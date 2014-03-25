@@ -31,7 +31,7 @@ import be.kuleuven.cs.som.annotate.*;
 
 
 
-public class Worm {
+public class Worm extends GameObject{
 	
 	/**
 	 * Variable initialization.
