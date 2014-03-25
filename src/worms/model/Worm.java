@@ -43,7 +43,7 @@ public class Worm extends GameObject{
 	private int actionPoints;
 	private String name;
 	private static final double g=9.80665;
-	private double minimumRadius=0.25;
+	private static final double minimumRadius=0.25;
 	private final double density=1062;
 
 
@@ -262,11 +262,15 @@ public class Worm extends GameObject{
 	
 	/**
 	 * Returns the minimum radius of this worm.
+	 * 
+	 * @return 	The radius is a positive number.
+	 * 			| result > 0
 	 */
 	@Basic
 	@Raw
-	public double getMinimumRadius() {
-		return this.minimumRadius;
+	@Immutable
+	public static double getMinimumRadius() {
+		return minimumRadius;
 	}
 
 	
@@ -335,11 +339,11 @@ public class Worm extends GameObject{
 	 * @return	True if and only if the given radius is larger than the minimum radius 
 	 * 			and the radius is a number or infinity and the mass for this radius is
 	 * 			a valid integer.
-	 * 			| result == ((radius >= this.getMinimumRadius()) && (! Double.isNaN(radius)))
+	 * 			| result == ((radius >= getMinimumRadius()) && (! Double.isNaN(radius)))
 	 * 			| && getMass(radius) <= Integer.MAX_VALUE
 	 */
 	public boolean isValidRadius(double radius) {
-		return (radius >= this.getMinimumRadius()) && (! Double.isNaN(radius)) && (this.getMass(radius) <= Integer.MAX_VALUE);
+		return (radius >= getMinimumRadius()) && (! Double.isNaN(radius)) && (this.getMass(radius) <= Integer.MAX_VALUE);
 	}
 	
 	
@@ -347,10 +351,21 @@ public class Worm extends GameObject{
 	
 	/**
 	 * Returns the current mass of this worm.
+	 * 
+	 * @return	Returns the current mass of this worm.
+	 * 			If the mass is larger than Integer.Max_Value,
+	 * 			Integer.Max_Value is returned.
+	 * 			| if (this.getMass(this.getRadius()) > Integer.MAX_VALUE)
+	 * 			|		result == Integer.MAX_VALUE
+	 * 			| else 
+	 * 			|		result == this.getMass(this.getRadius())
 	 */
 	@Basic
 	public double getMass(){
-		return (this.getDensity()*(4.0/3.0)*Math.PI*Math.pow(this.getRadius(), 3));
+		double mass = this.getMass(this.getRadius());
+		if (mass > Integer.MAX_VALUE)
+			mass = Integer.MAX_VALUE;
+		return mass;
 	}
 	
 	
@@ -741,4 +756,5 @@ public class Worm extends GameObject{
 			return false;
 		return true;
 	}
+	
 }
