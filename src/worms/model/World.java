@@ -8,9 +8,14 @@ package worms.model;
  *
  *@invar	Checks if width of world is valid.	
  *			|isValidDimension(this.getWidth())
- *
  *@invar	Checks if height of world is valid.	
  *			|isValidDimension(this.getHeight())
+ *@invar	World contains at most one live projectile.
+ *			| ...
+ *@invar	Each object appears only once in this world.
+ *			| ...
+ *@invar	The position of all objects must be within the bounds of the world.
+ *			| ...
  */
 public class World {
 	
