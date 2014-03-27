@@ -34,12 +34,14 @@ public class World {
 		return maxDimension;
 	}
 	
+	
 	/**
 	 * Returns the width of this world.
 	 */
 	public double getWidth(){
 		return this.width;
 	}
+	
 	
 	/**
 	 * Returns the height of this world.
@@ -62,7 +64,7 @@ public class World {
 	 * 			The dimension is invalid
 	 * 			|!isValidDimension(height)
 	 */
-	private void setHeight(double height) throws ModelException{
+	public void setHeight(double height) throws ModelException{
 		if (!isValidDimension(height))
 			throw new ModelException("Invalid height for world!");
 		this.height = height;
@@ -83,11 +85,12 @@ public class World {
 	 * 			The dimension is invalid
 	 * 			|!isValidDimension(width)
 	 */
-	private void setWidth(double width){
+	public void setWidth(double width){
 		if (!isValidDimension(width))
 			throw new ModelException("Invalid width for world!");
 		this.width = width;
 	}
+	
 	
 	/**
 	 * Checks if given dimension is valid.

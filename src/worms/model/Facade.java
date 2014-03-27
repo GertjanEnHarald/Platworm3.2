@@ -105,7 +105,7 @@ public class Facade implements IFacade {
 	
 	public double getMinimalRadius(Worm worm){
 		try {	
-			return worm.getMinimumRadius();
+			return Worm.getMinimumRadius();
 		} catch (NullPointerException exc) {
 			throw new ModelException("Null is invalid argument!");
 		}
