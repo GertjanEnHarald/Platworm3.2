@@ -37,9 +37,6 @@ public class Worm extends MoveableObject{
 	 * Variable initialization.
 	 */
 	private double direction;
-	private double coordinateX;
-	private double coordinateY;
-	private double radius;
 	private int actionPoints;
 	private String name;
 	private static final double g=9.80665;
@@ -75,12 +72,10 @@ public class Worm extends MoveableObject{
 	 * 
 	 */
 	@Raw
-	public Worm(double coordinateX, double coordinateY, double direction, double radius, String name) 
+	public Worm(double coordinateX, double coordinateY, double direction, double radius, String name, boolean isActive) 
 			throws ModelException {
-		this.setCoordinateX(coordinateX);
-		this.setCoordinateY(coordinateY);
+		super(coordinateX, coordinateY, isActive, radius);
 		this.setDirection(direction);
-		this.setRadius(radius);
 		this.setActionPoints(this.getMaximumActionPoints());
 		this.setName(name);
 	}	
@@ -105,86 +100,6 @@ public class Worm extends MoveableObject{
 	@Raw
 	public static final double getGravity(){
 		return g;
-	}
-	
-	
-	
-	
-	/**
-	 * Returns the X coordinate of the position of this worm.
-	 */
-	@Basic
-	@Raw
-	public double getCoordinateX(){
-		return this.coordinateX;
-	}
-	
-	
-	/**
-	 * Returns the Y coordinate of the position of this worm.			
-	 */
-	@Basic
-	@Raw
-	public double getCoordinateY(){
-		return this.coordinateY;
-	}
-	
-	
-	/**
-	 * Set the x coordinate of this worm to the given coordinateX.
-	 * 
-	 * 
-	 * @param 	coordinateX
-	 * 			The new x coordinate of this worm.
-	 * 
-	 * @post	The new x coordinate of this worm is equal to the given coordinateX.
-	 * 			| new.getCoordinateX() == coordinateX 
-	 * @throws	ModelException 
-	 * 			The given coordinateX is not a valid coordinate for a worm.
-	 *       	| ! isValidCoordinate(coordinateX)
-	 */
-	@Raw
-	private void setCoordinateX(double coordinateX) throws ModelException {
-		if (!isValidCoordinate(coordinateX))
-			throw new ModelException("Illegal X coordinate!");
-		this.coordinateX = coordinateX;
-	}
-	
-	
-	/**
-	 * Set the y coordinate of this worm to the given coordinateY.
-	 * 
-	 * 
-	 * @param 	coordinateY
-	 * 			The new y coordinate of this worm.
-	 * 
-	 * @post	The new y coordinate of this worm is equal to the given coordinateY.
-	 * 			| new.getCoordinateY() == coordinateY 
-	 * @throws	ModelException 
-	 * 			The given coordinateY is not a valid coordinate for a worm.
-	 *       	| ! isValidCoordinate(coordinateY)
-	 */
-	@Raw
-	private void setCoordinateY(double coordinateY) throws ModelException {
-		if (!isValidCoordinate(coordinateY))
-			throw new ModelException("Illegal Y coordinate!");
-		this.coordinateY = coordinateY;
-	}
-	
-	
-	/**
-	 * Check whether the given coordinate is a valid coordinate for a worm.
-	 * 
-	 * 
-	 * @param  	coordinate
-	 *         	The coordinate to check.
-	 *         
-	 * @return 	True if and only if the given coordinate is a number or infinity.
-	 *       	| result == (! Double.isNaN(coordinate))
-	 */
-	@Raw
-	public static boolean isValidCoordinate(double coordinate) {
-		return ! Double.isNaN(coordinate);
 	}
 	
 	
@@ -272,36 +187,6 @@ public class Worm extends MoveableObject{
 	public static double getMinimumRadius() {
 		return minimumRadius;
 	}
-
-	
-	/**
-	 * Returns the current radius of this worm.
-	 */
-	@Basic
-	@Raw
-	public double getRadius(){
-		return this.radius;
-	}
-	
-	
-	/**
-	 * Set the radius of this worm to the given radius.
-	 * 
-	 * 
-	 * @param 	radius
-	 * 			The new radius of this worm.
-	 * 
-	 * @post	The new radius of this worm is equal to the given radius.
-	 * 			| new.getRadius() == radius
-	 * @throws 	ModelException
-	 * 			The given radius for this worm is not a legal radius.
-	 * 			| ! isValidRadius(radius)
-	 */
-	private void setRadius(double radius) throws ModelException {
-		if (! isValidRadius(radius))
-			throw new ModelException("Illegal radius!");
-		this.radius = radius;
-	}
 	
 	
 	/**
@@ -342,6 +227,7 @@ public class Worm extends MoveableObject{
 	 * 			| result == ((radius >= getMinimumRadius()) && (! Double.isNaN(radius)))
 	 * 			| && getMass(radius) <= Integer.MAX_VALUE
 	 */
+	@Override
 	public boolean isValidRadius(double radius) {
 		return (radius >= getMinimumRadius()) && (! Double.isNaN(radius)) && (this.getMass(radius) <= Integer.MAX_VALUE);
 	}
