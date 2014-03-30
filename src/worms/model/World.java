@@ -25,7 +25,8 @@ public class World {
 	private static double maxDimension=Double.MAX_VALUE;
 	private double height;
 	private double width;
-	
+	private boolean[][] passableMap;
+	private boolean status;
 	
 	/**
 	 * Returns the upper bound for the dimensions of a world.
@@ -34,6 +35,12 @@ public class World {
 		return maxDimension;
 	}
 	
+	/**
+	 * Returns whether the game is active.
+	 */
+	public boolean getStatus(){
+		return this.status;
+	}
 	
 	/**
 	 * Returns the width of this world.
@@ -105,4 +112,58 @@ public class World {
 	public static boolean isValidDimension(double dimension){
 		return 0 <= dimension && dimension <= getMaxDimension();
 	}
+	
+	
+	/**
+	 * Checks if a given pixel of this world is passable 
+	 * 
+	 * @param 	row
+	 * 			The row in which the pixel is.
+	 * @param	column
+	 * 			The column in which the pixel is.
+	 * @return	
+	 * 			|result == this.passableMap[row][column]
+	 */
+	public boolean isPassablePixel(int row, int column){
+		return this.passableMap[row][column];
+	}
+	
+	/**
+	 * Returns the vertical or horizontal dimension of this world in a number of pixels.
+	 * 
+	 * @param 	heightOrWidth
+	 * 			This boolean signifies whether or not to return the vertical or horizontal 
+	 * 			dimension(true for horizontal and false for vertical).
+	 * 
+	 * @return	Returns the dimension wanted.
+	 * 			|if (heightOrWidth)
+	 * 			|	result == this.passableMap[0].length
+	 * 			|else 
+	 * 			|	this.passableMap.length
+	 */
+	public int getDimensionInPixels(boolean heightOrWidth){
+		if (heightOrWidth)
+			return this.passableMap[0].length;
+		else
+			return this.passableMap.length;
+	}
+	
+	/**
+	 * Checks if a given location is passable.
+	 * 
+	 * @param 	x
+	 * 			The x coordinate of the location to check.
+	 * @param 	y
+	 * 			The y coordinate of the location to check.
+	 * @return	Returns whether the location is passable.
+	 * 			|pixelHeight = (getHeight()/getDimensionInPixels(false))
+	 * 			|pixelWidth = (getWidth()/getDimensionInPixels(true))
+	 *			| result == isPassablePixel((int)(y/pixelHeight),(int)(x/pixelWidth))
+	 */
+	public boolean isPassableLocation(double x, double y){
+		double pixelHeight = (getHeight()/getDimensionInPixels(false));
+		double pixelWidth = (getWidth()/getDimensionInPixels(true));
+		return isPassablePixel((int)(y/pixelHeight),(int)(x/pixelWidth));
+	}
+	
 }
