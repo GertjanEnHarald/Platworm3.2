@@ -1,5 +1,7 @@
 package worms.model;
 
+import java.util.Random;
+
 /**
  * A class describing the world in which the game worms takes place.
  * 
@@ -25,8 +27,26 @@ public class World {
 	private static double maxDimension=Double.MAX_VALUE;
 	private double height;
 	private double width;
-	private boolean[][] passableMap;
+	private final boolean[][] passableMap;
 	private boolean status;
+	private Random random;
+	
+	
+	public World(double width, double height,boolean[][] passableMap, Random random) 
+			throws ModelException {
+		this.setHeight(height);
+		this.setWidth(width);
+		this.passableMap = passableMap;
+		this.random = random; 
+	}
+	
+	/**
+	 * Returns the random seed of this world.
+	 */
+	public Random getRandom(){
+		return this.random;
+	}
+	
 	
 	/**
 	 * Returns the upper bound for the dimensions of a world.
@@ -205,7 +225,7 @@ public class World {
 	 * 			| result  == isPassableArea(x,y,1.1*radius)
 	 */
 	public boolean isAdjacent(double x, double y,double radius){
-		return isPassableArea(x,y,1.1*radius);
+		return !isPassableArea(x,y,1.1*radius) && isPassableArea(x,y,radius);
 	}
 	
 	
