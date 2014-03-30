@@ -99,6 +99,7 @@ public abstract class GameObject {
 	
 	
 	
+	
 	/**
 	 * Returns the current radius of this game object.
 	 */
