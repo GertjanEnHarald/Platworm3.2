@@ -247,6 +247,7 @@ public class Worm extends MoveableObject{
 	 * 			|		result == this.getMass(this.getRadius())
 	 */
 	@Basic
+	@Override
 	public double getMass(){
 		double mass = this.getMass(this.getRadius());
 		if (mass > Integer.MAX_VALUE)

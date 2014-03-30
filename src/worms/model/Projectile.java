@@ -35,5 +35,9 @@ public class Projectile extends MoveableObject {
 		return this.weapon.getRadius();
 	}
 	
+	@Override
+	public double getMass() {
+		return this.weapon.getMassOfProjectile();
+	}
 	
 }

@@ -6,5 +6,6 @@ public abstract class MoveableObject extends GameObject {
 		super(coordinateX, coordinateY, isActive, radius);
 	}
 
+	public abstract double getMass();
 	
 }
