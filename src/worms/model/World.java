@@ -166,4 +166,50 @@ public class World {
 		return isPassablePixel((int)(y/pixelHeight),(int)(x/pixelWidth));
 	}
 	
+	
+	/**
+	 * Checks if a circular area with a given radius with the centre
+	 *  on the given locations x and y is passable.
+	 *  
+	 *  
+	 *  Rare methode, waarschijnlijk fout dus documentatie laat voor later.
+	 * 
+	 * @param x
+	 * @param y
+	 * @param radius
+	 * @return
+	 */
+	public boolean isPassableArea(double x, double y, double radius){
+		for(double angle=0; angle<=2*Math.PI; angle= angle + Math.PI/8.0){
+			for(double distance=0; distance<=radius;distance = distance + radius*0.05 ){
+				if (!(isPassableLocation(x+Math.sin(angle)*distance,y+Math.cos(angle)*distance))){
+					return false;
+				}
+			}
+			}
+		return true;
+	}
+	
+	
+	/**
+	 * Checks if entity at location is adjacent to impassable terrain.
+	 * 
+	 * 
+	 * @param 	x
+	 * 			x coordinate of loaction
+	 * @param 	y
+	 * 			y coordinate of location
+	 * @param 	radius
+	 * 			radius of entity
+	 * @return	Returns whethe entity at location is adjacent to impassable terrain.
+	 * 			| result  == isPassableArea(x,y,1.1*radius)
+	 */
+	public boolean isAdjacent(double x, double y,double radius){
+		return isPassableArea(x,y,1.1*radius);
+	}
+	
+	
+	
+	
+	
 }
