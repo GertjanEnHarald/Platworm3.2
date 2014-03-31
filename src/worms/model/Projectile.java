@@ -39,5 +39,11 @@ public class Projectile extends MoveableObject {
 	public double getMass() {
 		return this.weapon.getMassOfProjectile();
 	}
+
+	@Override
+	public void jump() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

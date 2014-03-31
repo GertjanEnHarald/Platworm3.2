@@ -38,6 +38,7 @@ public class Worm extends MoveableObject{
 	 */
 	private double direction;
 	private int actionPoints;
+	private int hitPoints;
 	private String name;
 	private static final double g=9.80665;
 	private static final double minimumRadius=0.25;
@@ -63,6 +64,10 @@ public class Worm extends MoveableObject{
 	 * 			| new.getName() == name
 	 * @post 	This worm has the maximum number of action points.
 	 * 			| new.getActionPoints() == new.getMaximumActionPoints()
+	 * @post	isActive ...
+	 * 			| ...
+	 * @post	This worm has the maximum number of hit points.
+	 * 			| new.getHitPoints() == new.getMaximumHitPoints()
 	 * @throws	ModelException
 	 * 			The exception is thrown if one or more of the given parameters are illegal 
 	 * 			assignments for this worm.
@@ -77,6 +82,7 @@ public class Worm extends MoveableObject{
 		super(coordinateX, coordinateY, isActive, radius);
 		this.setDirection(direction);
 		this.setActionPoints(this.getMaximumActionPoints());
+		this.setHitPoints(this.getMaximumHitPoints());
 		this.setName(name);
 	}	
 	
@@ -190,31 +196,6 @@ public class Worm extends MoveableObject{
 	
 	
 	/**
-	 * Change the radius of this worm to the given radius 
-	 * and change the action points, with respect to its last state. 
-	 * 
-	 * 
-	 * @param 	radius
-	 * 			The new radius of this worm.
-	 * 			
-	 * @post	The new radius of this worm is equal to the given radius.
-	 * 			| new.getRadius() == radius
-	 * @post	Set the action points of this worm such that the percentage of the 
-	 * 			old and new state are equal.
-	 * 			| this.getActionPoints() / this.getMaximumActionPoints() == 
-	 * 			| 		new.getActionPoints() / new.getMaximumActionPoints()
-	 * @throws 	ModelException
-	 * 			The given radius is not a legal radius.
-	 * 			| ! isValidRadius(radius)
-	 */
-	public void changeRadius(double radius) throws ModelException {
-		float percentage = ((float) this.getActionPoints())/((float) this.getMaximumActionPoints());
-		this.setRadius(radius);
-		this.setActionPoints((int) (percentage* ((float) this.getMaximumActionPoints())));
-	}
-	
-	
-	/**
 	 * Checks if the given radius is a valid radius for this worm.
 	 *
 	 * 
@@ -301,7 +282,7 @@ public class Worm extends MoveableObject{
 	 * 			The new number of action points.
 	 * 
 	 * @post	If the given number of action points is in the interval [0, getMaximumActionPoints()],
-	 * 			the actionPoints of this worm are set to the given action points.
+	 * 			the action points of this worm are set to the given actionPoints.
 	 * 			| if ((0 <= actionPoints) && (actionPoints <= getMaximumActionPoints()))
 	 * 			| 	new.getActionPoints() == actionPoints
 	 * @post	If the given number of action points is negative,
@@ -320,6 +301,56 @@ public class Worm extends MoveableObject{
 			this.actionPoints = 0;
 		else if (actionPoints > this.getMaximumActionPoints())
 			this.actionPoints = this.getMaximumActionPoints();
+	}
+	
+	
+	
+	
+	/**
+	 * Returns the current hit points of this worm.
+	 */
+	@Basic
+	@Raw
+	public int getHitPoints() {
+		return this.hitPoints;
+	}
+	
+	
+	/**
+	 * Set the hit points that this worm has.
+	 * 
+	 * 
+	 * @param 	hitPoints
+	 * 			The new number of hit points.
+	 * 
+	 * @post	If the given number of hit points is in the interval [0, getMaximumHitPoints()],
+	 * 			the hit points of this worm are set to the given hitPoints.
+	 * 			| if ((0 <= hitPoints) && (hitPoints <= getMaximumHitPoints()))
+	 * 			| 	new.getHitPoints() == hitPoints
+	 * @post	If the given number of hit points is negative,
+	 * 			the hitPoints of this worm are set to 0.
+	 * 			| if (hitPoints < 0)
+	 * 			| 	new.getHitPoints() == 0
+	 * @post	If the given number of hit points is larger than the maximum hit points,
+	 * 			the hitPoints of this worm are set to the maximum number of hit points.
+	 * 			| if (actionPoints > getMaximumHitPoints())
+	 * 			| 	new.getHitPoints() == this.getMaximumHitPoints()	
+	 */
+	private void setHitPoints(int hitPoints) {
+		if ((0 <= hitPoints) && (hitPoints <= this.getMaximumHitPoints()))
+			this.hitPoints = hitPoints;
+		else if (hitPoints < 0)
+			this.hitPoints = 0;
+		else if (hitPoints > this.getMaximumHitPoints())
+			this.hitPoints = this.getMaximumHitPoints();
+	}
+	
+	
+	/**
+	 * Returns the maximum number of hit points this worm can have.
+	 */
+	public int getMaximumHitPoints() {
+		return (int) this.getMass();
 	}
 	
 	
@@ -545,6 +576,7 @@ public class Worm extends MoveableObject{
 	 *			or when this worm has no action points left.
 	 *			| (! this.canJump)
 	 */
+	@Override
 	public void jump() throws ModelException{
 		if (! this.canJump()) {
 			this.setActionPoints(0);

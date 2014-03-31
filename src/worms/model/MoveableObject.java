@@ -8,4 +8,6 @@ public abstract class MoveableObject extends GameObject {
 
 	public abstract double getMass();
 	
+	public abstract void jump();
+	
 }

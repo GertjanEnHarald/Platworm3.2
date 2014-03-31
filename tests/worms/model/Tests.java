@@ -119,18 +119,14 @@ public class Tests {
 	@Test
 	public void testChangeRadiusLegalCase() {
 		Worm testWorm = new Worm(10.0,-5.0,Math.PI,1,"Bob");
-		testWorm.move(100);
-		float percentageOld = (((float) testWorm.getActionPoints())/ ((float) testWorm.getMaximumActionPoints()));
-		testWorm.changeRadius(50);
-		float percentageNew = (((float) testWorm.getActionPoints())/ ((float) testWorm.getMaximumActionPoints()));
+		testWorm.setRadius(50);
 		assertEquals(testWorm.getRadius(), 50.0, EPS);
-		assertEquals(percentageOld, percentageNew, EPS);
 	}
 	
 	@Test(expected = ModelException.class)
 	public void testChangeRadiusIllegalCase() {
 		Worm testWorm = new Worm(10.0,-5.0,Math.PI,1,"Bob");
-		testWorm.changeRadius(Integer.MAX_VALUE);
+		testWorm.setRadius(Integer.MAX_VALUE);
 	}
 	
 	@Test

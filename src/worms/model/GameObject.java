@@ -123,7 +123,7 @@ public abstract class GameObject {
 	 * 			The given radius for this game object is not a legal radius.
 	 * 			| ! isValidRadius(radius)
 	 */
-	protected void setRadius(double radius) throws ModelException {
+	public void setRadius(double radius) throws ModelException {
 		if (! isValidRadius(radius))
 			throw new ModelException("Illegal radius!");
 		this.radius = radius;
@@ -156,5 +156,6 @@ public abstract class GameObject {
 	protected void setStatus(boolean status) {
 		this.isActive = status;
 	}
+	
 	
 }
