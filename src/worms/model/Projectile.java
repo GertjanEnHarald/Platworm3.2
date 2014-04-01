@@ -6,9 +6,9 @@ public class Projectile extends MoveableObject {
 	private Weapon weapon;
 	
 	
-	public Projectile(double coordinateX, double coordinateY, boolean isActive,	double radius, Weapon weapon) 
+	public Projectile(double coordinateX, double coordinateY, boolean isActive,	double radius, Weapon weapon,World world) 
 			throws ModelException {
-	super(coordinateX, coordinateY, isActive, radius);		
+	super(coordinateX, coordinateY, isActive, radius,world);		
 	if (! isValidWeapon(weapon))
 		throw new ModelException("Illegal weapon assigned!");
 	this.weapon = weapon;

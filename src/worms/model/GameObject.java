@@ -9,16 +9,24 @@ public abstract class GameObject {
 	private double coordinateY;
 	private double radius;
 	private boolean isActive;
+	private final World world;
 	
-	
-	public GameObject(double coordinateX, double  coordinateY, boolean isActive, double radius) {
+	public GameObject(double coordinateX, double  coordinateY, boolean isActive, double radius,World world) {
 		this.setCoordinateX(coordinateX);
 		this.setCoordinateY(coordinateY);
 		this.setRadius(radius);
+		this.world = world;
 	}
 	
-	
-	
+	/**
+	 * Returns the world in which this object is.
+	 */
+	@Basic
+	@Raw
+	@Immutable
+	public World getWorld(){
+		return this.world;
+	}
 	
 	/**
 	 * Returns the X coordinate of the position of this game object.

@@ -1,5 +1,6 @@
 package worms.model;
 
+import java.util.*;
 import java.util.Random;
 
 /**
@@ -30,7 +31,7 @@ public class World {
 	private final boolean[][] passableMap;
 	private boolean status;
 	private Random random;
-	
+	private final List<GameObject> gameObjects = new ArrayList<GameObject>();
 	
 	public World(double width, double height,boolean[][] passableMap, Random random) 
 			throws ModelException {

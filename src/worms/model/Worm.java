@@ -77,9 +77,9 @@ public class Worm extends MoveableObject{
 	 * 
 	 */
 	@Raw
-	public Worm(double coordinateX, double coordinateY, double direction, double radius, String name, boolean isActive) 
+	public Worm(double coordinateX, double coordinateY, double direction, double radius, String name, boolean isActive,World world) 
 			throws ModelException {
-		super(coordinateX, coordinateY, isActive, radius);
+		super(coordinateX, coordinateY, isActive, radius,world);
 		this.setDirection(direction);
 		this.setActionPoints(this.getMaximumActionPoints());
 		this.setHitPoints(this.getMaximumHitPoints());
