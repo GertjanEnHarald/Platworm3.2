@@ -212,8 +212,9 @@ public class World {
 	 * @return
 	 */
 	public boolean isPassableArea(double x, double y, double radius){
-		for(double angle=0; angle<=2*Math.PI; angle= angle + Math.PI/8.0){
-			for(double distance=0; distance<=radius;distance = distance + radius*0.05 ){
+		double step = Math.min(getHeight()/getDimensionInPixels(false), getWidth()/getDimensionInPixels(true))/2.0;
+		for(double angle=0; angle<=2*Math.PI; angle= angle + Math.PI/80.0){
+			for(double distance=0; distance<=radius;distance = distance +step){
 				if (!(isPassableLocation(x+Math.sin(angle)*distance,y+Math.cos(angle)*distance))){
 					return false;
 				}
@@ -248,7 +249,7 @@ public class World {
 		double step = Math.min(getHeight()/getDimensionInPixels(false), getWidth()/getDimensionInPixels(true))/2.0;
 		double stepX = Math.cos(angle)*step;
 		double stepY = Math.sin(angle)*step;
-		while (!(Util.fuzzyEquals(Y, getHeight()/2.0,step))){
+		while (!(Util.fuzzyEquals(Y, getHeight()/2.0,step*16.0))){
 			X = X + stepX;
 			Y = Y + stepY;
 			if (isAdjacent(X, Y, radius))
