@@ -43,7 +43,7 @@ public class Worm extends MoveableObject{
 	private static final double g=9.80665;
 	private static final double minimumRadius=0.25;
 	private final double density=1062;
-
+	private Projectile projectile;
 
 	
 	
@@ -86,6 +86,12 @@ public class Worm extends MoveableObject{
 		this.setName(name);
 	}	
 	
+	/**
+	 * Returns the projectile of this worm.
+	 */
+	public Projectile getProjectile(){
+		return this.projectile;
+	}
 	
 	/**
 	 * Returns the density of this worm.
