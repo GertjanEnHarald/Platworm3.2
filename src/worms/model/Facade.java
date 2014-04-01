@@ -19,8 +19,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public void addNewWorm(World world) {
-		// TODO Auto-generated method stub
-		
+		world.addWorm();
 	}
 
 	@Override
@@ -248,9 +247,8 @@ public class Facade implements IFacade {
 	}
 
 	@Override
-	public boolean isAdjacent(World world, double x, double y, double radius) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean isAdjacent(World world, double x, double y, double radius){		
+		return world.isPassableArea(x, y, radius);
 	}
 
 	@Override
@@ -267,8 +265,8 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean isImpassable(World world, double x, double y, double radius) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return !world.isPassableArea(x, y, radius);
 	}
 
 	@Override

@@ -1,7 +1,10 @@
 package worms.model;
 
 import java.util.*;
-import java.util.Random;
+
+import javax.swing.text.html.MinimalHTMLWriter;
+
+import worms.util.Util;
 
 /**
  * A class describing the world in which the game worms takes place.
@@ -184,7 +187,15 @@ public class World {
 	public boolean isPassableLocation(double x, double y){
 		double pixelHeight = (getHeight()/getDimensionInPixels(false));
 		double pixelWidth = (getWidth()/getDimensionInPixels(true));
-		return isPassablePixel((int)(y/pixelHeight),(int)(x/pixelWidth));
+		return isPassablePixel(getDimensionInPixels(false)-(int)(y/pixelHeight),(int)(x/pixelWidth));
+	}
+	
+	
+	public void addWorm(){
+		double radius = 1.0;
+		double[] position = getRandomAdjacentLocation(radius);
+		Worm worm = new Worm(position[0],position[1],random.nextDouble()*Math.PI*2.0,radius,"Bob",true,this);
+		gameObjects.add(worm);
 	}
 	
 	
@@ -217,12 +228,12 @@ public class World {
 	 * 
 	 * 
 	 * @param 	x
-	 * 			x coordinate of loaction
+	 * 			x coordinate of location
 	 * @param 	y
 	 * 			y coordinate of location
 	 * @param 	radius
 	 * 			radius of entity
-	 * @return	Returns whethe entity at location is adjacent to impassable terrain.
+	 * @return	Returns whether entity at location is adjacent to impassable terrain.
 	 * 			| result  == isPassableArea(x,y,1.1*radius)
 	 */
 	public boolean isAdjacent(double x, double y,double radius){
@@ -230,7 +241,22 @@ public class World {
 	}
 	
 	
-	
+	public double[] getRandomAdjacentLocation(double radius){
+		double X = (getRandom().nextDouble())*getWidth();
+		double Y = 0;
+		double angle = Math.tan(getHeight()*0.5/(getWidth()*0.5-X));
+		double step = Math.min(getHeight()/getDimensionInPixels(false), getWidth()/getDimensionInPixels(true))/2.0;
+		double stepX = Math.cos(angle)*step;
+		double stepY = Math.sin(angle)*step;
+		while (!(Util.fuzzyEquals(Y, getHeight()/2.0,step))){
+			X = X + stepX;
+			Y = Y + stepY;
+			if (isAdjacent(X, Y, radius))
+				return new double[] {X,Y};
+				
+		}
+		return new double[] {Double.NaN,Double.NaN};
+	}
 	
 	
 }
