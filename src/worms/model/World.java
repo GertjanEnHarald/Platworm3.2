@@ -187,7 +187,7 @@ public class World {
 	public boolean isPassableLocation(double x, double y){
 		double pixelHeight = (getHeight()/getDimensionInPixels(false));
 		double pixelWidth = (getWidth()/getDimensionInPixels(true));
-		return isPassablePixel(getDimensionInPixels(false)-(int)((y/getHeight())*pixelHeight),(int)((x/getWidth())*pixelWidth));
+		return isPassablePixel(getDimensionInPixels(false)-(int)(y/pixelHeight),(int)(x/pixelWidth));
 	}
 	
 	
@@ -213,8 +213,8 @@ public class World {
 	 */
 	public boolean isPassableArea(double x, double y, double radius){
 		double step = Math.min(getHeight()/getDimensionInPixels(false), getWidth()/getDimensionInPixels(true))/2.0;
-		for(double angle=0; angle<=2*Math.PI; angle= angle + Math.PI/80.0){
-			for(double distance=0; distance<=radius;distance = distance +step){
+		for(double distance=step; distance<=radius;distance = distance +step){
+			for(double angle=0; angle<=2*Math.PI; angle= angle + step/distance){
 				if (!(isPassableLocation(x+Math.sin(angle)*distance,y+Math.cos(angle)*distance))){
 					return false;
 				}
