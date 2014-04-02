@@ -187,7 +187,7 @@ public class World {
 	public boolean isPassableLocation(double x, double y){
 		double pixelHeight = (getHeight()/getDimensionInPixels(false));
 		double pixelWidth = (getWidth()/getDimensionInPixels(true));
-		return isPassablePixel(getDimensionInPixels(false)-(int)(y/pixelHeight),(int)(x/pixelWidth));
+		return isPassablePixel(getDimensionInPixels(false)-(int)((y/getHeight())*pixelHeight),(int)((x/getWidth())*pixelWidth));
 	}
 	
 	
