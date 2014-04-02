@@ -41,11 +41,15 @@ public class WorldTest {
 		assertEquals(20, world.getDimensionInPixels(false));
 		assertTrue(world.isPassableLocation(14.5, 12.3));
 		assertTrue(world.isPassableLocation(2, 19));
-		assertFalse(world.isPassableLocation(18.5, 1.7));
+		assertFalse(world.isPassableLocation(18.5, 1.9));
+		assertTrue(world.isPassableLocation(18.5, 2.1));
 		assertTrue(world.isPassableArea(10, 10, 0.5));
 		assertFalse(world.isPassableArea(10, 3, 2));
 		assertFalse(world.isPassableArea(10, 2.05, 1));
-		assertFalse(world.isPassableArea(10, 3.95, 1));
+		assertTrue(world.isPassableArea(10, 3.95, 1));
+		assertTrue(world.isPassableArea(10, 3.05, 1));
+		assertFalse(world.isPassableArea(10, 3.05, 1.5));
+		//assertTrue(world.isAdjacent(10.0, 4.05, 1));
 		
 	}
 
