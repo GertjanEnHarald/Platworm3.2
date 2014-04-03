@@ -6,9 +6,9 @@ public class Rifle extends Projectile {
 	
 	
 	public Rifle(double coordinateX, double coordinateY, boolean isActive,
-			double radius, World world) throws ModelException {
-		super(coordinateX, coordinateY, isActive, radius, world, 10,
-				20, 10);
+			double radius, World world, double direction) throws ModelException {
+		super(coordinateX, coordinateY, isActive, radius, world, direction,
+				10,	20, 10);
 	}
 	
 	/**

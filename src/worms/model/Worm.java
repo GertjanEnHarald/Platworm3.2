@@ -1,6 +1,7 @@
 package worms.model;
 import java.util.Arrays;
 import java.util.List;
+
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -36,11 +37,9 @@ public class Worm extends MoveableObject{
 	/**
 	 * Variable initialization.
 	 */
-	private double direction;
 	private int actionPoints;
 	private int hitPoints;
 	private String name;
-	private static final double g=9.80665;
 	private static final double minimumRadius=0.25;
 	private final double density=1062;
 	private Projectile projectile;
@@ -79,8 +78,7 @@ public class Worm extends MoveableObject{
 	@Raw
 	public Worm(double coordinateX, double coordinateY, double direction, double radius, String name, boolean isActive,World world) 
 			throws ModelException {
-		super(coordinateX, coordinateY, isActive, radius,world);
-		this.setDirection(direction);
+		super(coordinateX, coordinateY, isActive, radius, world, direction);
 		this.setActionPoints(this.getMaximumActionPoints());
 		this.setHitPoints(this.getMaximumHitPoints());
 		this.setName(name);
@@ -101,87 +99,6 @@ public class Worm extends MoveableObject{
 	@Raw
 	public final double getDensity(){
 		return this.density;
-	}
-	
-	
-	/**
-	 *Returns the gravity used in this game. 
-	 */
-	@Basic
-	@Immutable
-	@Raw
-	public static final double getGravity(){
-		return g;
-	}
-	
-	
-	
-	
-	/**
-	 * Returns the current direction of this worm.
-	 */
-	@Basic
-	@Raw
-	public double getDirection() {
-		return this.direction;
-	}
-	
-	
-	/**
-	 * Set the direction of this worm to the given direction.
-	 * 
-	 * 
-	 * @param 	direction
-	 * 		  	The new direction of this worm.
-	 * 
-	 * @pre		The given direction must be a valid direction.
-	 * 			| isValidDirection(direction)
-	 * @post	The new direction of this worm is equal to the given direction.
-	 * 			| new.getDirection() == changeAngleModulo2PI(direction)
-	 */
-	@Raw
-	private void setDirection(double direction){
-		assert isValidDirection(direction);
-		this.direction = changeAngleModulo2PI(direction);
-	}
-
-	
-	/**
-	 * Returns the modulo 2PI of a given angle.
-	 * 
-	 * 
-	 * @param 	angle
-	 * 			The given angle.
-	 * 
-	 * @return	Returns the modulo 2PI of the given angle.
-	 * 			| angle = angle % (2*Math.PI)
-	 * 			| if angle<0
-	 * 			| 	angle = angle + 2*Math.PI
-	 * 			| result == angle
-	 */
-	@Raw
-	public static double changeAngleModulo2PI(double angle) {
-		angle = angle % (2*Math.PI);
-		if (angle < 0)
-			angle = angle + 2*Math.PI;
-		return angle;
-	}
-	
-	
-	/**
-	 * Check whether the given direction is a valid direction for
-	 * a worm.
-	 * 
-	 * 
-	 * @param  	direction
-	 *         	The direction to check.
-	 * 
-	 * @return 	True if and only if the given direction is a finite number.
-	 *			| result == !(Double.isNaN(direction) || Double.isInfinite(Direction))
-	 */
-	@Raw
-	public static boolean isValidDirection(double direction) {
-		return ! (Double.isNaN(direction) || Double.isInfinite(direction));
 	}
 	
 	
@@ -601,34 +518,10 @@ public class Worm extends MoveableObject{
 	 * 			| F = 5*this.getActionPoints()+this.getMass()*getGravity()
 	 *			| result == F*0.5/this.getMass()
 	 */
+	@Override
 	public double getJumpVelocity(){
 		double F = 5*this.getActionPoints()+this.getMass()*getGravity();
 		return F*0.5/this.getMass();
-	}
-	
-	
-	/**
-	 * Returns the horizontal distance of the potential jump of this worm.
-	 * 
-	 * 
-	 * @return	The horizontal distance.
-	 * 			| result == Math.pow(this.getJumpVelocity(), 2)*
-	 * 			|				Math.sin(2*this.getDirection())/getGravity()
-	 */
-	public double getJumpDistance(){
-		return Math.pow(this.getJumpVelocity(), 2)*Math.sin(2*this.getDirection())/getGravity();
-	}
-	
-	
-	/**
-	 * Returns the time this worm is in the air during the potential jump of this worm.
-	 * 
-	 * 
-	 * @return 	Returns the time in the air.
-	 * 			| result == this.getJumpDistance()/(this.getJumpVelocity()*Math.cos(this.getDirection()))
-	 */
-	public double getJumpTime(){
-		return this.getJumpDistance()/(this.getJumpVelocity()*Math.cos(this.getDirection()));
 	}
 	
 	
@@ -651,17 +544,13 @@ public class Worm extends MoveableObject{
 	 * 			The time for calculation is larger than the time in the air.
 	 * 			| (time > this.getJumpTime())
 	 */
+	@Override
 	public double[] getJumpStep(double time) throws ModelException{
-		if (! canJump())
+		// First check if can jump, then jump.
+		// Is this sequence somehow available?
+		if (! this.canJump())
 			throw new ModelException("Cannot jump!");
-		if(time > this.getJumpTime())
-			throw new ModelException("Cannot calculate position at time, worm has already landed!");
-		double initialJumpVelocityX = this.getJumpVelocity()*Math.cos(getDirection());
-		double initialJumpVelocityY= this.getJumpVelocity()*Math.sin(getDirection());
-		double[] result = 
-		        {this.getCoordinateX()+initialJumpVelocityX*time,
-				this.getCoordinateY()+initialJumpVelocityY*time-0.5*getGravity()*Math.pow(time, 2)};
-		return result;
+		super(time);
 	}
 	
 	

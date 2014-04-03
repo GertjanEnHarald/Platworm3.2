@@ -1,5 +1,6 @@
 package worms.model;
 
+
 import be.kuleuven.cs.som.annotate.*;
 
 public abstract class GameObject {
@@ -10,12 +11,23 @@ public abstract class GameObject {
 	private double radius;
 	private boolean isActive;
 	private final World world;
+	private static final double g=9.80665;
 	
-	public GameObject(double coordinateX, double  coordinateY, boolean isActive, double radius,World world) {
+	public GameObject(double coordinateX, double  coordinateY, boolean isActive, double radius, World world) {
 		this.setCoordinateX(coordinateX);
 		this.setCoordinateY(coordinateY);
 		this.setRadius(radius);
 		this.world = world;
+	}
+	
+	/**
+	 *Returns the gravity used in this game. 
+	 */
+	@Basic
+	@Immutable
+	@Raw
+	public static final double getGravity(){
+		return g;
 	}
 	
 	/**

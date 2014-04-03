@@ -2,21 +2,24 @@ package worms.model;
 
 import be.kuleuven.cs.som.annotate.*;
 
-public class Projectile extends MoveableObject {
+public abstract class Projectile extends MoveableObject {
 	
 	private static final double density = 7800;		// In kg/m³
 	private final double massOfProjectile;			// In gram
 	private final int lostHitPoints;
 	private final int costActionPoints;
 	
+	//TODO Coordinates an direction determined by coordinates and direction of worm. 
 	public Projectile(double coordinateX, double coordinateY, boolean isActive,	double radius, World world,
-			double massOfProjectile, int lostHitPoints, int costActionPoints) 
+			double direction, double massOfProjectile, int lostHitPoints, int costActionPoints) 
 			throws ModelException {
-		super(coordinateX, coordinateY, isActive, radius,world);
+		super(coordinateX, coordinateY, isActive, radius, world, direction);
 		this.massOfProjectile = massOfProjectile;
 		this.lostHitPoints = lostHitPoints;
 		this.costActionPoints = costActionPoints;
 	}
+	
+	public abstract double getForce();
 	
 	/**
 	 * Returns the density of the projectile in kg/m³.
@@ -42,6 +45,12 @@ public class Projectile extends MoveableObject {
 	public double getRadius() {
 		return Math.pow(this.getMass()*(3/4)*(1/getDensity())
 				*(1/Math.PI), 1/3);
+	}
+	
+	
+	@Override
+	public boolean isValidRadius(double radius) {
+		return true;
 	}
 	
 	/**
@@ -85,15 +94,21 @@ public class Projectile extends MoveableObject {
 	}
 	
 	@Override
-	public boolean isValidRadius(double radius) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-	@Override
 	public void jump() {
 		// TODO Auto-generated method stub
-		
 	}
+
+	/**
+	 * Returns the initial velocity of the potential jump of this projectile.
+	 * 
+	 * 
+	 * @return	The initial velocity of the jump.
+	 *			| result == this.getForce()*0.5/this.getMass()
+	 */
+	@Override
+	public double getJumpVelocity(){
+		return this.getForce()*0.5/this.getMass();
+	}
+	
 	
 }
