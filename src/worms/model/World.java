@@ -2,8 +2,6 @@ package worms.model;
 
 import java.util.*;
 
-import javax.swing.text.html.MinimalHTMLWriter;
-
 import worms.util.Util;
 
 /**
@@ -35,6 +33,7 @@ public class World {
 	private boolean status;
 	private Random random;
 	private final List<GameObject> gameObjects = new ArrayList<GameObject>();
+	
 	
 	public World(double width, double height,boolean[][] passableMap, Random random) 
 			throws ModelException {
@@ -158,21 +157,25 @@ public class World {
 	/**
 	 * Checks if a given pixel of this world is passable 
 	 * 
+	 * 
 	 * @param 	row
 	 * 			The row in which the pixel is.
 	 * @param	column
 	 * 			The column in which the pixel is.
+	 * 
 	 * @return	
 	 * 			|result == this.passableMap[row][column]
 	 */
 	public boolean isPassablePixel(int row, int column){
 		if (row < this.getDimensionInPixels(false) && row >= 0 && column < this.getDimensionInPixels(true) && column >= 0) 
 			return this.passableMap[row][column];
-	return false;
+		return false;
 	}
+	
 	
 	/**
 	 * Returns the vertical or horizontal dimension of this world in a number of pixels.
+	 * 
 	 * 
 	 * @param 	heightOrWidth
 	 * 			This boolean signifies whether or not to return the vertical or horizontal 
@@ -194,10 +197,12 @@ public class World {
 	/**
 	 * Checks if a given location is passable.
 	 * 
+	 * 
 	 * @param 	x
 	 * 			The x coordinate of the location to check.
 	 * @param 	y
 	 * 			The y coordinate of the location to check.
+	 * 
 	 * @return	Returns whether the location is passable.
 	 * 			|pixelHeight = (getHeight()/getDimensionInPixels(false))
 	 * 			|pixelWidth = (getWidth()/getDimensionInPixels(true))
@@ -258,6 +263,7 @@ public class World {
 	 * 			y coordinate of location
 	 * @param 	radius
 	 * 			radius of entity
+	 * 
 	 * @return	Returns whether entity at location is adjacent to impassable terrain.
 	 * 			| result  == isPassableArea(x,y,1.1*radius)
 	 */
