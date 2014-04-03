@@ -30,14 +30,12 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean canMove(Worm worm) {
-		// TODO Auto-generated method stub
-		return false;
+		return worm.canMove(1);
 	}
 
 	@Override
 	public boolean canTurn(Worm worm, double angle) {
-		// TODO Auto-generated method stub
-		return false;
+		return worm.canTurn(angle);
 	}
 
 	@Override
@@ -56,8 +54,7 @@ public class Facade implements IFacade {
 	@Override
 	public Worm createWorm(World world, double x, double y, double direction,
 			double radius, String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Worm(x, y, direction, radius, name, true, world);
 	}
 
 	@Override
@@ -68,8 +65,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public int getActionPoints(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return worm.getActionPoints();
 	}
 
 	@Override
@@ -92,8 +88,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public int getHitPoints(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return worm.getHitPoints();
 	}
 
 	@Override
@@ -128,32 +123,27 @@ public class Facade implements IFacade {
 
 	@Override
 	public int getMaxActionPoints(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return worm.getMaximumActionPoints();
 	}
 
 	@Override
 	public int getMaxHitPoints(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return worm.getMaximumHitPoints();
 	}
 
 	@Override
 	public double getMinimalRadius(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return getMinimalRadius(worm);
 	}
 
 	@Override
 	public String getName(Worm worm) {
-		// TODO Auto-generated method stub
-		return null;
+		return worm.getName();
 	}
 
 	@Override
 	public double getOrientation(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return worm.getDirection();
 	}
 
 	@Override
@@ -170,8 +160,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public double getRadius(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return worm.getRadius();
 	}
 
 	@Override
@@ -194,8 +183,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public Collection<Worm> getWorms(World world) {
-		// TODO Auto-generated method stub
-		return null;
+		return world.getAllWorms();
 	}
 
 	@Override
@@ -212,8 +200,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public double getX(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return worm.getCoordinateX();
 	}
 
 	@Override
@@ -230,8 +217,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public double getY(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return worm.getCoordinateY();
 	}
 
 	@Override

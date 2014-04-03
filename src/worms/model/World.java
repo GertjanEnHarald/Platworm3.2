@@ -52,6 +52,23 @@ public class World {
 	}
 	
 	
+	public List<GameObject> getGameObjects(){
+		return this.gameObjects;
+	}
+	
+	
+	public Collection<Worm> getAllWorms(){
+		List<Worm> worms = new ArrayList<Worm>();
+		List<GameObject> objects = getGameObjects();
+		for(int counter = 0; counter < (objects.size()); counter = counter +1){
+			if (objects.get(counter).getClass().equals(Worm.class));
+				worms.add((Worm) objects.get(counter));
+		}
+		return worms;
+			
+	}
+	
+	
 	/**
 	 * Returns the upper bound for the dimensions of a world.
 	 */
@@ -149,7 +166,9 @@ public class World {
 	 * 			|result == this.passableMap[row][column]
 	 */
 	public boolean isPassablePixel(int row, int column){
-		return this.passableMap[row][column];
+		if (row < this.getDimensionInPixels(false) && row >= 0 && column < this.getDimensionInPixels(true) && column >= 0) 
+			return this.passableMap[row][column];
+	return false;
 	}
 	
 	/**
@@ -187,14 +206,6 @@ public class World {
 	public boolean isPassableLocation(double x, double y){
 		double pixelHeight = (getHeight()/getDimensionInPixels(false));
 		double pixelWidth = (getWidth()/getDimensionInPixels(true));
-		if ((getDimensionInPixels(false)-1)<((getDimensionInPixels(false)-1-(int)(y/pixelHeight)))
-				||
-				(getDimensionInPixels(false)-1-(int)(y/pixelHeight)) < 0
-				||
-				(int)(x/pixelWidth) > (getDimensionInPixels(true) -1) 
-				||
-				(int)(x/pixelWidth) < 0);
-			return false;
 		return isPassablePixel((getDimensionInPixels(false)-1-(int)(y/pixelHeight)),(int)(x/pixelWidth));
 	}
 	
