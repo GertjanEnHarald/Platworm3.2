@@ -187,7 +187,15 @@ public class World {
 	public boolean isPassableLocation(double x, double y){
 		double pixelHeight = (getHeight()/getDimensionInPixels(false));
 		double pixelWidth = (getWidth()/getDimensionInPixels(true));
-		return isPassablePixel(getDimensionInPixels(false)-1-(int)(y/pixelHeight),(int)(x/pixelWidth));
+		if ((getDimensionInPixels(false)-1)<((getDimensionInPixels(false)-1-(int)(y/pixelHeight)))
+				||
+				(getDimensionInPixels(false)-1-(int)(y/pixelHeight)) < 0
+				||
+				(int)(x/pixelWidth) > (getDimensionInPixels(true) -1) 
+				||
+				(int)(x/pixelWidth) < 0);
+			return false;
+		return isPassablePixel((getDimensionInPixels(false)-1-(int)(y/pixelHeight)),(int)(x/pixelWidth));
 	}
 	
 	
@@ -212,7 +220,7 @@ public class World {
 	 * @return
 	 */
 	public boolean isPassableArea(double x, double y, double radius){
-		double step = Math.min(getHeight()/getDimensionInPixels(false), getWidth()/getDimensionInPixels(true))/2.0;
+		double step = getStep();
 		for(double distance=step; distance<=radius;distance = distance +step){
 			for(double angle=0; angle<=2*Math.PI; angle= angle + step/distance){
 				if (!(isPassableLocation(x+Math.sin(angle)*distance,y+Math.cos(angle)*distance))){
@@ -221,6 +229,11 @@ public class World {
 			}
 			}
 		return true;
+	}
+
+	private double getStep() {
+		double step = Math.min(getHeight()/getDimensionInPixels(false), getWidth()/getDimensionInPixels(true))/20.0;
+		return step;
 	}
 	
 	
@@ -243,20 +256,23 @@ public class World {
 	
 	
 	public double[] getRandomAdjacentLocation(double radius){
-		double X = (getRandom().nextDouble())*getWidth();
+		double X = getWidth()/2.0;//(getRandom().nextDouble())*getWidth();
 		double Y = 0;
 		double angle = Math.tan(getHeight()*0.5/(getWidth()*0.5-X));
-		double step = Math.min(getHeight()/getDimensionInPixels(false), getWidth()/getDimensionInPixels(true))/2.0;
+		if (Double.isNaN(angle));
+			angle = Math.PI/2.0;
+		double step = getStep();
 		double stepX = Math.cos(angle)*step;
 		double stepY = Math.sin(angle)*step;
-		while (!(Util.fuzzyEquals(Y, getHeight()/2.0,step*16.0))){
+		while (!(Util.fuzzyEquals(Y, getHeight()/2.0,step*20.0))){
 			X = X + stepX;
 			Y = Y + stepY;
+			System.out.println(Y);
 			if (isAdjacent(X, Y, radius))
 				return new double[] {X,Y};
 				
 		}
-		return new double[] {Double.NaN,Double.NaN};
+		throw new ModelException("Did not find location");
 	}
 	
 	
