@@ -2,6 +2,8 @@ package worms.model;
 
 import static org.junit.Assert.*;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 
 import org.junit.Test;
@@ -9,7 +11,8 @@ import org.junit.Test;
 public class WorldTest {
 
 	@Test
-	public void test() {
+	public void test
+	() {
 		boolean[][] map =  {   
 				{true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true},
 				{true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true},
@@ -54,8 +57,18 @@ public class WorldTest {
 		assertFalse(world.isPassableArea(10, 3.05, 1.5));
 		assertTrue(world.isAdjacent(10.0, 4.05, 2));
 		assertFalse(world.isAdjacent(10.0, 3.15, 1));
-		double[] lst = {10.0,3.0};
-		assertArrayEquals(lst, world.getRandomAdjacentLocation(1.0), 0.1);
+		assertEquals(3.0,world.getRandomAdjacentLocation(1.0)[1],0.1);
+		world.addWorm();
+		world.addWorm();
+		world.addWorm();
+		System.out.println(world.getAllWorms());
+		List<Worm> worms = (List<Worm>) world.getAllWorms();
+		System.out.println(worms.get(0).getCoordinateY());
+		System.out.println(worms.get(0).getCoordinateX());
+		assertEquals(3.0,worms.get(0).getCoordinateY(),0.1);
+		assertEquals(3.0,worms.get(1).getCoordinateY(),0.1);
+		assertEquals(3.0,worms.get(2).getCoordinateY(),0.1);
+
 		
 	}
 

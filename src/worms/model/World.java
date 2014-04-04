@@ -166,10 +166,10 @@ public class World {
 	 * @return	
 	 * 			|result == this.passableMap[row][column]
 	 */
-	public boolean isPassablePixel(int row, int column){
+	public boolean isPassablePixel(int row, int column) throws ModelException{
 		if (row < this.getDimensionInPixels(false) && row >= 0 && column < this.getDimensionInPixels(true) && column >= 0) 
 			return this.passableMap[row][column];
-		return false;
+		throw new ModelException("Tested passable pixel outside of range!");
 	}
 	
 	
@@ -237,6 +237,8 @@ public class World {
 	 */
 	public boolean isPassableArea(double x, double y, double radius){
 		double step = getStep();
+		if ((x-radius) < 0 || (x+radius) > getWidth() || (y-radius) < 0 || (y + radius) > getHeight())
+			return false;
 		for(double distance=step; distance<=radius;distance = distance +step){
 			for(double angle=0; angle<=2*Math.PI; angle= angle + step/distance){
 				if (!(isPassableLocation(x+Math.sin(angle)*distance,y+Math.cos(angle)*distance))){
@@ -273,7 +275,7 @@ public class World {
 	
 	
 	public double[] getRandomAdjacentLocation(double radius){
-		double X = getWidth()/2.0;//(getRandom().nextDouble())*getWidth();
+		double X = (getRandom().nextDouble())*(getWidth()-radius*2.0)+radius;
 		double Y = 0;
 		double angle = Math.tan(getHeight()*0.5/(getWidth()*0.5-X));
 		if (Double.isNaN(angle));
@@ -281,10 +283,9 @@ public class World {
 		double step = getStep();
 		double stepX = Math.cos(angle)*step;
 		double stepY = Math.sin(angle)*step;
-		while (!(Util.fuzzyEquals(Y, getHeight()/2.0,step*20.0))){
+		while (!(Util.fuzzyEquals(Y, getHeight()/2.0,step*2.0))){
 			X = X + stepX;
 			Y = Y + stepY;
-			System.out.println(Y);
 			if (isAdjacent(X, Y, radius))
 				return new double[] {X,Y};
 				
