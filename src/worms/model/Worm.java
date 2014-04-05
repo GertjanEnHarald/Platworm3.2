@@ -85,12 +85,8 @@ public class Worm extends MovableObject{
 		this.setName(name);
 	}	
 	
-	/**
-	 * Returns the projectile of this worm.
-	 */
-	public Projectile getProjectile(){
-		return this.projectile;
-	}
+	
+	
 	
 	/**
 	 * Returns the density of this worm.
@@ -535,12 +531,51 @@ public class Worm extends MovableObject{
 	 * 			| result == ((this.getActionPoints() > 0) &&
 	 * 			|			 (this.getDirection() > Math.PI && this.getDirection() < Math.PI*2))
 	 */
+	@Override
 	public boolean canJump() {
 		if (this.getActionPoints() == 0)
 			return false;
 		if (this.getDirection() > Math.PI && this.getDirection() < Math.PI*2)
 			return false;
+		for(double time = 0; time <= this.getJumpTime(); time = time + this.getJumpTime()/1000.0){
+			double[] position = this.getJumpStep(time);
+			if (! (this.getWorld()).isPassableArea(position[0], position[1], this.getRadius()))
+				return false;
+		}
 		return true;
 	}
 	
+	
+	
+
+	/**
+	 * Returns the projectile of this worm.
+	 */
+	public Projectile getProjectile(){
+		return this.projectile;
+	}
+	
+	
+	private void setProjectile(Projectile projectile) {
+		// TODO
+	}
+	
+	
+	public void addProjectile(Projectile projectile) throws ModelException {
+		if (! this.canHaveAsProjectile(projectile))
+			throw new ModelException("Cannot have this projectile!");
+		this.setProjectile(projectile);
+	}
+	
+	
+	public boolean canHaveAsProjectile(Projectile projectile) {
+		// TODO
+		return false;
+	}
+	
+	
+	public boolean hasProperProjectile() {
+		// TODO
+		return false;
+	}
 }

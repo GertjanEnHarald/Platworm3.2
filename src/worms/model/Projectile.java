@@ -9,6 +9,7 @@ public abstract class Projectile extends MovableObject {
 	private final int lostHitPoints;
 	private final int costActionPoints;
 	
+	
 	//TODO Coordinates an direction determined by coordinates and direction of worm. 
 	public Projectile(double coordinateX, double coordinateY, boolean isActive,	double radius, World world,
 			double direction, double massOfProjectile, int lostHitPoints, int costActionPoints) 
@@ -115,5 +116,6 @@ public abstract class Projectile extends MovableObject {
 		// TODO
 		return true;
 	}
+	
 	
 }
