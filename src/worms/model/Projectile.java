@@ -2,7 +2,7 @@ package worms.model;
 
 import be.kuleuven.cs.som.annotate.*;
 
-public abstract class Projectile extends MoveableObject {
+public abstract class Projectile extends MovableObject {
 	
 	private static final double density = 7800;		// In kg/m³
 	private final double massOfProjectile;			// In gram
@@ -18,8 +18,6 @@ public abstract class Projectile extends MoveableObject {
 		this.lostHitPoints = lostHitPoints;
 		this.costActionPoints = costActionPoints;
 	}
-	
-	public abstract double getForce();
 	
 	/**
 	 * Returns the density of the projectile in kg/m³.
@@ -92,12 +90,14 @@ public abstract class Projectile extends MoveableObject {
 	public int getCostActionPoints() {
 		return this.costActionPoints;
 	}
-	
+
 	@Override
 	public void jump() {
 		// TODO Auto-generated method stub
 	}
 
+	public abstract double getForce();
+	
 	/**
 	 * Returns the initial velocity of the potential jump of this projectile.
 	 * 
@@ -110,5 +110,10 @@ public abstract class Projectile extends MoveableObject {
 		return this.getForce()*0.5/this.getMass();
 	}
 	
+	@Override
+	public boolean canJump() {
+		// TODO
+		return true;
+	}
 	
 }

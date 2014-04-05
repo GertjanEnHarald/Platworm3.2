@@ -3,18 +3,18 @@ package worms.model;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
 
-public abstract class MoveableObject extends GameObject {
+public abstract class MovableObject extends GameObject {
 
 	private double direction;
 	
-	public MoveableObject(double coordinateX, double coordinateY, boolean isActive, 
+	public MovableObject(double coordinateX, double coordinateY, boolean isActive, 
 			double radius, World world, double direction) {
 		super(coordinateX, coordinateY, isActive, radius,world);
 	}
 	
 	
 	/**
-	 * Returns the current direction of this moveable object.
+	 * Returns the current direction of this movable object.
 	 */
 	@Basic
 	@Raw
@@ -24,15 +24,15 @@ public abstract class MoveableObject extends GameObject {
 	
 	
 	/**
-	 * Set the direction of this moveable object to the given direction.
+	 * Set the direction of this movable object to the given direction.
 	 * 
 	 * 
 	 * @param 	direction
-	 * 		  	The new direction of this moveable object.
+	 * 		  	The new direction of this movable object.
 	 * 
 	 * @pre		The given direction must be a valid direction.
 	 * 			| isValidDirection(direction)
-	 * @post	The new direction of this moveable object is equal to the given direction.
+	 * @post	The new direction of this movable object is equal to the given direction.
 	 * 			| new.getDirection() == changeAngleModulo2PI(direction)
 	 */
 	@Raw
@@ -66,7 +66,7 @@ public abstract class MoveableObject extends GameObject {
 	
 	/**
 	 * Check whether the given direction is a valid direction for
-	 * a moveable object.
+	 * a movable object.
 	 * 
 	 * 
 	 * @param  	direction
@@ -86,7 +86,7 @@ public abstract class MoveableObject extends GameObject {
 	public abstract void jump();
 	
 	/**
-	 * Returns the time this moveable object is in the air during the potential jump of this moveable object.
+	 * Returns the time this movable object is in the air during the potential jump of this movable object.
 	 * 
 	 * 
 	 * @return 	Returns the time in the air.
@@ -99,7 +99,7 @@ public abstract class MoveableObject extends GameObject {
 	public abstract double getJumpVelocity();
 	
 	/**
-	 * Returns the horizontal distance of the potential jump of this moveable object.
+	 * Returns the horizontal distance of the potential jump of this movable object.
 	 * 
 	 * 
 	 * @return	The horizontal distance.
@@ -110,9 +110,30 @@ public abstract class MoveableObject extends GameObject {
 		return Math.pow(this.getJumpVelocity(), 2)*Math.sin(2*this.getDirection())/getGravity();
 	}
 	
+	/**
+	 * Calculates the position of this movable object at a given time in a jump.
+	 * 
+	 * 
+	 * @param 	time
+	 * 			The point in time at which the position should be calculated.
+	 * 
+	 * @return	Returns the x and y coordinates of the position at which this worm will be at the given time.
+	 * 			| initialJumpVelocityX = this.getJumpVelocity()*Math.cos(this.getDirection())
+	 * 			| initialJumpVelocityY = this.getJumpVelocity()*Math.sin(this.getDirection())
+	 * 			| result == {this.getCoordinateX()+initialJumpVelocityX*time, 
+	 * 			| 			 this.getCoordinateY()+initialJumpVelocityY*time-0.5*getGravity()*Math.pow(time, 2)}
+	 * @throws	ModelException
+	 * 			This worm cannot jump.
+	 * 			| (!canJump())
+	 * @throws	ModelException
+	 * 			The time for calculation is larger than the time in the air.
+	 * 			| (time > this.getJumpTime())
+	 */
 	public double[] getJumpStep(double time) throws ModelException {
+		if (! this.canJump())
+			throw new ModelException("Cannot jump!");
 		if(time > this.getJumpTime())
-			throw new ModelException("Cannot calculate position at time, worm has already landed!");
+			throw new ModelException("Cannot calculate position at time, movable object has already landed!");
 		double initialJumpVelocityX = this.getJumpVelocity()*Math.cos(this.getDirection());
 		double initialJumpVelocityY= this.getJumpVelocity()*Math.sin(this.getDirection());
 		double[] result = 
@@ -120,5 +141,7 @@ public abstract class MoveableObject extends GameObject {
 				this.getCoordinateY()+initialJumpVelocityY*time-0.5*getGravity()*Math.pow(time, 2)};
 		return result;
 	}
+	
+	public abstract boolean canJump();
 	
 }

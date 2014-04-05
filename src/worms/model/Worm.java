@@ -32,7 +32,7 @@ import be.kuleuven.cs.som.annotate.*;
 
 
 
-public class Worm extends MoveableObject{
+public class Worm extends MovableObject{
 	
 	/**
 	 * Variable initialization.
@@ -76,7 +76,8 @@ public class Worm extends MoveableObject{
 	 * 
 	 */
 	@Raw
-	public Worm(double coordinateX, double coordinateY, double direction, double radius, String name, boolean isActive,World world) 
+	public Worm(double coordinateX, double coordinateY, double direction, double radius, 
+			String name, boolean isActive, World world) 
 			throws ModelException {
 		super(coordinateX, coordinateY, isActive, radius, world, direction);
 		this.setActionPoints(this.getMaximumActionPoints());
@@ -522,35 +523,6 @@ public class Worm extends MoveableObject{
 	public double getJumpVelocity(){
 		double F = 5*this.getActionPoints()+this.getMass()*getGravity();
 		return F*0.5/this.getMass();
-	}
-	
-	
-	/**
-	 * Calculates the position of this worm at a given time in a jump.
-	 * 
-	 * 
-	 * @param 	time
-	 * 			The point in time at which the position should be calculated.
-	 * 
-	 * @return	Returns the x and y coordinates of the position at which this worm will be at the given time.
-	 * 			| initialJumpVelocityX = this.getJumpVelocity()*Math.cos(this.getDirection())
-	 * 			| initialJumpVelocityY = this.getJumpVelocity()*Math.sin(this.getDirection())
-	 * 			| result == {this.getCoordinateX()+initialJumpVelocityX*time, 
-	 * 			| 			 this.getCoordinateY()+initialJumpVelocityY*time-0.5*getGravity()*Math.pow(time, 2)}
-	 * @throws	ModelException
-	 * 			This worm cannot jump.
-	 * 			| (!canJump())
-	 * @throws	ModelException
-	 * 			The time for calculation is larger than the time in the air.
-	 * 			| (time > this.getJumpTime())
-	 */
-	@Override
-	public double[] getJumpStep(double time) throws ModelException{
-		// First check if can jump, then jump.
-		// Is this sequence somehow available?
-		if (! this.canJump())
-			throw new ModelException("Cannot jump!");
-		super(time);
 	}
 	
 	
