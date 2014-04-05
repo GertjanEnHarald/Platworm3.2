@@ -60,10 +60,20 @@ public class World {
 		List<Worm> worms = new ArrayList<Worm>();
 		List<GameObject> objects = getGameObjects();
 		for(int counter = 0; counter < (objects.size()); counter = counter +1){
-			if (objects.get(counter).getClass().equals(Worm.class));
+			if (objects.get(counter) instanceof Worm)
 				worms.add((Worm) objects.get(counter));
 		}
 		return worms;
+	}
+		
+		public Collection<Food> getAllFood(){
+			List<Food> food = new ArrayList<Food>();
+			List<GameObject> objects = getGameObjects();
+			for(int counter = 0; counter < (objects.size()); counter = counter +1){
+				if (objects.get(counter) instanceof Food)
+					food.add((Food) objects.get(counter));
+			}
+			return food;
 			
 	}
 	
@@ -222,6 +232,12 @@ public class World {
 		gameObjects.add(worm);
 	}
 	
+	public void addFood(){
+		double[] position = getRandomAdjacentLocation(0.20);
+		Food food = new  Food(position[0],position[1],true,this);
+		gameObjects.add(food);
+	}
+	
 	
 	/**
 	 * Checks if a circular area with a given radius with the centre
@@ -250,7 +266,7 @@ public class World {
 	}
 
 	private double getStep() {
-		double step = Math.min(getHeight()/getDimensionInPixels(false), getWidth()/getDimensionInPixels(true))/20.0;
+		double step = Math.min(getHeight()/getDimensionInPixels(false), getWidth()/getDimensionInPixels(true))/2.0;
 		return step;
 	}
 	
@@ -292,6 +308,7 @@ public class World {
 		}
 		throw new ModelException("Did not find location");
 	}
+
 	
 	
 }

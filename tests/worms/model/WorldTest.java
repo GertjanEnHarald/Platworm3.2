@@ -40,7 +40,7 @@ public class WorldTest {
 		
 		World world = new World(20.0,20.0,map,rand);
 		assertTrue(world.isPassablePixel(12, 6));
-		assertFalse(world.isPassablePixel(18, 0));
+		assertFalse(world.isPassablePixel(18, 0));			
 		assertEquals(20, world.getDimensionInPixels(true));
 		assertEquals(20, world.getDimensionInPixels(false));
 		assertTrue(world.isPassableLocation(14.5, 12.3));
@@ -58,17 +58,26 @@ public class WorldTest {
 		assertTrue(world.isAdjacent(10.0, 4.05, 2));
 		assertFalse(world.isAdjacent(10.0, 3.15, 1));
 		assertEquals(3.0,world.getRandomAdjacentLocation(1.0)[1],0.1);
+		assertTrue(world.isPassableArea(10, 2.21, 0.2));
+		assertEquals(2.45,world.getRandomAdjacentLocation(0.45)[1],0.1);
+		
+		
+		
 		world.addWorm();
 		world.addWorm();
-		world.addWorm();
+		world.addFood();
+		world.addFood();
 		System.out.println(world.getAllWorms());
 		List<Worm> worms = (List<Worm>) world.getAllWorms();
-		System.out.println(worms.get(0).getCoordinateY());
-		System.out.println(worms.get(0).getCoordinateX());
 		assertEquals(3.0,worms.get(0).getCoordinateY(),0.1);
 		assertEquals(3.0,worms.get(1).getCoordinateY(),0.1);
-		assertEquals(3.0,worms.get(2).getCoordinateY(),0.1);
-
+		
+		
+		
+		List<Food> food = (List<Food>) world.getAllFood();
+		System.out.println(world.getAllFood());
+		assertEquals(2.2,food.get(0).getCoordinateY(),0.1);
+		assertEquals(2.2,food.get(1).getCoordinateY(),0.1);
 		
 	}
 

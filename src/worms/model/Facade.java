@@ -13,8 +13,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public void addNewFood(World world) {
-		// TODO Auto-generated method stub
-		
+		world.addFood();
 	}
 
 	@Override
@@ -40,14 +39,12 @@ public class Facade implements IFacade {
 
 	@Override
 	public Food createFood(World world, double x, double y) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Food(x,y,true,world);
 	}
 
 	@Override
 	public World createWorld(double width, double height,
 			boolean[][] passableMap, Random random) {
-		
 		 return new World(width,height,passableMap,random);
 	}
 
@@ -82,8 +79,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public Collection<Food> getFood(World world) {
-		// TODO Auto-generated method stub
-		return null;
+		return world.getAllFood();
 	}
 
 	@Override
@@ -148,8 +144,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public double getRadius(Food food) {
-		// TODO Auto-generated method stub
-		return 0;
+		return food.getRadius();
 	}
 
 	@Override
@@ -188,8 +183,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public double getX(Food food) {
-		// TODO Auto-generated method stub
-		return 0;
+		return food.getCoordinateX();
 	}
 
 	@Override
@@ -205,8 +199,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public double getY(Food food) {
-		// TODO Auto-generated method stub
-		return 0;
+		return food.getCoordinateY();
 	}
 
 	@Override
@@ -222,8 +215,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean isActive(Food food) {
-		// TODO Auto-generated method stub
-		return false;
+		return food.getStatus();
 	}
 
 	@Override
