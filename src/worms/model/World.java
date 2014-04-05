@@ -226,16 +226,24 @@ public class World {
 	
 	
 	public void addWorm(){
-		double radius = 1.0;
+		double radius = 0.3;
+		try {
 		double[] position = getRandomAdjacentLocation(radius);
 		Worm worm = new Worm(position[0],position[1],random.nextDouble()*Math.PI*2.0,radius,"Bob",true,this);
 		gameObjects.add(worm);
+		}
+		catch(ModelException modelException){
+		}	
 	}
 	
 	public void addFood(){
+		try {
 		double[] position = getRandomAdjacentLocation(0.20);
 		Food food = new  Food(position[0],position[1],true,this);
 		gameObjects.add(food);
+		}
+		catch(ModelException modelException){
+		}
 	}
 	
 	
@@ -286,6 +294,8 @@ public class World {
 	 * 			| result  == isPassableArea(x,y,1.1*radius)
 	 */
 	public boolean isAdjacent(double x, double y,double radius){
+		if ((x-radius*1.1) < 0 || (x+radius*1.1) > getWidth() || (y-radius*1.1) < 0 || (y + radius*1.1) > getHeight())
+			return false;
 		return !isPassableArea(x,y,1.1*radius) && isPassableArea(x,y,radius);
 	}
 	
