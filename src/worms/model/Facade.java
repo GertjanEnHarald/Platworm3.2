@@ -73,8 +73,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public Worm getCurrentWorm(World world) {
-		// TODO Auto-generated method stub
-		return null;
+		return world.getActiveWorm();
 	}
 
 	@Override
@@ -113,8 +112,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public double getMass(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return worm.getMass();
 	}
 
 	@Override
@@ -149,8 +147,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public double getRadius(Projectile projectile) {
-		// TODO Auto-generated method stub
-		return 0;
+		return projectile.getRadius();
 	}
 
 	@Override
@@ -188,8 +185,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public double getX(Projectile projectile) {
-		// TODO Auto-generated method stub
-		return 0;
+		return projectile.getCoordinateX();
 	}
 
 	@Override
@@ -204,8 +200,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public double getY(Projectile projectile) {
-		// TODO Auto-generated method stub
-		return 0;
+		return projectile.getCoordinateY();
 	}
 
 	@Override
@@ -231,8 +226,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean isAlive(Worm worm) {
-		// TODO Auto-generated method stub
-		return false;
+		return worm.getStatus();
 	}
 
 	@Override
@@ -291,20 +285,17 @@ public class Facade implements IFacade {
 
 	@Override
 	public void startGame(World world) {
-		// TODO Auto-generated method stub
-		
+		world.startGame();
 	}
 
 	@Override
 	public void startNextTurn(World world) {
-		// TODO Auto-generated method stub
-		
+		world.nextTurn();
 	}
 
 	@Override
 	public void turn(Worm worm, double angle) {
-		// TODO Auto-generated method stub
-		
+		worm.turn(angle);
 	}
 	
 
