@@ -66,16 +66,17 @@ public class World {
 		return worms;
 	}
 		
-		public Collection<Food> getAllFood(){
-			List<Food> food = new ArrayList<Food>();
-			List<GameObject> objects = getGameObjects();
-			for(int counter = 0; counter < (objects.size()); counter = counter +1){
-				if (objects.get(counter) instanceof Food)
-					food.add((Food) objects.get(counter));
-			}
-			return food;
+	public Collection<Food> getAllFood(){
+		List<Food> food = new ArrayList<Food>();
+		List<GameObject> objects = getGameObjects();
+		for(int counter = 0; counter < (objects.size()); counter = counter +1){
+			if (objects.get(counter) instanceof Food)
+				food.add((Food) objects.get(counter));
+		}
+		return food;
 			
 	}
+	
 	
 	
 	/**
@@ -225,7 +226,9 @@ public class World {
 	}
 	
 	
-	public void addWorm(){
+	public void addWorm() throws ModelException{
+		if (getStatus() == true)
+			throw new ModelException("Cannot place worms once game has started!");
 		double radius = 0.3;
 		try {
 		double[] position = getRandomAdjacentLocation(radius);
@@ -237,6 +240,8 @@ public class World {
 	}
 	
 	public void addFood(){
+		if (getStatus() == true)
+			throw new ModelException("Cannot place worms once game has started!");
 		try {
 		double[] position = getRandomAdjacentLocation(0.20);
 		Food food = new  Food(position[0],position[1],true,this);
