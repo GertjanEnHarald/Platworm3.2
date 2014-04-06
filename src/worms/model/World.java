@@ -82,11 +82,39 @@ public class World {
 			
 	}
 	
-	public void removeObjectFromWorld(GameObject gameObject) throws ModelException{
-		getGameObjects().remove(gameObject);
-		gameObject.setWorld(null);
-		gameObject.setStatus(false);
-		
+	public int getNbOfGameObjects() {
+		return this.getGameObjects().size();
+	}
+	
+	public GameObject getGameObjectAt(int i) throws ModelException {
+		if (! (i < this.getNbOfGameObjects()))
+			throw new ModelException("Index out of bound!");
+		return this.getGameObjects().get(i);
+		// TODO clone this given game object
+	}
+	
+	public void addAsGameObject(GameObject gameObject) throws ModelException {
+		if (! this.canHaveAsGameObject(gameObject))
+			throw new ModelException("Cannot assign this game object to this world!");
+		this.gameObjects.add(gameObject);
+	}
+	
+	public void removeAsGameObject(GameObject gameObject) throws ModelException{
+		gameObject.terminate();
+		this.gameObjects.remove(gameObject);
+		gameObject.setStatus(false);	
+	}
+	
+	public boolean canHaveAsGameObject(GameObject gameObject) {
+		return (gameObject.getWorld() == null);
+	}
+	
+	public boolean hasProperGameObjects() {
+		for(int i=0; i < this.getNbOfGameObjects(); i++) {
+			if (! this.canHaveAsGameObject(this.getGameObjectAt(i)))
+				return false;
+		}
+		return true;
 	}
 	
 	/**
@@ -270,7 +298,7 @@ public class World {
 		try {
 		double[] position = getRandomAdjacentLocation(radius);
 		Worm worm = new Worm(position[0],position[1],random.nextDouble()*Math.PI*2.0,radius,"Bob",true,this);
-		gameObjects.add(worm);
+		this.addAsGameObject(worm);
 		}
 		catch(ModelException modelException){
 		}	
@@ -282,7 +310,7 @@ public class World {
 		try {
 		double[] position = getRandomAdjacentLocation(0.20);
 		Food food = new  Food(position[0],position[1],true,this);
-		gameObjects.add(food);
+		this.addAsGameObject(food);
 		}
 		catch(ModelException modelException){
 		}

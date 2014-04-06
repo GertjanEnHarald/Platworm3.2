@@ -10,14 +10,14 @@ public abstract class GameObject {
 	private double coordinateY;
 	private double radius;
 	private boolean isActive;
-	private final World world;
+	private World world;
 	private static final double g=9.80665;
 	
 	public GameObject(double coordinateX, double  coordinateY, boolean isActive, double radius, World world) {
 		this.setCoordinateX(coordinateX);
 		this.setCoordinateY(coordinateY);
 		this.setRadius(radius);
-		this.world = world;
+		this.setWorld(world);
 	}
 	
 	/**
@@ -38,6 +38,20 @@ public abstract class GameObject {
 	@Immutable
 	public World getWorld(){
 		return this.world;
+	}
+	
+	public void setWorld(@Raw World world) {
+		if (! this.canHaveAsWorld(world))
+			throw new ModelException("Illegal world assignment!");
+		this.world = world;
+	}
+	
+	public boolean canHaveAsWorld(@Raw World world) {
+		return world.getGameObjects().contains(this);
+	}
+	
+	public void terminate() {
+		this.setWorld(null);
 	}
 	
 	/**
