@@ -40,17 +40,16 @@ public abstract class GameObject {
 		return this.world;
 	}
 	
-	public void setWorld(@Raw World world) {
-		if (! this.canHaveAsWorld(world))
-			throw new ModelException("Illegal world assignment!");
+	public void setWorld(World world) {
 		this.world = world;
 	}
 	
-	public boolean canHaveAsWorld(@Raw World world) {
-		return world == null || world.getGameObjects().contains(this);
+	public boolean hasProperWorld() {
+		return (this.getWorld() == null) || (this.getWorld().getGameObjects().contains(this));
 	}
 	
 	public void terminate() {
+		this.getWorld().removeAsGameObject(this);
 		this.setWorld(null);
 	}
 	

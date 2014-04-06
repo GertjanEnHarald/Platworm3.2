@@ -106,7 +106,7 @@ public class World {
 	}
 	
 	public boolean canHaveAsGameObject(GameObject gameObject) {
-		return (gameObject.getWorld() == null);
+		return (gameObject.getWorld() == this);
 	}
 	
 	public boolean hasProperGameObjects() {
@@ -297,9 +297,8 @@ public class World {
 		double radius = 0.3;
 		try {
 		double[] position = getRandomAdjacentLocation(radius);
-		Worm worm = new Worm(position[0],position[1],random.nextDouble()*Math.PI*2.0,radius,"Bob",true,null);
+		Worm worm = new Worm(position[0],position[1],random.nextDouble()*Math.PI*2.0,radius,"Bob",true,this);
 		this.addAsGameObject(worm);
-		worm.setWorld(this);
 		}
 		catch(ModelException modelException){
 		}	
@@ -310,9 +309,8 @@ public class World {
 			throw new ModelException("Cannot place worms once game has started!");
 		try {
 		double[] position = getRandomAdjacentLocation(0.20);
-		Food food = new  Food(position[0],position[1],true,null);
+		Food food = new  Food(position[0],position[1],true,this);
 		this.addAsGameObject(food);
-		food.setWorld(this);
 		}
 		catch(ModelException modelException){
 		}
