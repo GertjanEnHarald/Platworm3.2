@@ -297,8 +297,9 @@ public class World {
 		double radius = 0.3;
 		try {
 		double[] position = getRandomAdjacentLocation(radius);
-		Worm worm = new Worm(position[0],position[1],random.nextDouble()*Math.PI*2.0,radius,"Bob",true,this);
+		Worm worm = new Worm(position[0],position[1],random.nextDouble()*Math.PI*2.0,radius,"Bob",true,null);
 		this.addAsGameObject(worm);
+		worm.setWorld(this);
 		}
 		catch(ModelException modelException){
 		}	
@@ -309,8 +310,9 @@ public class World {
 			throw new ModelException("Cannot place worms once game has started!");
 		try {
 		double[] position = getRandomAdjacentLocation(0.20);
-		Food food = new  Food(position[0],position[1],true,this);
+		Food food = new  Food(position[0],position[1],true,null);
 		this.addAsGameObject(food);
+		food.setWorld(this);
 		}
 		catch(ModelException modelException){
 		}

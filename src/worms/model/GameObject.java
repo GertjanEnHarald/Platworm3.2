@@ -47,7 +47,7 @@ public abstract class GameObject {
 	}
 	
 	public boolean canHaveAsWorld(@Raw World world) {
-		return world.getGameObjects().contains(this);
+		return world == null || world.getGameObjects().contains(this);
 	}
 	
 	public void terminate() {
