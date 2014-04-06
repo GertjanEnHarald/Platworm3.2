@@ -33,6 +33,8 @@ public class World {
 	private boolean status;
 	private Random random;
 	private final List<GameObject> gameObjects = new ArrayList<GameObject>();
+	private final List<Worm> wormsWhoHaveHadTheirTurn = new ArrayList<Worm>();
+	private Worm activeWorm;
 	
 	
 	public World(double width, double height,boolean[][] passableMap, Random random) 
@@ -55,8 +57,11 @@ public class World {
 		return this.gameObjects;
 	}
 	
+	public Worm getActiveWorm(){
+		return this.activeWorm;
+	}
 	
-	public Collection<Worm> getAllWorms(){
+	public List<Worm> getAllWorms(){
 		List<Worm> worms = new ArrayList<Worm>();
 		List<GameObject> objects = getGameObjects();
 		for(int counter = 0; counter < (objects.size()); counter = counter +1){
@@ -66,7 +71,7 @@ public class World {
 		return worms;
 	}
 		
-	public Collection<Food> getAllFood(){
+	public List<Food> getAllFood(){
 		List<Food> food = new ArrayList<Food>();
 		List<GameObject> objects = getGameObjects();
 		for(int counter = 0; counter < (objects.size()); counter = counter +1){
@@ -77,7 +82,12 @@ public class World {
 			
 	}
 	
-	
+	public void removeObjectFromWorld(GameObject gameObject) throws ModelException{
+		getGameObjects().remove(gameObject);
+		gameObject.setWorld(null);
+		gameObject.setStatus(false);
+		
+	}
 	
 	/**
 	 * Returns the upper bound for the dimensions of a world.
@@ -92,6 +102,33 @@ public class World {
 	public boolean getStatus(){
 		return this.status;
 	}
+	
+	private List<Worm> getAllWormsWhoHaveHadTheirTurn(){
+		return this.wormsWhoHaveHadTheirTurn;
+	}
+	
+	public void startGame(){
+		this.status = true;
+		this.nextTurn();
+	}
+	
+	public void setActiveWorm(Worm worm){
+		this.activeWorm = worm;
+	}
+	
+	public void nextTurn() {
+		
+		for(int counter  = 0;counter < getAllWorms().size(); counter = counter+1){
+			if (!getAllWormsWhoHaveHadTheirTurn().contains(getAllWorms().get(counter))){
+					setActiveWorm(getAllWorms().get(counter));
+					getAllWormsWhoHaveHadTheirTurn().add(getAllWorms().get(counter));
+					return;
+			}
+		}
+		getAllWormsWhoHaveHadTheirTurn().clear();
+		nextTurn();
+	}
+	
 	
 	/**
 	 * Returns the width of this world.
@@ -323,7 +360,7 @@ public class World {
 		}
 		throw new ModelException("Did not find location");
 	}
-
+	
 	
 	
 }
