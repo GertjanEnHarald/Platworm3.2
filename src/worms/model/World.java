@@ -306,7 +306,7 @@ public class World {
 		double angle = Math.tan(getHeight()*0.5/(getWidth()*0.5-X));
 		if (Double.isNaN(angle));
 			angle = Math.PI/2.0;
-		double step = getStep();
+		double step = Math.min(getStep(), radius*0.01);
 		double stepX = Math.cos(angle)*step;
 		double stepY = Math.sin(angle)*step;
 		while (!(Util.fuzzyEquals(Y, getHeight()/2.0,step*2.0))){

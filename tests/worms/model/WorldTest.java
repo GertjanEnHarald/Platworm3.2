@@ -11,8 +11,8 @@ import org.junit.Test;
 public class WorldTest {
 
 	@Test
-	public void test
-	() {
+	public void addFoodAddWormCompleteTest() {
+		
 		boolean[][] map =  {   
 				{true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true},
 				{true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true},
@@ -41,25 +41,16 @@ public class WorldTest {
 		World world = new World(20.0,20.0,map,rand);
 		assertTrue(world.isPassablePixel(12, 6));
 		assertFalse(world.isPassablePixel(18, 0));			
+		
 		assertEquals(20, world.getDimensionInPixels(true));
 		assertEquals(20, world.getDimensionInPixels(false));
+		
 		assertTrue(world.isPassableLocation(14.5, 12.3));
-		assertTrue(world.isPassableLocation(2, 19));
 		assertFalse(world.isPassableLocation(18.5, 1.99999));
 		assertTrue(world.isPassableLocation(18.5, 2.0001));
+		
 		assertTrue(world.isPassableArea(10, 10, 0.5));
-		assertTrue(world.isPassableArea(10, 2.5, 0.4));
-		assertFalse(world.isPassableArea(10, 2.5,0.6));
 		assertFalse(world.isPassableArea(10, 3, 2));
-		assertFalse(world.isPassableArea(10, 2.05, 1));
-		assertTrue(world.isPassableArea(10, 3.95, 1));
-		assertTrue(world.isPassableArea(10, 3.05, 1));
-		assertFalse(world.isPassableArea(10, 3.05, 1.5));
-		assertTrue(world.isAdjacent(10.0, 4.05, 2));
-		assertFalse(world.isAdjacent(10.0, 3.15, 1));
-		assertEquals(3.0,world.getRandomAdjacentLocation(1.0)[1],0.1);
-		assertTrue(world.isPassableArea(10, 2.21, 0.2));
-		assertEquals(2.45,world.getRandomAdjacentLocation(0.45)[1],0.1);
 		
 		
 		
@@ -67,10 +58,11 @@ public class WorldTest {
 		world.addWorm();
 		world.addFood();
 		world.addFood();
+		
 		System.out.println(world.getAllWorms());
 		List<Worm> worms = (List<Worm>) world.getAllWorms();
-		assertEquals(3.0,worms.get(0).getCoordinateY(),0.1);
-		assertEquals(3.0,worms.get(1).getCoordinateY(),0.1);
+		assertEquals(2.3,worms.get(0).getCoordinateY(),0.1);
+		assertEquals(2.3,worms.get(1).getCoordinateY(),0.1);
 		
 		
 		
