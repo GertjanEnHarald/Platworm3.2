@@ -7,8 +7,8 @@ public class Bazooka extends Projectile {
 	private final int propulsionYield;
 
 	public Bazooka(double coordinateX, double coordinateY, boolean isActive,
-			double radius, World world, double direction,int propulsionYield) throws ModelException {
-		super(coordinateX, coordinateY, isActive, radius, world, direction,
+			World world, double direction,int propulsionYield) throws ModelException {
+		super(coordinateX, coordinateY, isActive, world, direction,
 				300, 80, 50);
 		if (! isValidPropulsionYield(propulsionYield))
 			throw new ModelException("Illegal propulsion yield!");

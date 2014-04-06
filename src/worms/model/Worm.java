@@ -548,6 +548,21 @@ public class Worm extends MovableObject{
 	
 	
 
+	private int currentWeaponNumber = 0;
+	
+	public int getCurrentWeaponNumber() {
+		return this.currentWeaponNumber;
+	}
+	
+	private void setCurrentWeaponNumber(int number) {
+		this.currentWeaponNumber = number;
+	}
+	
+	public static int getNumberOfProjectiles() {
+		return 2;
+	}
+	
+	
 	/**
 	 * Returns the projectile of this worm.
 	 */
@@ -556,26 +571,27 @@ public class Worm extends MovableObject{
 	}
 	
 	
-	private void setProjectile(Projectile projectile) {
-		// TODO
+	private void setProjectile() {
+		if (this.getCurrentWeaponNumber() == 0)
+			this.projectile = new Rifle(this.getCoordinateX() + this.getRadius()*Math.cos(this.getDirection()),
+					this.getCoordinateY() + this.getRadius()*Math.sin(this.getDirection()), 
+					true, this.getWorld(), this.getDirection());
+		if (this.getCurrentWeaponNumber() == 1)
+			this.projectile = new Bazooka(this.getCoordinateX() + this.getRadius()*Math.cos(this.getDirection()),
+					this.getCoordinateY() + this.getRadius()*Math.sin(this.getDirection()), 
+					true, this.getWorld(), this.getDirection(), this.getPropulsionYield());	
 	}
 	
 	
-	public void addProjectile(Projectile projectile) throws ModelException {
-		if (! this.canHaveAsProjectile(projectile))
-			throw new ModelException("Cannot have this projectile!");
-		this.setProjectile(projectile);
+	public int getPropulsionYield() {
+		// TODO
+		return 0;
 	}
 	
 	
-	public boolean canHaveAsProjectile(Projectile projectile) {
-		// TODO
-		return false;
-	}
-	
-	
-	public boolean hasProperProjectile() {
-		// TODO
-		return false;
+	public void selectWeapon() {
+		this.projectile.terminate();
+		this.setCurrentWeaponNumber((this.getCurrentWeaponNumber()+1) % getNumberOfProjectiles());
+		this.setProjectile();
 	}
 }

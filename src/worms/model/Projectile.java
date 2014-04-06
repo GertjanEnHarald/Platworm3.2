@@ -8,13 +8,14 @@ public abstract class Projectile extends MovableObject {
 	private final double massOfProjectile;			// In gram
 	private final int lostHitPoints;
 	private final int costActionPoints;
+	private boolean isTerminated;
 	
 	
 	//TODO Coordinates an direction determined by coordinates and direction of worm. 
-	public Projectile(double coordinateX, double coordinateY, boolean isActive,	double radius, World world,
+	public Projectile(double coordinateX, double coordinateY, boolean isActive,	World world,
 			double direction, double massOfProjectile, int lostHitPoints, int costActionPoints) 
 			throws ModelException {
-		super(coordinateX, coordinateY, isActive, radius, world, direction);
+		super(coordinateX, coordinateY, isActive, getRadius(massOfProjectile), world, direction);
 		this.massOfProjectile = massOfProjectile;
 		this.lostHitPoints = lostHitPoints;
 		this.costActionPoints = costActionPoints;
@@ -33,6 +34,14 @@ public abstract class Projectile extends MovableObject {
 		return density;
 	}
 	
+	public boolean isTerminated() {
+		return (! this.isTerminated);
+	}
+	
+	public void terminate() {
+		this.isTerminated = true;
+	}
+	
 	/**
 	 * Returns the radius of this projectile, derived by the mass and density of this projectile. 
 	 * 
@@ -41,11 +50,14 @@ public abstract class Projectile extends MovableObject {
 	 * 			| result == (this.getMass()*(3/4)*(1/getDensity())
 	 *			|			*(1/Math.PI))^(1/3)
 	 */
-	public double getRadius() {
-		return Math.pow(this.getMass()*(3/4)*(1/getDensity())
+	private static double getRadius(double mass) {
+		return Math.pow(mass*(3/4)*(1/getDensity())
 				*(1/Math.PI), 1/3);
 	}
 	
+	public double getRadius() {
+		return getRadius(this.getMass());
+	}
 	
 	@Override
 	public boolean isValidRadius(double radius) {
