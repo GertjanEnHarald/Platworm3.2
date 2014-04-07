@@ -98,7 +98,7 @@ public class Worm extends MovableObject{
 	public final double getDensity(){
 		return this.density;
 	}
-	
+
 	
 	
 	
@@ -474,8 +474,8 @@ public class Worm extends MovableObject{
 		int currentActionPoints = this.getActionPoints();
 		int usedActionPoints = (int) usedActionPointsMove(steps, theta);
 		
-		this.setCoordinateX(x + this.getRadius()*steps*Math.cos(theta));
-		this.setCoordinateY(y + this.getRadius()*steps*Math.sin(theta));
+		this.setCoordinateX(x + 0.5*this.getRadius()*steps*Math.cos(theta));
+		this.setCoordinateY(y + 0.5*this.getRadius()*steps*Math.sin(theta));
 		this.setActionPoints(currentActionPoints - usedActionPoints);
 	}
 	

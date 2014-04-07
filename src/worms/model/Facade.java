@@ -257,7 +257,6 @@ public class Facade implements IFacade {
 	@Override
 	public void move(Worm worm) {
 		worm.move(1);
-		worm.fall();
 	}
 
 	@Override
