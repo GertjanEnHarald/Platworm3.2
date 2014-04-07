@@ -195,6 +195,14 @@ public class Worm extends MovableObject{
 	
 	
 	/**
+	 * Aangezien AP nooit echt op 0, moet er een minum zijn waarvoor de beurt eindigt.
+	 * @return
+	 */
+	public int getMinimumActionPoints(){
+		return getMaximumActionPoints()/50;
+	}
+	
+	/**
 	 * Set the action points that this worm has.
 	 * 
 	 * 
@@ -214,11 +222,13 @@ public class Worm extends MovableObject{
 	 * 			| if (actionPoints > getMaximumActionPoints())
 	 * 			| 	new.getActionPoints() == this.getMaximumActionPoints()
 	 */
-	private void setActionPoints(int actionPoints){
-		if ((0 <= actionPoints) && (actionPoints <= this.getMaximumActionPoints()))
+	protected void setActionPoints(int actionPoints){
+		if ((getMinimumActionPoints() < actionPoints) && (actionPoints <= this.getMaximumActionPoints()))
 			this.actionPoints = actionPoints;
-		else if (actionPoints < 0)
+		else if (actionPoints < 0 || actionPoints == 0 || (getMinimumActionPoints() >= actionPoints)){
+			this.getWorld().nextTurn();
 			this.actionPoints = 0;
+		}
 		else if (actionPoints > this.getMaximumActionPoints())
 			this.actionPoints = this.getMaximumActionPoints();
 	}

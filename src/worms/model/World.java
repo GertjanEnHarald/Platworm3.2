@@ -145,7 +145,6 @@ public class World {
 	}
 	
 	public void nextTurn() {
-		
 		for(int counter  = 0;counter < getAllWorms().size(); counter = counter+1){
 			if (!getAllWormsWhoHaveHadTheirTurn().contains(getAllWorms().get(counter))){
 					setActiveWorm(getAllWorms().get(counter));
@@ -154,6 +153,9 @@ public class World {
 			}
 		}
 		getAllWormsWhoHaveHadTheirTurn().clear();
+		for(int counter  = 0;counter < getAllWorms().size(); counter = counter+1){
+			getAllWorms().get(counter).setActionPoints(getAllWorms().get(counter).getMaximumActionPoints());
+		}
 		nextTurn();
 	}
 	
