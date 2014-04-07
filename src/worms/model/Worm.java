@@ -647,9 +647,9 @@ public class Worm extends MovableObject{
 		if (this.canFall()) {
 			double startY = this.getCoordinateY();
 			double finalY = startY;
-			for(double Y = startY; this.canFall(this.getCoordinateX(), Y);
-					Y = Y - (this.getRadius()*0.1)) {
-					finalY = Y- (this.getRadius()*0.1);
+			double step = (this.getRadius()*0.1);
+			for(double Y = startY; this.canFall(this.getCoordinateX(), Y); Y = Y - step) {
+					finalY = Y- step;
 			}
 			this.setCoordinateY(finalY);
 			this.setHitPoints(this.getHitPoints() - (int) ((startY - finalY)*3.0));
@@ -670,8 +670,35 @@ public class Worm extends MovableObject{
 		return (! this.getWorld().isAdjacent(x, y, this.getRadius()));
 	}
 	
+	public void move(int steps) throws ModelException {
+		if(! this.canMove(steps))
+			throw new ModelException("Illegal number of steps!");
+		
+		double x = this.getCoordinateX();
+		double y = this.getCoordinateY();
+		double theta = this.getDirection();
+		int currentActionPoints = this.getActionPoints();
+		int usedActionPoints = (int) usedActionPointsMove(steps, theta);
+		
+		this.setCoordinateX(x + this.getRadius()*steps*Math.cos(theta));
+		this.setCoordinateY(y + this.getRadius()*steps*Math.sin(theta));
+		this.setActionPoints(currentActionPoints - usedActionPoints);
+	}
 	
+	public boolean canMove(int NbSteps){
+		double theta = this.getDirection();
+		int currentActionPoints = this.getActionPoints();
+		double usedActionPoints = usedActionPointsMove(NbSteps, theta);
+		return ((currentActionPoints >= usedActionPoints) && (NbSteps >0) && (usedActionPoints <= Integer.MAX_VALUE));
+	}
 	
+	public void move() {
+		move(1);
+	}
+	
+	public boolean canMove() {
+		return canMove(1);
+	}
 	
 	
 	
@@ -683,101 +710,101 @@ public class Worm extends MovableObject{
 	 * Nieuwe moves voor deel 2.
 	 */
 	
-	public void move(double steps,double direction) throws ModelException {
-		if(! this.canMove(steps,direction))
-			throw new ModelException("Illegal number of steps!");
-		
-		double x = this.getCoordinateX();
-		double y = this.getCoordinateY();
-		double theta = direction;
-		int currentActionPoints = this.getActionPoints();
-		int usedActionPoints = (int) usedActionPointsMove((int)steps+1, theta);
-		
-		this.setCoordinateX(x + this.getRadius()*steps*Math.cos(theta));
-		this.setCoordinateY(y + this.getRadius()*steps*Math.sin(theta));
-		this.setActionPoints(currentActionPoints - usedActionPoints);
-	}
-	
-	
-	public boolean canMove(){
-		for(double steps = 0.1; steps <= 1.0;steps = steps +0.1){
-			for(double direction = getDirection()-0.7875; direction <= getDirection()+0.7875;direction = direction + 0.0175){
-				if (canMove(steps,direction))
-					return true;
-			}
-		}
-		return false;
-	}
-	
-	public boolean canMove(double steps, double direction){
-		return canMoveAdjacent(steps,direction) || canMovePassable(steps,direction);
-	}
-	
-	private boolean canMovePassable(double steps, double direction) {
-			if (!getWorld().isAdjacent(getCoordinateX()+Math.cos(direction)*steps*getRadius(), getCoordinateY()+Math.sin(direction)*steps*getRadius(), getRadius()))
-				return false;
-			return isPossibleMoveWithCurrentActionPoints((int)steps +1, direction);
-		}
-
-
-	public boolean canMoveAdjacent(double steps,double direction){
-		if (!getWorld().isAdjacent(getCoordinateX()+Math.cos(direction)*steps*getRadius(), getCoordinateY()+Math.sin(direction)*steps*getRadius(), getRadius()))
-			return false;
-		return isPossibleMoveWithCurrentActionPoints((int)steps +1, direction);
-	}
-	
-	public boolean isPossibleMoveWithCurrentActionPoints(int steps,double direction){
-		int currentActionPoints = this.getActionPoints();
-		double usedActionPoints = usedActionPointsMove(steps, direction);
-		return ((currentActionPoints >= usedActionPoints) && (steps >0) && (usedActionPoints <= Integer.MAX_VALUE));
-	}
-	
-	
-	public double getMaxCoverableDistanceAdjacent(double direction){
-		for(double steps= 1.0; steps < 0.1;steps = steps -0.1){
-			if (canMoveAdjacent(steps, direction))
-				return steps;
-		}
-		return 0.0;
-	}
-	
-	public double getMaxCoverableDistancePassable(double direction){
-		for(double steps= 1.0; steps < 0.1;steps = steps -0.1){
-			if (canMovePassable(steps, direction))
-				return steps;
-		}
-		return 0.0;
-	}
-	
-	public void move(){
-		double maxSuccesOfMoveValue = 0.0;
-		double toBeExecutedDirection = getDirection();
-		double toBeExecutedSteps = 0.0;
-		for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.0175){
-			double possibleMaxSuccesOfMoveValue = Math.abs(getMaxCoverableDistanceAdjacent(direction)/(direction-getDirection()+0.5));
-			if (maxSuccesOfMoveValue < possibleMaxSuccesOfMoveValue){
-				maxSuccesOfMoveValue = possibleMaxSuccesOfMoveValue;
-				toBeExecutedSteps = getMaxCoverableDistanceAdjacent(direction);
-				toBeExecutedDirection = direction;
-				
-			}
-			}
-		if (toBeExecutedSteps > 0.0){
-			move(toBeExecutedSteps,toBeExecutedDirection);
-			return;
-		}
-			
-		for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.0175){
-				double possibleMaxSuccesOfMoveValue = Math.abs(getMaxCoverableDistanceAdjacent(direction)/(direction-getDirection()+0.5));
-				if (maxSuccesOfMoveValue < possibleMaxSuccesOfMoveValue){
-					maxSuccesOfMoveValue = possibleMaxSuccesOfMoveValue;
-					toBeExecutedSteps = getMaxCoverableDistancePassable(direction);
-					toBeExecutedDirection = direction;
-		}
-		}
-		if (toBeExecutedSteps > 0.0)
-			move(toBeExecutedSteps,toBeExecutedDirection);
-		}
+//	public void move(double steps,double direction) throws ModelException {
+//		if(! this.canMove(steps,direction))
+//			throw new ModelException("Illegal number of steps!");
+//		
+//		double x = this.getCoordinateX();
+//		double y = this.getCoordinateY();
+//		double theta = direction;
+//		int currentActionPoints = this.getActionPoints();
+//		int usedActionPoints = (int) usedActionPointsMove((int)steps+1, theta);
+//		
+//		this.setCoordinateX(x + this.getRadius()*steps*Math.cos(theta));
+//		this.setCoordinateY(y + this.getRadius()*steps*Math.sin(theta));
+//		this.setActionPoints(currentActionPoints - usedActionPoints);
+//	}
+//	
+//	
+//	public boolean canMove(){
+//		for(double steps = 0.1; steps <= 1.0;steps = steps +0.1){
+//			for(double direction = getDirection()-0.7875; direction <= getDirection()+0.7875;direction = direction + 0.0175){
+//				if (canMove(steps,direction))
+//					return true;
+//			}
+//		}
+//		return false;
+//	}
+//	
+//	public boolean canMove(double steps, double direction){
+//		return canMoveAdjacent(steps,direction) || canMovePassable(steps,direction);
+//	}
+//	
+//	private boolean canMovePassable(double steps, double direction) {
+//			if (!getWorld().isAdjacent(getCoordinateX()+Math.cos(direction)*steps*getRadius(), getCoordinateY()+Math.sin(direction)*steps*getRadius(), getRadius()))
+//				return false;
+//			return isPossibleMoveWithCurrentActionPoints((int)steps +1, direction);
+//		}
+//
+//
+//	public boolean canMoveAdjacent(double steps,double direction){
+//		if (!getWorld().isAdjacent(getCoordinateX()+Math.cos(direction)*steps*getRadius(), getCoordinateY()+Math.sin(direction)*steps*getRadius(), getRadius()))
+//			return false;
+//		return isPossibleMoveWithCurrentActionPoints((int)steps +1, direction);
+//	}
+//	
+//	public boolean isPossibleMoveWithCurrentActionPoints(int steps,double direction){
+//		int currentActionPoints = this.getActionPoints();
+//		double usedActionPoints = usedActionPointsMove(steps, direction);
+//		return ((currentActionPoints >= usedActionPoints) && (steps >0) && (usedActionPoints <= Integer.MAX_VALUE));
+//	}
+//	
+//	
+//	public double getMaxCoverableDistanceAdjacent(double direction){
+//		for(double steps= 1.0; steps < 0.1;steps = steps -0.1){
+//			if (canMoveAdjacent(steps, direction))
+//				return steps;
+//		}
+//		return 0.0;
+//	}
+//	
+//	public double getMaxCoverableDistancePassable(double direction){
+//		for(double steps= 1.0; steps < 0.1;steps = steps -0.1){
+//			if (canMovePassable(steps, direction))
+//				return steps;
+//		}
+//		return 0.0;
+//	}
+//	
+//	public void move(){
+//		double maxSuccesOfMoveValue = 0.0;
+//		double toBeExecutedDirection = getDirection();
+//		double toBeExecutedSteps = 0.0;
+//		for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.0175){
+//			double possibleMaxSuccesOfMoveValue = Math.abs(getMaxCoverableDistanceAdjacent(direction)/(direction-getDirection()+0.5));
+//			if (maxSuccesOfMoveValue < possibleMaxSuccesOfMoveValue){
+//				maxSuccesOfMoveValue = possibleMaxSuccesOfMoveValue;
+//				toBeExecutedSteps = getMaxCoverableDistanceAdjacent(direction);
+//				toBeExecutedDirection = direction;
+//				
+//			}
+//			}
+//		if (toBeExecutedSteps > 0.0){
+//			move(toBeExecutedSteps,toBeExecutedDirection);
+//			return;
+//		}
+//			
+//		for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.0175){
+//				double possibleMaxSuccesOfMoveValue = Math.abs(getMaxCoverableDistanceAdjacent(direction)/(direction-getDirection()+0.5));
+//				if (maxSuccesOfMoveValue < possibleMaxSuccesOfMoveValue){
+//					maxSuccesOfMoveValue = possibleMaxSuccesOfMoveValue;
+//					toBeExecutedSteps = getMaxCoverableDistancePassable(direction);
+//					toBeExecutedDirection = direction;
+//		}
+//		}
+//		if (toBeExecutedSteps > 0.0)
+//			move(toBeExecutedSteps,toBeExecutedDirection);
+//		}
 		
 	}
 	
