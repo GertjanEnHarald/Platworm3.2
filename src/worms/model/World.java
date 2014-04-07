@@ -36,6 +36,9 @@ public class World {
 	private final List<Worm> wormsWhoHaveHadTheirTurn = new ArrayList<Worm>();
 	private Worm activeWorm;
 	private final List<Team> teams = new ArrayList<Team>();
+	private final List<String> randomNames = Arrays.asList("Bob", "Emmitt","Parker", "Sergio", "Elias", "Clifton",
+		    "Gregg", "Derick", "Porter", "Archie", "Robbie", "Salvador", "Erich", "Wilfredo", "Casey",
+		    "Sung", "Christopher", "Jude", "Logan", "Roosevelt", "Rich");
 	
 	
 	public World(double width, double height,boolean[][] passableMap, Random random) 
@@ -297,13 +300,19 @@ public class World {
 	}
 	
 	
+	public String getRandomName() {
+		int random = this.getRandom().nextInt(this.randomNames.size());
+		return randomNames.get(random);
+	}
+	
 	public void addWorm(){
 		if (getStatus())
 			throw new ModelException("Cannot place worms once game has started!");
 		double radius = 0.3;
 		try {
 		double[] position = getRandomAdjacentLocation(radius);
-		Worm worm = new Worm(position[0],position[1],random.nextDouble()*Math.PI*2.0,radius,"Bob",true,this);
+		Worm worm = new Worm(position[0],position[1],random.nextDouble()*Math.PI*2.0,radius,
+							this.getRandomName(),true,this);
 		this.addAsGameObject(worm);
 		
 		int random = getRandom().nextInt(this.getNumberOfTeams()+1);
