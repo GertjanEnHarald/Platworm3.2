@@ -145,6 +145,12 @@ public class World {
 	}
 	
 	public void nextTurn() {
+		if (getAllWormsWhoHaveHadTheirTurn().size() == getAllWorms().size()){
+			getAllWormsWhoHaveHadTheirTurn().clear();
+			for(int counter  = 0;counter < getAllWorms().size(); counter = counter+1){
+				getAllWorms().get(counter).setActionPoints(getAllWorms().get(counter).getMaximumActionPoints());
+			}
+		}
 		for(int counter  = 0;counter < getAllWorms().size(); counter = counter+1){
 			if (!getAllWormsWhoHaveHadTheirTurn().contains(getAllWorms().get(counter))){
 					setActiveWorm(getAllWorms().get(counter));
@@ -152,11 +158,6 @@ public class World {
 					return;
 			}
 		}
-		getAllWormsWhoHaveHadTheirTurn().clear();
-		for(int counter  = 0;counter < getAllWorms().size(); counter = counter+1){
-			getAllWorms().get(counter).setActionPoints(getAllWorms().get(counter).getMaximumActionPoints());
-		}
-		nextTurn();
 	}
 	
 	
