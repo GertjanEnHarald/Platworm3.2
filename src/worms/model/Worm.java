@@ -447,6 +447,8 @@ public class Worm extends MovableObject{
 	
 	
 	
+	
+	
 	/**
 	 * Move this worm a number of steps in his current direction.
 	 *
@@ -657,4 +659,69 @@ public class Worm extends MovableObject{
 	public boolean canFall() {
 		return this.getWorld().isAdjacent(this.getCoordinateX(), this.getCoordinateY(), this.getRadius());
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Nieuwe moves voor deel 2.
+	 */
+	
+	public void move(int steps,double direction) throws ModelException {
+		if(! this.canMove(steps,direction))
+			throw new ModelException("Illegal number of steps!");
+		
+		double x = this.getCoordinateX();
+		double y = this.getCoordinateY();
+		double theta = direction;
+		int currentActionPoints = this.getActionPoints();
+		int usedActionPoints = (int) usedActionPointsMove(steps, theta);
+		
+		this.setCoordinateX(x + 0.5*this.getRadius()*steps*Math.cos(theta));
+		this.setCoordinateY(y + 0.5*this.getRadius()*steps*Math.sin(theta));
+		this.setActionPoints(currentActionPoints - usedActionPoints);
+	}
+	
+	
+	public boolean canMove(int NbSteps,double direction){
+		if (!getWorld().isAdjacent(getCoordinateX()+Math.cos(direction)*0.5*getRadius(), getCoordinateY()+Math.sin(direction)*0.5*getRadius(), getRadius()))
+			return false;
+		double theta = direction;
+		int currentActionPoints = this.getActionPoints();
+		double usedActionPoints = usedActionPointsMove(NbSteps, theta);
+		return ((currentActionPoints >= usedActionPoints) && (NbSteps >0) && (usedActionPoints <= Integer.MAX_VALUE));
+	}
+	
+	
+	
+	public void move(){
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
