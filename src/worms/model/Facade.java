@@ -255,7 +255,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public void move(Worm worm) {
-		// TODO Auto-generated method stub
+		worm.move(1);
 		
 	}
 

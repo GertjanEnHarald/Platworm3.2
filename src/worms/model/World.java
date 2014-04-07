@@ -291,7 +291,7 @@ public class World {
 	}
 	
 	
-	public void addWorm() throws ModelException{
+	public void addWorm(){
 		if (getStatus() == true)
 			throw new ModelException("Cannot place worms once game has started!");
 		double radius = 0.3;
