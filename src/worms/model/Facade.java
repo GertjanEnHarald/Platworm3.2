@@ -27,7 +27,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean canMove(Worm worm) {
-		return worm.canMove(1);
+		return worm.canMove();
 	}
 
 	@Override
@@ -256,7 +256,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public void move(Worm worm) {
-		worm.move(1);
+		worm.move();
 	}
 
 	@Override
