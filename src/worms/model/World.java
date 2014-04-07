@@ -35,6 +35,7 @@ public class World {
 	private final List<GameObject> gameObjects = new ArrayList<GameObject>();
 	private final List<Worm> wormsWhoHaveHadTheirTurn = new ArrayList<Worm>();
 	private Worm activeWorm;
+	private final List<Team> teams = new ArrayList<Team>();
 	
 	
 	public World(double width, double height,boolean[][] passableMap, Random random) 
@@ -295,7 +296,7 @@ public class World {
 	
 	
 	public void addWorm(){
-		if (getStatus() == true)
+		if (getStatus())
 			throw new ModelException("Cannot place worms once game has started!");
 		double radius = 0.3;
 		try {
@@ -308,7 +309,7 @@ public class World {
 	}
 	
 	public void addFood(){
-		if (getStatus() == true)
+		if (getStatus())
 			throw new ModelException("Cannot place worms once game has started!");
 		try {
 		double[] position = getRandomAdjacentLocation(0.20);
@@ -394,4 +395,28 @@ public class World {
 	
 	
 	
+	
+	public List<Team> getTeams() {
+		return this.teams;
+	}
+	
+	
+	public void addAsTeam(Team team) {
+		this.teams.add(team);
+	}
+	
+	
+	public int getNumberOfTeams() {
+		return this.getTeams().size();
+	}
+	
+	
+	public void addTeam(String name) throws ModelException {
+		if (this.getStatus())
+			throw new ModelException("Cannot make team once game has started!");
+		if (this.getNumberOfTeams() > 10)
+			throw new ModelException("World can only have up to 10 teams");
+		Team team = new Team(name);
+		this.addAsTeam(team);
+	}
 }
