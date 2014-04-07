@@ -149,7 +149,9 @@ public class World {
 	}
 	
 	public void nextTurn() {
+		
 		if (getAllWormsWhoHaveHadTheirTurn().size() == getAllWorms().size()){
+			setActionPointsToMax();
 			getAllWormsWhoHaveHadTheirTurn().clear();
 		}
 		for(int counter  = 0;counter < getAllWorms().size(); counter = counter+1){
@@ -162,8 +164,8 @@ public class World {
 	}
 	
 	public void setActionPointsToMax(){
-		for(int counter  = 0;counter < getAllWorms().size(); counter = counter+1){
-			getAllWorms().get(counter).setActionPoints(getAllWorms().get(counter).getMaximumActionPoints());
+		for(int counter  = 0;counter < getAllWormsWhoHaveHadTheirTurn().size(); counter = counter+1){
+			getAllWormsWhoHaveHadTheirTurn().get(counter).setActionPoints(getAllWormsWhoHaveHadTheirTurn().get(counter).getMaximumActionPoints());
 		}
 	}
 	
@@ -349,7 +351,7 @@ public class World {
 	 * @return
 	 */
 	public boolean isPassableArea(double x, double y, double radius){
-		double step = getStep();
+		double step = Math.min(getStep(), radius*0.01);
 		if ((x-radius) < 0 || (x+radius) > getWidth() || (y-radius) < 0 || (y + radius) > getHeight())
 			return false;
 		for(double distance=step; distance<=radius;distance = distance +step){
