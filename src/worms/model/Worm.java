@@ -646,20 +646,29 @@ public class Worm extends MovableObject{
 	public void fall() {
 		if (this.canFall()) {
 			double startY = this.getCoordinateY();
-			double finalY = 0;
-			for(double Y = startY; (! this.getWorld().isAdjacent(this.getCoordinateX(), Y, this.getRadius()));
-					Y = Y - (this.getWorld().getHeight()/this.getWorld().getDimensionInPixels(false))) {
-					finalY = Y;
+			double finalY = startY;
+			for(double Y = startY; this.canFall(this.getCoordinateX(), Y);
+					Y = Y - (this.getRadius()*0.1)) {
+					finalY = Y- (this.getRadius()*0.1);
 			}
 			this.setCoordinateY(finalY);
 			this.setHitPoints(this.getHitPoints() - (int) ((startY - finalY)*3.0));
 		}
 	}
 	
+	/**
+	 * Checks if this worm can fall.
+	 */
 	public boolean canFall() {
-		return this.getWorld().isAdjacent(this.getCoordinateX(), this.getCoordinateY(), this.getRadius());
+		return canFall(this.getCoordinateX(), this.getCoordinateY());
 	}
 	
+	/**
+	 * Checks if this worm could fall from a given position x,y.
+	 */
+	public boolean canFall(double x, double y) {
+		return (! this.getWorld().isAdjacent(x, y, this.getRadius()));
+	}
 	
 	
 	

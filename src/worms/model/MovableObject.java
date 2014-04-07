@@ -10,6 +10,7 @@ public abstract class MovableObject extends GameObject {
 	public MovableObject(double coordinateX, double coordinateY, boolean isActive, 
 			double radius, World world, double direction) {
 		super(coordinateX, coordinateY, isActive, radius,world);
+		this.setDirection(direction);
 	}
 	
 	
