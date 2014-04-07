@@ -613,6 +613,9 @@ public class Worm extends MovableObject{
 	}
 	
 	
+	//TODO: Shouldn't be done like this: OOP style requires the possibility to add a new class
+	//of projectile without changing any other code.
+	//This is clearly not handled in a proper manner. 
 	private void setProjectile() {
 		if (this.getCurrentWeaponNumber() == 0)
 			this.projectile = new Rifle(this.getCoordinateX() + this.getRadius()*Math.cos(this.getDirection()),
