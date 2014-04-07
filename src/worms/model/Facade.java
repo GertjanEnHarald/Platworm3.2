@@ -7,8 +7,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public void addEmptyTeam(World world, String newName) {
-		// TODO Auto-generated method stub
-		
+		world.addTeam(newName);
 	}
 
 	@Override
@@ -163,8 +162,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public String getTeamName(Worm worm) {
-		// TODO Auto-generated method stub
-		return null;
+		return worm.getTeam().getName();
 	}
 
 	@Override

@@ -43,7 +43,8 @@ public class Worm extends MovableObject{
 	private static final double minimumRadius=0.25;
 	private final double density=1062;
 	private Projectile projectile;
-
+	private Team team;
+	
 	
 	
 	/**
@@ -274,6 +275,11 @@ public class Worm extends MovableObject{
 	}
 	
 	
+	public boolean isAlive() {
+		return (this.getHitPoints() > 0);
+	}
+	
+	
 	
 	
 	/**
@@ -342,6 +348,32 @@ public class Worm extends MovableObject{
 	
 	
 	
+	public Team getTeam() {
+		return this.team;
+	}
+	
+	
+	public void joinTeam(Team team) throws ModelException {
+		if (! isValidTeam(team))
+			throw new ModelException("Invalid team assignment!");
+		if (this.getWorld().getStatus())
+			throw new ModelException("Game has already started, cannot assign to team!");
+		this.team = team;
+	}
+	
+	
+	public static boolean isValidTeam(Team team) {
+		return (team != null);
+	}
+	
+	
+	public boolean hasProperTeam() {
+		return this.getTeam().getWorms().contains(this);
+	}
+
+
+
+
 	/**
 	 * Changes the direction of this worm by adding given angle and using the appropriate number of action points.
 	 * 
