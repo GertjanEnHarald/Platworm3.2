@@ -133,9 +133,9 @@ public class Worm extends MovableObject{
 	public boolean isValidRadius(double radius) {
 		return (radius >= getMinimumRadius()) && (! Double.isNaN(radius)) && (this.getMass(radius) <= Integer.MAX_VALUE);
 	}
+
 	
-	
-	
+		
 	
 	/**
 	 * Returns the current mass of this worm.
@@ -639,14 +639,16 @@ public class Worm extends MovableObject{
 	
 	
 	public void fall() {
-		double startY = this.getCoordinateY();
-		double finalY = 0;
-		for(double Y = startY; (! this.getWorld().isAdjacent(this.getCoordinateX(), Y, this.getRadius()));
-				Y = Y - (this.getWorld().getHeight()/this.getWorld().getDimensionInPixels(false))) {
-				finalY = Y;
+		if (this.canFall()) {
+			double startY = this.getCoordinateY();
+			double finalY = 0;
+			for(double Y = startY; (! this.getWorld().isAdjacent(this.getCoordinateX(), Y, this.getRadius()));
+					Y = Y - (this.getWorld().getHeight()/this.getWorld().getDimensionInPixels(false))) {
+					finalY = Y;
+			}
+			this.setCoordinateY(finalY);
+			this.setHitPoints(this.getHitPoints() - (int) ((startY - finalY)*3.0));
 		}
-		this.setCoordinateY(finalY);
-		this.setHitPoints(this.getHitPoints() - (int) ((startY - finalY)*3.0));
 	}
 	
 	public boolean canFall() {

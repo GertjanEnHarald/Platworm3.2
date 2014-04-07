@@ -6,8 +6,9 @@ public class Tester {
 		//for (int number = 1; number <= 12; number++) {
 		//    System.out.println(number + " squared is " + (number * number));
 		//}
-		double x= 1.9999;
-		System.out.println((int)x);
+		Worm worm = new Worm(0, 0, 0, 0, null, false, null);
+		worm.setCoordinateX(1);
+		System.out.println(worm.getCoordinateX());
 	
 	}
 }
