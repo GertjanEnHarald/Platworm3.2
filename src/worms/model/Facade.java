@@ -22,8 +22,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean canFall(Worm worm) {
-		// TODO Auto-generated method stub
-		return false;
+		return worm.canFall();
 	}
 
 	@Override
@@ -55,7 +54,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public void fall(Worm worm) {
-		// TODO Auto-generated method stub
+		worm.fall();
 		
 	}
 
@@ -258,7 +257,7 @@ public class Facade implements IFacade {
 	@Override
 	public void move(Worm worm) {
 		worm.move(1);
-		
+		worm.fall();
 	}
 
 	@Override

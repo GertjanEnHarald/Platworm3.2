@@ -636,4 +636,20 @@ public class Worm extends MovableObject{
 		this.setCurrentWeaponNumber((this.getCurrentWeaponNumber()+1) % getNumberOfProjectiles());
 		this.setProjectile();
 	}
+	
+	
+	public void fall() {
+		double startY = this.getCoordinateY();
+		double finalY = 0;
+		for(double Y = startY; (! this.getWorld().isAdjacent(this.getCoordinateX(), Y, this.getRadius()));
+				Y = Y - (this.getWorld().getHeight()/this.getWorld().getDimensionInPixels(false))) {
+				finalY = Y;
+		}
+		this.setCoordinateY(finalY);
+		this.setHitPoints(this.getHitPoints() - (int) ((startY - finalY)*3.0));
+	}
+	
+	public boolean canFall() {
+		return this.getWorld().isAdjacent(this.getCoordinateX(), this.getCoordinateY(), this.getRadius());
+	}
 }
