@@ -399,7 +399,7 @@ public class Worm extends MovableObject{
 	 */
 	@Raw
 	public static double usedActionPointsTurn(double angle) {
-		return (60*Math.abs(changeAngleModulo2PI(angle))/(2*Math.PI));
+		return Math.min((60*Math.abs(changeAngleModulo2PI(angle))/(2*Math.PI)), (60*Math.abs(changeAngleModulo2PI(angle)-2*Math.PI)/(2*Math.PI)));
 	}
 	
 	
