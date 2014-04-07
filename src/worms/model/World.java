@@ -305,6 +305,10 @@ public class World {
 		double[] position = getRandomAdjacentLocation(radius);
 		Worm worm = new Worm(position[0],position[1],random.nextDouble()*Math.PI*2.0,radius,"Bob",true,this);
 		this.addAsGameObject(worm);
+		
+		int random = getRandom().nextInt(this.getNumberOfTeams()+1);
+		if (! (random == this.getNumberOfTeams()))
+			worm.joinTeam(this.getTeamAt(random));
 		}
 		catch(ModelException modelException){
 		}	
@@ -410,6 +414,13 @@ public class World {
 	
 	public int getNumberOfTeams() {
 		return this.getTeams().size();
+	}
+	
+	
+	public Team getTeamAt(int i) throws ModelException {
+		if (i >= this.getNumberOfTeams())
+			throw new ModelException("Not possible to select that team!");
+		return this.getTeams().get(i);
 	}
 	
 	

@@ -162,7 +162,11 @@ public class Facade implements IFacade {
 
 	@Override
 	public String getTeamName(Worm worm) {
-		return worm.getTeam().getName();
+		try {
+			return worm.getTeam().getName();
+		} catch (NullPointerException exc) {
+			return null;
+		}
 	}
 
 	@Override
