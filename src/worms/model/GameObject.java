@@ -92,8 +92,9 @@ public abstract class GameObject {
 	protected void setCoordinateX(double coordinateX) throws ModelException {
 		if (!isValidCoordinate(coordinateX))
 			throw new ModelException("Illegal X coordinate!");
-		if ((coordinateX < 0) || (coordinateX > this.getWorld().getWidth()))
-			this.setStatus(false);
+		if ((coordinateX < 0) || (coordinateX > this.getWorld().getWidth())){
+			this.coordinateX = coordinateX;
+			this.terminate(); }
 		else
 			this.coordinateX = coordinateX;
 	}
@@ -116,8 +117,9 @@ public abstract class GameObject {
 	protected void setCoordinateY(double coordinateY) throws ModelException {
 		if (!isValidCoordinate(coordinateY))
 			throw new ModelException("Illegal Y coordinate!");
-		if ((coordinateY < 0) || (coordinateY > this.getWorld().getHeight()))
-			this.setStatus(false);
+		if ((coordinateY < 0) || (coordinateY > this.getWorld().getHeight())){
+			this.coordinateY = coordinateY;
+			this.setStatus(false);}
 		else
 			this.coordinateY = coordinateY;
 	}
