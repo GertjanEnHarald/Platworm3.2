@@ -49,7 +49,6 @@ public abstract class GameObject {
 	}
 	
 	public void terminate() {
-		this.getWorld().removeAsGameObject(this);
 		this.setWorld(null);
 	}
 	

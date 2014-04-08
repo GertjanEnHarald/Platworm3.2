@@ -106,9 +106,18 @@ public class World {
 	public void removeAsGameObject(GameObject gameObject) throws ModelException{
 		gameObject.terminate();
 		this.gameObjects.remove(gameObject);
-		gameObject.setStatus(false);	
+		gameObject.setStatus(false);
+		if (gameObject instanceof Worm)
+			cleanUpWormMessDueToTrippleRelation((Worm) gameObject);
 	}
 	
+	private void cleanUpWormMessDueToTrippleRelation(Worm worm) {
+		if (getActiveWorm() == worm){
+			nextTurn();
+		}
+		this.wormsWhoHaveHadTheirTurn.remove(worm);
+	}
+
 	public boolean canHaveAsGameObject(GameObject gameObject) {
 		return (gameObject.getWorld() == this);
 	}

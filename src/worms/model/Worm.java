@@ -647,7 +647,7 @@ public class Worm extends MovableObject{
 		if (this.canFall()) {
 			double startY = this.getCoordinateY();
 			double finalY = startY;
-			for(double Y = startY; this.canFall(this.getCoordinateX(), Y);
+			for(double Y = startY; this.canFall(this.getCoordinateX(), Y)&&(Y>0);
 					Y = Y - (this.getRadius()*0.1)) {
 					finalY = Y- (this.getRadius()*0.1);
 			}
