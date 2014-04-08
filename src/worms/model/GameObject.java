@@ -18,6 +18,7 @@ public abstract class GameObject {
 		this.setCoordinateX(coordinateX);
 		this.setCoordinateY(coordinateY);
 		this.setRadius(radius);
+		this.setStatus(isActive);
 	}
 	
 	/**

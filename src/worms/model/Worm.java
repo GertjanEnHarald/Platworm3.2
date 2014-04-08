@@ -733,6 +733,8 @@ public class Worm extends MovableObject{
 	
 	
 	public boolean canMove(){
+		if (!getStatus())
+			return false;
 		for(double steps = 0.1; steps <= 1.0;steps = steps +0.45){
 			for(double direction = getDirection()-0.7875; direction <= getDirection()+0.7875;direction = direction + 0.1575){
 				if (canMove(steps,direction))
