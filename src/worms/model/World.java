@@ -62,6 +62,11 @@ public class World {
 	}
 	
 	public Worm getActiveWorm(){
+		if (!getStatus())
+			return null;
+		if (this.activeWorm.getStatus())
+			return this.activeWorm;
+		nextTurn();
 		return this.activeWorm;
 	}
 	
@@ -105,16 +110,10 @@ public class World {
 	
 	public void removeAsGameObject(GameObject gameObject) throws ModelException{
 		this.gameObjects.remove(gameObject);
-		if (gameObject instanceof Worm)
-			cleanUpWormMessDueToTrippleRelation((Worm) gameObject);
-	}
-	
-	private void cleanUpWormMessDueToTrippleRelation(Worm worm) {
-		if (getActiveWorm() == worm){
+		if (getActiveWorm()==gameObject)
 			nextTurn();
-		}
-		this.wormsWhoHaveHadTheirTurn.remove(worm);
 	}
+
 
 	public boolean canHaveAsGameObject(GameObject gameObject) {
 		return (gameObject.getWorld() == this);
