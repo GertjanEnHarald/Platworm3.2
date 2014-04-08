@@ -22,6 +22,7 @@ public class Tester {
 		Worm worm = facade.createWorm(world, 1.5, 2.5, -Math.PI / 2, 0.5,
 				"Test");
 		worm.selectWeapon();
+		facade.shoot(worm,100);
 		
 		
 //		assertFalse(facade.canFall(worm));

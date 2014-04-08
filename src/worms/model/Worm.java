@@ -43,6 +43,7 @@ public class Worm extends MovableObject{
 	private static final double minimumRadius=0.25;
 	private final double density=1062;
 	private Projectile projectile;
+	private int propulsionYield;
 	private Team team;
 	
 	
@@ -632,8 +633,12 @@ public class Worm extends MovableObject{
 	
 	
 	public int getPropulsionYield() {
-		// TODO
-		return 0;
+		return this.propulsionYield;
+	}
+	
+	
+	private void setPropulsionYield(int yield) {
+		this.propulsionYield = yield;
 	}
 	
 	
@@ -642,6 +647,14 @@ public class Worm extends MovableObject{
 		this.setCurrentWeaponNumber((this.getCurrentWeaponNumber()+1) % getNumberOfProjectiles());
 		this.setProjectile();
 	}
+	
+	
+	public void shoot(int yield) {
+		this.setPropulsionYield(yield);
+		this.getProjectile().jump();
+	}
+	
+	
 	
 	
 	public void fall() {

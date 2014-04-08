@@ -111,7 +111,10 @@ public abstract class Projectile extends MovableObject {
 
 	@Override
 	public void jump() {
-		// TODO Auto-generated method stub
+		if (! this.canJump()) {
+			throw new ModelException("Cannot jump!");
+		}
+		this.setCoordinateX(this.getCoordinateX()+this.getJumpDistance());
 	}
 
 	public abstract double getForce();

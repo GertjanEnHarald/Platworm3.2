@@ -86,8 +86,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public double[] getJumpStep(Projectile projectile, double t) {
-		// TODO Auto-generated method stub
-		return null;
+		return projectile.getJumpStep(t);
 	}
 
 	@Override
@@ -98,8 +97,8 @@ public class Facade implements IFacade {
 
 	@Override
 	public double getJumpTime(Projectile projectile, double timeStep) {
-		// TODO Auto-generated method stub
-		return 0;
+		//TODO Something with timestep
+		return projectile.getJumpTime();
 	}
 
 	@Override
@@ -242,12 +241,14 @@ public class Facade implements IFacade {
 
 	@Override
 	public void jump(Projectile projectile, double timeStep) {
-		// TODO Auto-generated method stub
+		//TODO Something with timestep
+		projectile.jump();
 		
 	}
 
 	@Override
 	public void jump(Worm worm, double timeStep) {
+		//TODO Something with timestep
 		// TODO Auto-generated method stub
 		
 	}
@@ -276,7 +277,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public void shoot(Worm worm, int yield) {
-		// TODO Auto-generated method stub
+		worm.shoot(yield);
 		
 	}
 
