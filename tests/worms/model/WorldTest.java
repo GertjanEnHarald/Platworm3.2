@@ -12,7 +12,7 @@ public class WorldTest {
 
 	
 	@Test
-	public void WorldCompleteTest() {
+	public void testsWhichNeedBooleanMap() {
 		
 		boolean[][] map =  {   
 				{true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true},
@@ -170,6 +170,43 @@ public class WorldTest {
 		assertEquals(worm1,world.getActiveWorm());
 		assertEquals(worm1.getMaximumActionPoints(),worm1.getActionPoints());
 		assertEquals(worm2.getMaximumActionPoints(),worm2.getActionPoints());
+		
+		
+		
+		worm1.setCoordinateX(10);
+		worm1.setDirection(0.0);
+		assertTrue(worm1.canMove());
+		assertTrue(worm1.canMoveAdjacent(1, 0.0));
+		assertTrue(worm1.canMoveAdjacent(1, Math.PI));
+		assertFalse(worm1.canMoveAdjacent(1, -Math.PI/2.0));
+		assertFalse(worm1.canMoveAdjacent(1, Math.PI/2.0));
+		assertTrue(worm1.canMovePassable(1, Math.PI/2.0));
+		assertFalse(worm1.canMovePassable(1, -Math.PI/2.0));
+		assertTrue(worm1.canMovePassable(1, 0.0));
+		assertTrue(worm1.canMovePassable(1, Math.PI));
+		worm1.setActionPoints(0);
+		
+		assertFalse(worm1.canMove());
+		worm2.setCoordinateX(10);
+		worm2.setDirection(0.0);
+		assertTrue(worm2.canMove());
+		
+		System.out.println(worm2.canMove(1, 0.05));
+		worm2.move(1, 0.0);
+		System.out.println(worm2.getCoordinateX());
+		System.out.println(worm2.getCoordinateY());
+		worm2.move(1, Math.PI/2.0);
+		System.out.println(worm2.getCoordinateY());
+		System.out.println(worm2.getCoordinateX());
+		System.out.println(worm2.getMaxCoverableDistanceAdjacent(0.0175));
+		System.out.println(worm2.getMaxCoverableDistancePassable(0.0175));
+		
+		worm2.setCoordinateX(10);
+		worm2.setDirection(0.0);
+		worm2.move();
+		System.out.println(worm2.getCoordinateX());
+
+		
 	}
 
 }

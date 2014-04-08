@@ -683,6 +683,43 @@ public class Worm extends MovableObject{
 	 * Nieuwe moves voor deel 2.
 	 */
 	
+	
+	public void move(){
+		if(! this.canMove())
+			throw new ModelException("Illegal number of steps!");
+		double maxSuccesOfMoveValue = 0.0;
+		double toBeExecutedDirection = getDirection();
+		double toBeExecutedSteps = 0.0;
+		for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.0175){
+			double possibleMaxSuccesOfMoveValue = Math.abs(getMaxCoverableDistanceAdjacent(direction)/(direction-getDirection()+0.5));
+			if (maxSuccesOfMoveValue < possibleMaxSuccesOfMoveValue){
+				maxSuccesOfMoveValue = possibleMaxSuccesOfMoveValue;
+				toBeExecutedSteps = getMaxCoverableDistanceAdjacent(direction);
+				toBeExecutedDirection = direction;
+				
+			}
+			}
+		if (toBeExecutedSteps > 0.0){
+			System.out.println("yo it works bro");
+			move(toBeExecutedSteps,toBeExecutedDirection);
+			return;
+		}
+			
+		for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.0175){
+				double possibleMaxSuccesOfMoveValue = Math.abs(getMaxCoverableDistancePassable(direction)/(direction-getDirection()+0.5));
+				if (maxSuccesOfMoveValue < possibleMaxSuccesOfMoveValue){
+					maxSuccesOfMoveValue = possibleMaxSuccesOfMoveValue;
+					toBeExecutedSteps = getMaxCoverableDistancePassable(direction);
+					toBeExecutedDirection = direction;
+		}
+		}
+		if (toBeExecutedSteps > 0.0)
+			System.out.println("yo it works bro");
+			move(toBeExecutedSteps,toBeExecutedDirection);
+		}
+	
+	
+	
 	public void move(double steps,double direction) throws ModelException {
 		if(! this.canMove(steps,direction))
 			throw new ModelException("Illegal number of steps!");
@@ -713,8 +750,8 @@ public class Worm extends MovableObject{
 		return canMoveAdjacent(steps,direction) || canMovePassable(steps,direction);
 	}
 	
-	private boolean canMovePassable(double steps, double direction) {
-			if (!getWorld().isAdjacent(getCoordinateX()+Math.cos(direction)*steps*getRadius(), getCoordinateY()+Math.sin(direction)*steps*getRadius(), getRadius()))
+	public boolean canMovePassable(double steps, double direction) {
+			if (!getWorld().isPassableArea(getCoordinateX()+Math.cos(direction)*steps*getRadius(), getCoordinateY()+Math.sin(direction)*steps*getRadius(), getRadius()))
 				return false;
 			return isPossibleMoveWithCurrentActionPoints((int)steps +1, direction);
 		}
@@ -734,7 +771,7 @@ public class Worm extends MovableObject{
 	
 	
 	public double getMaxCoverableDistanceAdjacent(double direction){
-		for(double steps= 1.0; steps < 0.1;steps = steps -0.1){
+		for(double steps= 1.0; steps >= 0.1;steps = steps -0.1){
 			if (canMoveAdjacent(steps, direction))
 				return steps;
 		}
@@ -742,42 +779,13 @@ public class Worm extends MovableObject{
 	}
 	
 	public double getMaxCoverableDistancePassable(double direction){
-		for(double steps= 1.0; steps < 0.1;steps = steps -0.1){
+		for(double steps= 1.0; steps >= 0.1;steps = steps -0.1){
 			if (canMovePassable(steps, direction))
 				return steps;
 		}
 		return 0.0;
 	}
 	
-	public void move(){
-		double maxSuccesOfMoveValue = 0.0;
-		double toBeExecutedDirection = getDirection();
-		double toBeExecutedSteps = 0.0;
-		for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.0175){
-			double possibleMaxSuccesOfMoveValue = Math.abs(getMaxCoverableDistanceAdjacent(direction)/(direction-getDirection()+0.5));
-			if (maxSuccesOfMoveValue < possibleMaxSuccesOfMoveValue){
-				maxSuccesOfMoveValue = possibleMaxSuccesOfMoveValue;
-				toBeExecutedSteps = getMaxCoverableDistanceAdjacent(direction);
-				toBeExecutedDirection = direction;
-				
-			}
-			}
-		if (toBeExecutedSteps > 0.0){
-			move(toBeExecutedSteps,toBeExecutedDirection);
-			return;
-		}
-			
-		for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.0175){
-				double possibleMaxSuccesOfMoveValue = Math.abs(getMaxCoverableDistanceAdjacent(direction)/(direction-getDirection()+0.5));
-				if (maxSuccesOfMoveValue < possibleMaxSuccesOfMoveValue){
-					maxSuccesOfMoveValue = possibleMaxSuccesOfMoveValue;
-					toBeExecutedSteps = getMaxCoverableDistancePassable(direction);
-					toBeExecutedDirection = direction;
-		}
-		}
-		if (toBeExecutedSteps > 0.0)
-			move(toBeExecutedSteps,toBeExecutedDirection);
-		}
 		
 	}
 	
