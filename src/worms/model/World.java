@@ -104,9 +104,7 @@ public class World {
 	}
 	
 	public void removeAsGameObject(GameObject gameObject) throws ModelException{
-		gameObject.terminate();
 		this.gameObjects.remove(gameObject);
-		gameObject.setStatus(false);
 		if (gameObject instanceof Worm)
 			cleanUpWormMessDueToTrippleRelation((Worm) gameObject);
 	}

@@ -21,15 +21,18 @@ public class Tester {
 				{ true, true, true }, { false, false, false } }, random);
 		Worm worm = facade.createWorm(world, 1.5, 2.5, -Math.PI / 2, 0.5,
 				"Test");
-		assertFalse(facade.canFall(worm));
-		worm.move(2);
-		System.out.println("X is: " + worm.getCoordinateX());
-		System.out.println("Y is: " + worm.getCoordinateY());
-		assertTrue(facade.canFall(worm));
-		facade.fall(worm);
-		System.out.println("X is: " + worm.getCoordinateX());
-		System.out.println("Y is: " + worm.getCoordinateY());
-		assertEquals(1.5, facade.getX(worm), EPS);
-		assertEquals(1.5, facade.getY(worm), EPS);		
+		worm.terminate();
+		
+		
+//		assertFalse(facade.canFall(worm));
+//		worm.move(2);
+//		System.out.println("X is: " + worm.getCoordinateX());
+//		System.out.println("Y is: " + worm.getCoordinateY());
+//		assertTrue(facade.canFall(worm));
+//		facade.fall(worm);
+//		System.out.println("X is: " + worm.getCoordinateX());
+//		System.out.println("Y is: " + worm.getCoordinateY());
+//		assertEquals(1.5, facade.getX(worm), EPS);
+//		assertEquals(1.5, facade.getY(worm), EPS);		
 	}
 }

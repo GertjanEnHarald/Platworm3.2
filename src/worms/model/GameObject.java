@@ -50,6 +50,8 @@ public abstract class GameObject {
 	}
 	
 	public void terminate() {
+		this.setStatus(false);
+		this.getWorld().removeAsGameObject(this);
 		this.setWorld(null);
 	}
 	
@@ -194,8 +196,6 @@ public abstract class GameObject {
 	 */
 	protected void setStatus(boolean status) {
 		this.isActive = status;
-		if (! this.getStatus())
-			this.terminate();
 	}
 	
 	
