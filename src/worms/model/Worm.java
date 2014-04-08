@@ -685,12 +685,10 @@ public class Worm extends MovableObject{
 	
 	
 	public void move(){
-		if(! this.canMove())
-			throw new ModelException("Illegal number of steps!");
 		double maxSuccesOfMoveValue = 0.0;
 		double toBeExecutedDirection = getDirection();
 		double toBeExecutedSteps = 0.0;
-		for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.0175){
+		for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.1575){
 			double possibleMaxSuccesOfMoveValue = Math.abs(getMaxCoverableDistanceAdjacent(direction)/(direction-getDirection()+0.5));
 			if (maxSuccesOfMoveValue < possibleMaxSuccesOfMoveValue){
 				maxSuccesOfMoveValue = possibleMaxSuccesOfMoveValue;
@@ -700,12 +698,11 @@ public class Worm extends MovableObject{
 			}
 			}
 		if (toBeExecutedSteps > 0.0){
-			System.out.println("yo it works bro");
 			move(toBeExecutedSteps,toBeExecutedDirection);
 			return;
 		}
 			
-		for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.0175){
+		for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.1575){
 				double possibleMaxSuccesOfMoveValue = Math.abs(getMaxCoverableDistancePassable(direction)/(direction-getDirection()+0.5));
 				if (maxSuccesOfMoveValue < possibleMaxSuccesOfMoveValue){
 					maxSuccesOfMoveValue = possibleMaxSuccesOfMoveValue;
@@ -714,7 +711,6 @@ public class Worm extends MovableObject{
 		}
 		}
 		if (toBeExecutedSteps > 0.0)
-			System.out.println("yo it works bro");
 			move(toBeExecutedSteps,toBeExecutedDirection);
 		}
 	
@@ -737,8 +733,8 @@ public class Worm extends MovableObject{
 	
 	
 	public boolean canMove(){
-		for(double steps = 0.1; steps <= 1.0;steps = steps +0.1){
-			for(double direction = getDirection()-0.7875; direction <= getDirection()+0.7875;direction = direction + 0.0175){
+		for(double steps = 0.1; steps <= 1.0;steps = steps +0.45){
+			for(double direction = getDirection()-0.7875; direction <= getDirection()+0.7875;direction = direction + 0.1575){
 				if (canMove(steps,direction))
 					return true;
 			}
@@ -771,7 +767,7 @@ public class Worm extends MovableObject{
 	
 	
 	public double getMaxCoverableDistanceAdjacent(double direction){
-		for(double steps= 1.0; steps >= 0.1;steps = steps -0.1){
+		for(double steps= 1.0; steps >= 0.1;steps = steps -0.45){
 			if (canMoveAdjacent(steps, direction))
 				return steps;
 		}
@@ -779,7 +775,7 @@ public class Worm extends MovableObject{
 	}
 	
 	public double getMaxCoverableDistancePassable(double direction){
-		for(double steps= 1.0; steps >= 0.1;steps = steps -0.1){
+		for(double steps= 1.0; steps >= 0.1;steps = steps -0.45){
 			if (canMovePassable(steps, direction))
 				return steps;
 		}
