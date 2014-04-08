@@ -216,7 +216,6 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean isActive(Projectile projectile) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

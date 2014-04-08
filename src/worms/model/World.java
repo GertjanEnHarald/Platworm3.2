@@ -62,11 +62,6 @@ public class World {
 	}
 	
 	public Worm getActiveWorm(){
-		if (!getStatus())
-			return null;
-		if (this.activeWorm.getStatus())
-			return this.activeWorm;
-		nextTurn();
 		return this.activeWorm;
 	}
 	
@@ -110,7 +105,8 @@ public class World {
 	
 	public void removeAsGameObject(GameObject gameObject) throws ModelException{
 		this.gameObjects.remove(gameObject);
-		if (getActiveWorm()==gameObject)
+		this.wormsWhoHaveHadTheirTurn.remove(gameObject);
+		if (this.getActiveWorm()==gameObject)
 			nextTurn();
 	}
 
