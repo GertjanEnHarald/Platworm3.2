@@ -21,7 +21,7 @@ public class Tester {
 				{ true, true, true }, { false, false, false } }, random);
 		Worm worm = facade.createWorm(world, 1.5, 2.5, -Math.PI / 2, 0.5,
 				"Test");
-		worm.setCoordinateX(-1);;
+		worm.selectWeapon();
 		
 		
 //		assertFalse(facade.canFall(worm));

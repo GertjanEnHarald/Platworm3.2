@@ -155,8 +155,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public String getSelectedWeapon(Worm worm) {
-		// TODO Auto-generated method stub
-		return null;
+		return worm.getProjectile().getName();
 	}
 
 	@Override
@@ -260,20 +259,19 @@ public class Facade implements IFacade {
 
 	@Override
 	public void rename(Worm worm, String newName) {
-		// TODO Auto-generated method stub
+		worm.setName(newName);
 		
 	}
 
 	@Override
 	public void selectNextWeapon(Worm worm) {
-		// TODO Auto-generated method stub
+		worm.selectWeapon();
 		
 	}
 
 	@Override
 	public void setRadius(Worm worm, double newRadius) {
-		// TODO Auto-generated method stub
-		
+		worm.setRadius(newRadius);
 	}
 
 	@Override

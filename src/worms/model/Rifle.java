@@ -9,6 +9,7 @@ public class Rifle extends Projectile {
 			World world, double direction) throws ModelException {
 		super(coordinateX, coordinateY, isActive, world, direction,
 				10,	20, 10);
+		this.name = "Rifle";
 	}
 	
 	/**

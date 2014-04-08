@@ -9,9 +9,10 @@ public abstract class Projectile extends MovableObject {
 	private final int lostHitPoints;
 	private final int costActionPoints;
 	private boolean isTerminated;
+	protected String name;
 	
 	
-	//TODO Coordinates an direction determined by coordinates and direction of worm. 
+	
 	public Projectile(double coordinateX, double coordinateY, boolean isActive,	World world,
 			double direction, double massOfProjectile, int lostHitPoints, int costActionPoints) 
 			throws ModelException {
@@ -40,6 +41,10 @@ public abstract class Projectile extends MovableObject {
 	
 	public void terminate() {
 		this.isTerminated = true;
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 	
 	/**

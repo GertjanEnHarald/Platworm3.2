@@ -13,6 +13,7 @@ public class Bazooka extends Projectile {
 		if (! isValidPropulsionYield(propulsionYield))
 			throw new ModelException("Illegal propulsion yield!");
 		this.propulsionYield = propulsionYield;
+		this.name = "Bazooka";
 	}
 
 	public static boolean isValidPropulsionYield(int propulsionYield) {
