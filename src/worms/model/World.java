@@ -366,7 +366,7 @@ public class World {
 		return true;
 	}
 
-	private double getStep() {
+	protected double getStep() {
 		double step = Math.min(getHeight()/getDimensionInPixels(false), getWidth()/getDimensionInPixels(true))/2.0;
 		return step;
 	}
@@ -446,3 +446,5 @@ public class World {
 		this.addAsTeam(team);
 	}
 }
+
+
