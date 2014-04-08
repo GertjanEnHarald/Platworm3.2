@@ -14,10 +14,10 @@ public abstract class GameObject {
 	private static final double g=9.80665;
 	
 	public GameObject(double coordinateX, double  coordinateY, boolean isActive, double radius, World world) {
+		this.setWorld(world);
 		this.setCoordinateX(coordinateX);
 		this.setCoordinateY(coordinateY);
 		this.setRadius(radius);
-		this.setWorld(world);
 	}
 	
 	/**
@@ -90,7 +90,10 @@ public abstract class GameObject {
 	protected void setCoordinateX(double coordinateX) throws ModelException {
 		if (!isValidCoordinate(coordinateX))
 			throw new ModelException("Illegal X coordinate!");
-		this.coordinateX = coordinateX;
+		if ((coordinateX < 0) || (coordinateX > this.getWorld().getWidth()))
+			this.setStatus(false);
+		else
+			this.coordinateX = coordinateX;
 	}
 	
 	
@@ -111,7 +114,10 @@ public abstract class GameObject {
 	protected void setCoordinateY(double coordinateY) throws ModelException {
 		if (!isValidCoordinate(coordinateY))
 			throw new ModelException("Illegal Y coordinate!");
-		this.coordinateY = coordinateY;
+		if ((coordinateY < 0) || (coordinateY > this.getWorld().getHeight()))
+			this.setStatus(false);
+		else
+			this.coordinateY = coordinateY;
 	}
 	
 	
@@ -188,6 +194,8 @@ public abstract class GameObject {
 	 */
 	protected void setStatus(boolean status) {
 		this.isActive = status;
+		if (! this.getStatus())
+			this.terminate();
 	}
 	
 	
