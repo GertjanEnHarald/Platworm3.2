@@ -447,8 +447,15 @@ public class World {
 	}
 
 	public boolean isGameFinished() {
-		
-		return false;
+		Set<Team> set = new HashSet<Team>();
+		for(int counter=0;counter<getAllWorms().size();counter++){
+			set.add(getAllWorms().get(counter).getTeam());
+		}
+		if (set.size() > 1)
+			return false;
+		if (set.size()==1 && set.contains(null) && getAllWorms().size()>1)
+			return false;
+		return true;
 	}
 
 	
@@ -472,6 +479,16 @@ public class World {
 		}
 		return null;
 	}
+	
+	
+	public String getWinner(){
+		if (getAllWorms().size() ==0)
+			return "Nobody";
+		if (getAllWorms().get(0).getTeam() == null)
+			return getAllWorms().get(0).getName();
+		return getAllWorms().get(0).getTeam().getName();
+	}
+	
 }
 
 

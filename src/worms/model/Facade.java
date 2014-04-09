@@ -168,8 +168,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public String getWinner(World world) {
-		// TODO Auto-generated method stub
-		return null;
+		return world.getWinner();
 	}
 
 	@Override

@@ -114,7 +114,7 @@ public abstract class Projectile extends MovableObject {
 		if (! this.canJump()) {
 			throw new ModelException("Cannot jump!");
 		}
-		this.setCoordinateX(this.getCoordinateX()+this.getJumpDistance());
+		this.setCoordinates(this.getCoordinateX()+this.getJumpDistance(),getCoordinateY());
 	}
 
 	public abstract double getForce();

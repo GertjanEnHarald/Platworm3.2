@@ -661,11 +661,11 @@ public class Worm extends MovableObject{
 		if (this.canFall()) {
 			double startY = this.getCoordinateY();
 			double finalY = startY;
-			for(double Y = startY; this.canFall(this.getCoordinateX(), Y)&&(Y>0);
+			for(double Y = startY; this.canFall(this.getCoordinateX(), Y)&&(Y>-0.1*getRadius());
 					Y = Y - (this.getRadius()*0.1)) {
 					finalY = Y- (this.getWorld().getStep());
 			}
-			this.setCoordinates(getCoordinateX(),finalY);
+			this.setY(finalY);
 			this.setHitPoints(this.getHitPoints() - (int) ((startY - finalY)*3.0));
 		}
 	}
@@ -801,8 +801,10 @@ public class Worm extends MovableObject{
 	@Override
 	public void terminate(){
 		super.terminate();
-		this.team.removeFromTeam(this);
-		this.team=null;
+		if (getTeam() != null){
+			this.team.removeFromTeam(this);
+			this.team=null;
+		}
 	}
 		
 	
