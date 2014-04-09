@@ -19,10 +19,10 @@ public class Tester {
 		World world = facade.createWorld(3.0, 4.0, new boolean[][] {
 				{ true, false, true }, { true, true, true },
 				{ true, true, true }, { false, false, false } }, random);
-		Worm worm = facade.createWorm(world, 1.5, 2.5, -Math.PI / 2, 0.5,
+		Worm worm = facade.createWorm(world, 1.5, 2.5, Math.PI / 4, 0.5,
 				"Test");
 		worm.selectWeapon();
-		facade.shoot(worm,100);
+		facade.jump(worm,1);
 		
 		
 //		assertFalse(facade.canFall(worm));

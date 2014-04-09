@@ -543,15 +543,42 @@ public class Worm extends MovableObject{
 	 *			| (! this.canJump)
 	 */
 	@Override
-	public void jump() throws ModelException{
+	public void jump(double timeStep) throws ModelException {
 		if (! this.canJump()) {
 			this.setActionPoints(0);
 			throw new ModelException("Cannot jump!");
 		}
-		this.setCoordinates(this.getCoordinateX()+this.getJumpDistance(),this.getCoordinateY());
+		
+		double x = this.getCoordinateX();
+		double y = this.getCoordinateY();
+		boolean hasLanded = false;
+		timeStep = 10.0*timeStep;
+		System.out.println(this.getJumpTime());
+		for (double time = 0; time <= this.getJumpTime(); time = time + timeStep) {
+			double[] position = this.getJumpStep(time);
+			x = position[0];
+			y = position[1];
+			if (this.getWorld().isAdjacent(position[0], position[1], this.getRadius())) {
+				double[] position2 = this.getJumpStep(time+ timeStep);
+				double x2 = position2[0];
+				double y2 = position2[1];
+				if (! this.getWorld().isPassableArea(x2, y2, this.getRadius())) {
+					System.out.println(time+"Loop break");
+					hasLanded = true;
+					break;
+				}
+			}
+		}
+		
+		this.setX(x);
+		this.setY(y);
 		this.setActionPoints(0);
+	
+		if (! hasLanded)
+			this.fall();
 	}
 
+	
 	
 	/**
 	 * Returns the initial velocity of the potential jump of this worm.
@@ -583,14 +610,20 @@ public class Worm extends MovableObject{
 			return false;
 		if (this.getDirection() > Math.PI && this.getDirection() < Math.PI*2)
 			return false;
-		for(double time = 0; time <= this.getJumpTime(); time = time + this.getJumpTime()/1000.0){
-			double[] position = this.getJumpStep(time);
-			if (! (this.getWorld()).isPassableArea(position[0], position[1], this.getRadius()))
-				return false;
-		}
+		
+//		for(double time = 0; time <= this.getJumpTime(); time = time + this.getJumpTime()/1000.0){
+//			double[] position = this.getJumpStep(time);
+//			if (! (this.getWorld()).isPassableArea(position[0], position[1], this.getRadius()))
+//				return false;
+//		}
 		return true;
 	}
 	
+	
+	public boolean canJumpAtTime(double time) {
+		double[] position = this.getJumpStep(time);
+		return this.getWorld().isPassableArea(position[0], position[1], this.getRadius());
+	}
 	
 	
 

@@ -84,7 +84,11 @@ public abstract class MovableObject extends GameObject {
 
 	public abstract double getMass();
 	
-	public abstract void jump();
+	public abstract void jump(double timeStep);
+	
+	public void jump() throws ModelException {
+		this.jump(Math.pow(10, -4));
+	}
 	
 	/**
 	 * Returns the time this movable object is in the air during the potential jump of this movable object.
