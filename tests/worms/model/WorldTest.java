@@ -173,7 +173,7 @@ public class WorldTest {
 		
 		
 		
-		worm1.setCoordinateX(10);
+		worm1.setCoordinates(10,worm1.getCoordinateY());
 		worm1.setDirection(0.0);
 		assertTrue(worm1.canMove());
 		assertTrue(worm1.canMoveAdjacent(1, 0.0));
@@ -187,7 +187,7 @@ public class WorldTest {
 		worm1.setActionPoints(0);
 		
 		assertFalse(worm1.canMove());
-		worm2.setCoordinateX(10);
+		worm2.setCoordinates(10,worm1.getCoordinateY());
 		worm2.setDirection(0.0);
 		assertTrue(worm2.canMove());
 		
@@ -201,7 +201,7 @@ public class WorldTest {
 		System.out.println(worm2.getMaxCoverableDistanceAdjacent(0.0175));
 		System.out.println(worm2.getMaxCoverableDistancePassable(0.0175));
 		
-		worm2.setCoordinateX(10);
+		worm2.setCoordinates(10,worm1.getCoordinateY());
 		worm2.setDirection(0.0);
 		worm2.move();
 		System.out.println(worm2.getCoordinateX());

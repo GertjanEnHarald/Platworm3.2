@@ -15,8 +15,7 @@ public abstract class GameObject {
 	
 	public GameObject(double coordinateX, double  coordinateY, boolean isActive, double radius, World world) {
 		this.setWorld(world);
-		this.setCoordinateX(coordinateX);
-		this.setCoordinateY(coordinateY);
+		this.setCoordinates(coordinateX, coordinateY);
 		this.setRadius(radius);
 		this.setStatus(isActive);
 	}
@@ -75,6 +74,13 @@ public abstract class GameObject {
 	}
 	
 	
+	
+	
+	protected void setCoordinates(double x, double y){
+		setX(x);
+		setY(y);
+	}
+	
 	/**
 	 * Set the x coordinate of this game object to the given coordinateX.
 	 * 
@@ -89,7 +95,7 @@ public abstract class GameObject {
 	 *       	| ! isValidCoordinate(coordinateX)
 	 */
 	@Raw
-	protected void setCoordinateX(double coordinateX) throws ModelException {
+	protected void setX(double coordinateX) throws ModelException {
 		if (!isValidCoordinate(coordinateX))
 			throw new ModelException("Illegal X coordinate!");
 		if ((coordinateX < 0) || (coordinateX > this.getWorld().getWidth())){
@@ -115,7 +121,7 @@ public abstract class GameObject {
 	 *       	| ! isValidCoordinate(coordinateY)
 	 */
 	@Raw
-	protected void setCoordinateY(double coordinateY) throws ModelException {
+	protected void setY(double coordinateY) throws ModelException {
 		if (!isValidCoordinate(coordinateY))
 			throw new ModelException("Illegal Y coordinate!");
 		if ((coordinateY < 0) || (coordinateY > this.getWorld().getHeight())){

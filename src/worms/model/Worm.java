@@ -548,7 +548,7 @@ public class Worm extends MovableObject{
 			this.setActionPoints(0);
 			throw new ModelException("Cannot jump!");
 		}
-		this.setCoordinateX(this.getCoordinateX()+this.getJumpDistance());
+		this.setCoordinates(this.getCoordinateX()+this.getJumpDistance(),this.getCoordinateY());
 		this.setActionPoints(0);
 	}
 
@@ -665,7 +665,7 @@ public class Worm extends MovableObject{
 					Y = Y - (this.getRadius()*0.1)) {
 					finalY = Y- (this.getWorld().getStep());
 			}
-			this.setCoordinateY(finalY);
+			this.setCoordinates(getCoordinateX(),finalY);
 			this.setHitPoints(this.getHitPoints() - (int) ((startY - finalY)*3.0));
 		}
 	}
@@ -740,8 +740,7 @@ public class Worm extends MovableObject{
 		int currentActionPoints = this.getActionPoints();
 		int usedActionPoints = (int) usedActionPointsMove((int)steps+1, theta);
 		
-		this.setCoordinateX(x + this.getRadius()*steps*Math.cos(theta));
-		this.setCoordinateY(y + this.getRadius()*steps*Math.sin(theta));
+		this.setCoordinates(x + this.getRadius()*steps*Math.cos(theta),y + this.getRadius()*steps*Math.sin(theta));
 		this.setActionPoints(currentActionPoints - usedActionPoints);
 	}
 	
@@ -798,7 +797,36 @@ public class Worm extends MovableObject{
 		return 0.0;
 	}
 	
+	
+	@Override
+	public void terminate(){
+		super.terminate();
+		this.team.removeFromTeam(this);
+		this.team=null;
+	}
 		
+	
+	@Override
+	protected void setCoordinates(double x, double y) {
+		super.setCoordinates(x, y);
+		eatFoodIfPossible();
+	}
+	
+	private void eatFoodIfPossible(){
+		if (getWorld().getFoodThatOverlaps(this)!=null)
+			eat(getWorld().getFoodThatOverlaps(this));
+	}
+
+
+
+
+	private void eat(Food food) {
+		food.terminate();
+		this.setRadius(1.1*this.getRadius());
+		
+	}
+	
+	
 	}
 	
 	

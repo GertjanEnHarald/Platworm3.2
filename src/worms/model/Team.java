@@ -70,4 +70,8 @@ public class Team {
 		}
 		return true;
 	}
+	
+	public void removeFromTeam(Worm worm){
+		
+	}
 }

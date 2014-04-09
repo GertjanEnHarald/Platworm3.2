@@ -445,6 +445,33 @@ public class World {
 		Team team = new Team(name);
 		this.addAsTeam(team);
 	}
+
+	public boolean isGameFinished() {
+		
+		return false;
+	}
+
+	
+	/**
+	 * Dit werkt met vierkanten en het moet met cirkels. Dit klopt dus niet.
+	 * @param worm
+	 * @return
+	 */
+	public Food getFoodThatOverlaps(Worm worm) {
+		for(int counter=0;counter<getAllFood().size();counter++){
+			if ((getAllFood().get(counter).getCoordinateX()-getAllFood().get(counter).getRadius() < worm.getCoordinateX()+worm.getRadius())
+					&& 
+					(getAllFood().get(counter).getCoordinateX()+getAllFood().get(counter).getRadius() > worm.getCoordinateX()-worm.getRadius())
+					&&
+					(getAllFood().get(counter).getCoordinateY()-getAllFood().get(counter).getRadius() < worm.getCoordinateY()+worm.getRadius())
+					&& 
+					(getAllFood().get(counter).getCoordinateY()+getAllFood().get(counter).getRadius() > worm.getCoordinateY()-worm.getRadius())){
+						return getAllFood().get(counter);
+			}
+				
+		}
+		return null;
+	}
 }
 
 

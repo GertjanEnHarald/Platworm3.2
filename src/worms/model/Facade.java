@@ -229,8 +229,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean isGameFinished(World world) {
-		// TODO Auto-generated method stub
-		return false;
+		return world.isGameFinished();
 	}
 
 	@Override
