@@ -587,7 +587,6 @@ public class Worm extends MovableObject{
 			if (this.getWorld().isAdjacent(position[0], position[1], this.getRadius())) {
 				double[] position2 = this.getJumpStep(time + step);
 				if (! this.getWorld().isPassableArea(position2[0], position2[1], this.getRadius())) {
-					System.out.println("Loop broke");
 					break;
 				}
 			}
