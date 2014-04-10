@@ -102,7 +102,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public double getJumpTime(Worm worm, double timeStep) {
-		return worm.getJumpTime();
+		return worm.getJumpRealTimeInAir();
 	}
 
 	@Override

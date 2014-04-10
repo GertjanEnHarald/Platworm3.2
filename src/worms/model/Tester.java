@@ -17,12 +17,12 @@ public class Tester {
 		// . . .
 		// X X X
 		World world = facade.createWorld(3.0, 4.0, new boolean[][] {
-				{ true, false, true }, { true, true, true },
+				{ true, true, true }, { true, true, true },
 				{ true, true, true }, { false, false, false } }, random);
 		Worm worm = facade.createWorm(world, 1.5, 2.5, Math.PI / 4, 0.5,
 				"Test");
-		worm.selectWeapon();
-		facade.jump(worm,1);
+		System.out.println(worm.getJumpTime());
+		System.out.println(worm.getJumpRealTimeInAir());
 		
 		
 //		assertFalse(facade.canFall(worm));

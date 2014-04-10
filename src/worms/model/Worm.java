@@ -552,7 +552,6 @@ public class Worm extends MovableObject{
 		
 		double x = this.getCoordinateX();
 		double y = this.getCoordinateY();
-		boolean hasLanded = false;
 		timeStep = 10.0*timeStep;
 		for (double time = 0; time <= this.getJumpTime(); time = time + timeStep) {
 			double[] position = this.getJumpStep(time);
@@ -563,7 +562,6 @@ public class Worm extends MovableObject{
 				double x2 = position2[0];
 				double y2 = position2[1];
 				if (! this.getWorld().isPassableArea(x2, y2, this.getRadius())) {
-					hasLanded = true;
 					break;
 				}
 			}
@@ -573,8 +571,28 @@ public class Worm extends MovableObject{
 		this.setY(y);
 		this.setActionPoints(0);
 	
-		if (! hasLanded)
+		if (this.canFall())
 			this.fall();
+	}
+	
+	
+	public double getJumpRealTimeInAir() {
+		double maxTime = this.getJumpTime();
+		double time = 0.0;
+		double step = maxTime/1000.0;
+
+		for (double t = 0; t <= maxTime - step; t = t + step) {
+			double[] position = this.getJumpStep(time);
+			time = t;
+			if (this.getWorld().isAdjacent(position[0], position[1], this.getRadius())) {
+				double[] position2 = this.getJumpStep(time + step);
+				if (! this.getWorld().isPassableArea(position2[0], position2[1], this.getRadius())) {
+					System.out.println("Loop broke");
+					break;
+				}
+			}
+		}
+		return time;
 	}
 
 	
