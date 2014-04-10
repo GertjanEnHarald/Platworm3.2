@@ -33,8 +33,7 @@ public class World {
 	private boolean status;
 	private Random random;
 	private final List<GameObject> gameObjects = new ArrayList<GameObject>();
-	private final List<Worm> wormsWhoHaveHadTheirTurn = new ArrayList<Worm>();
-	private Worm activeWorm;
+	private int indexOfActiveWorm;
 	private final List<Team> teams = new ArrayList<Team>();
 	private final List<String> randomNames = Arrays.asList("Bob", "Emmitt","Parker", "Sergio", "Elias", "Clifton",
 		    "Gregg", "Derick", "Porter", "Archie", "Robbie", "Salvador", "Erich", "Wilfredo", "Casey",
@@ -52,20 +51,28 @@ public class World {
 	/**
 	 * Returns the random seed of this world.
 	 */
-	public Random getRandom(){
+	private Random getRandom(){
 		return this.random;
 	}
 	
-	
-	public List<GameObject> getGameObjects(){
+	/**
+	 * Returns all the game objects (that means:food, worms, weapons ...) in this world.
+	 */
+	protected List<GameObject> getGameObjects(){
 		return this.gameObjects;
 	}
 	
-	public Worm getActiveWorm(){
-		return this.activeWorm;
+	/**
+	 * Returns the active worm. 
+	 */
+	protected Worm getActiveWorm(){
+		return this.getAllWorms().get(getIndexOfActiveWorm());
 	}
 	
-	public List<Worm> getAllWorms(){
+	/**
+	 * Returns all the worms in this world.
+	 */
+	protected List<Worm> getAllWorms(){
 		List<Worm> worms = new ArrayList<Worm>();
 		List<GameObject> objects = getGameObjects();
 		for(int counter = 0; counter < (objects.size()); counter = counter +1){
@@ -74,8 +81,11 @@ public class World {
 		}
 		return worms;
 	}
-		
-	public List<Food> getAllFood(){
+	
+	/**
+	 * Returns all the food in this world.
+	 */
+	protected List<Food> getAllFood(){
 		List<Food> food = new ArrayList<Food>();
 		List<GameObject> objects = getGameObjects();
 		for(int counter = 0; counter < (objects.size()); counter = counter +1){
@@ -86,10 +96,16 @@ public class World {
 			
 	}
 	
-	public int getNbOfGameObjects() {
+	/**
+	 * Returns the amount of objects in this world.
+	 */
+	private int getNbOfGameObjects() {
 		return this.getGameObjects().size();
 	}
 	
+	/**
+	 * Returns a game object at a certain postion in the list of game objects.
+	 */
 	public GameObject getGameObjectAt(int i) throws ModelException {
 		if (! (i < this.getNbOfGameObjects()))
 			throw new ModelException("Index out of bound!");
@@ -97,25 +113,31 @@ public class World {
 		// TODO clone this given game object
 	}
 	
-	public void addAsGameObject(GameObject gameObject) throws ModelException {
+	/**
+	 * 
+	 * @param gameObject
+	 * @throws ModelException
+	 */
+	private void addAsGameObject(GameObject gameObject) throws ModelException {
 		if (! this.canHaveAsGameObject(gameObject))
 			throw new ModelException("Cannot assign this game object to this world!");
 		this.gameObjects.add(gameObject);
 	}
 	
 	public void removeAsGameObject(GameObject gameObject) throws ModelException{
+		int index = getAllWorms().indexOf(gameObject);
 		this.gameObjects.remove(gameObject);
-		this.wormsWhoHaveHadTheirTurn.remove(gameObject);
-		if (this.getActiveWorm()==gameObject)
-			nextTurn();
+		
+		if (index < getIndexOfActiveWorm())
+			setIndexOfActiveWorm(getIndexOfActiveWorm()-1);
 	}
 
 
-	public boolean canHaveAsGameObject(GameObject gameObject) {
+	private boolean canHaveAsGameObject(GameObject gameObject) {
 		return (gameObject.getWorld() == this);
 	}
 	
-	public boolean hasProperGameObjects() {
+	private boolean hasProperGameObjects() {
 		for(int i=0; i < this.getNbOfGameObjects(); i++) {
 			if (! this.canHaveAsGameObject(this.getGameObjectAt(i)))
 				return false;
@@ -126,48 +148,47 @@ public class World {
 	/**
 	 * Returns the upper bound for the dimensions of a world.
 	 */
-	public static double getMaxDimension(){
+	private static double getMaxDimension(){
 		return maxDimension;
 	}
 	
 	/**
 	 * Returns whether the game is active.
 	 */
-	public boolean getStatus(){
+	protected boolean getStatus(){
 		return this.status;
 	}
 	
-	private List<Worm> getAllWormsWhoHaveHadTheirTurn(){
-		return this.wormsWhoHaveHadTheirTurn;
-	}
 	
-	public void startGame(){
+	protected void startGame(){
 		this.status = true;
 		this.nextTurn();
 	}
 	
-	public void setActiveWorm(Worm worm){
-		this.activeWorm = worm;
-	}
 	
-	public void nextTurn() {
+	protected void nextTurn() {
 		
-		if (getAllWormsWhoHaveHadTheirTurn().size() == getAllWorms().size()){
+		if (getIndexOfActiveWorm()+1 == getAllWorms().size()){
 			setActionPointsToMax();
-			getAllWormsWhoHaveHadTheirTurn().clear();
+			setIndexOfActiveWorm(0);
 		}
-		for(int counter  = 0;counter < getAllWorms().size(); counter = counter+1){
-			if (!getAllWormsWhoHaveHadTheirTurn().contains(getAllWorms().get(counter))){
-					setActiveWorm(getAllWorms().get(counter));
-					getAllWormsWhoHaveHadTheirTurn().add(getAllWorms().get(counter));
-					return;
-			}
+		else{
+			setIndexOfActiveWorm(getIndexOfActiveWorm()+1);
 		}
 	}
 	
+	private void setIndexOfActiveWorm(int indexToBeSet) {
+		this.indexOfActiveWorm = indexToBeSet;
+		
+	}
+
+	private int getIndexOfActiveWorm() {
+		return this.indexOfActiveWorm;
+	}
+
 	public void setActionPointsToMax(){
-		for(int counter  = 0;counter < getAllWormsWhoHaveHadTheirTurn().size(); counter = counter+1){
-			getAllWormsWhoHaveHadTheirTurn().get(counter).setActionPoints(getAllWormsWhoHaveHadTheirTurn().get(counter).getMaximumActionPoints());
+		for(int counter  = 0;counter < getAllWorms().size(); counter = counter+1){
+			getAllWorms().get(counter).setActionPoints(getAllWorms().get(counter).getMaximumActionPoints());
 		}
 	}
 	
@@ -256,32 +277,33 @@ public class World {
 	 * 			|result == this.passableMap[row][column]
 	 */
 	public boolean isPassablePixel(int row, int column) throws ModelException{
-		if (row < this.getDimensionInPixels(false) && row >= 0 && column < this.getDimensionInPixels(true) && column >= 0) 
+		if (row < this.getHeightInPixels() && row >= 0 && column < this.getWidthInPixels() && column >= 0) 
 			return this.passableMap[row][column];
 		throw new ModelException("Tested passable pixel outside of range!");
 	}
 	
 	
 	/**
-	 * Returns the vertical or horizontal dimension of this world in a number of pixels.
+	 * Returns the vertical dimension of this world in a number of pixels.
 	 * 
-	 * 
-	 * @param 	heightOrWidth
-	 * 			This boolean signifies whether or not to return the vertical or horizontal 
-	 * 			dimension(true for horizontal and false for vertical).
-	 * 
-	 * @return	Returns the dimension wanted.
-	 * 			|if (heightOrWidth)
-	 * 			|	result == this.passableMap[0].length
-	 * 			|else 
-	 * 			|	this.passableMap.length
+	 * @return	Returns the height in pixels of this world.
+	 * 			|	result == this.passableMap.length
 	 */
-	public int getDimensionInPixels(boolean heightOrWidth){
-		if (heightOrWidth)
-			return this.passableMap[0].length;
-		else
-			return this.passableMap.length;
+	public int getWidthInPixels(){
+		return this.passableMap[0].length;
+		
 	}
+	
+	/**
+	 * Returns the horizontal dimension of this world in a number of pixels.
+	 * 
+	 * @return	Returns the width in pixels of this world.
+	 * 			|	result == this.passableMap[0].length
+	 */
+	public int getHeightInPixels(){
+		return this.passableMap.length;
+	}
+	
 	
 	/**
 	 * Checks if a given location is passable.
@@ -298,9 +320,9 @@ public class World {
 	 *			| result == isPassablePixel((int)(y/pixelHeight),(int)(x/pixelWidth))
 	 */
 	public boolean isPassableLocation(double x, double y){
-		double pixelHeight = (getHeight()/getDimensionInPixels(false));
-		double pixelWidth = (getWidth()/getDimensionInPixels(true));
-		return isPassablePixel((getDimensionInPixels(false)-1-(int)(y/pixelHeight)),(int)(x/pixelWidth));
+		double pixelHeight = (getHeight()/getHeightInPixels());
+		double pixelWidth = (getWidth()/getWidthInPixels());
+		return isPassablePixel((getHeightInPixels()-1-(int)(y/pixelHeight)),(int)(x/pixelWidth));
 	}
 	
 	
@@ -353,7 +375,7 @@ public class World {
 	 * @return
 	 */
 	public boolean isPassableArea(double x, double y, double radius){
-		double step = Math.min(getStep(), radius*0.01);
+		double step = Math.min(getStep()*10, getStep(radius));
 		if ((x-radius) < 0 || (x+radius) > getWidth() || (y-radius) < 0 || (y + radius) > getHeight())
 			return false;
 		for(double distance=step; distance<=radius;distance = distance +step){
@@ -366,8 +388,12 @@ public class World {
 		return true;
 	}
 
+	protected double getStep(double radius) {
+		return 0.03*radius;
+	}
+	
 	protected double getStep() {
-		double step = Math.min(getHeight()/getDimensionInPixels(false), getWidth()/getDimensionInPixels(true))/2.0;
+		double step = Math.min(getHeight()/getHeightInPixels(), getWidth()/getWidthInPixels())/2.0;
 		return step;
 	}
 	
@@ -399,7 +425,7 @@ public class World {
 		double angle = Math.tan(getHeight()*0.5/(getWidth()*0.5-X));
 		if (Double.isNaN(angle));
 			angle = Math.PI/2.0;
-		double step = Math.min(getStep(), radius*0.01);
+		double step = getStep(radius);
 		double stepX = Math.cos(angle)*step;
 		double stepY = Math.sin(angle)*step;
 		while (!(Util.fuzzyEquals(Y, getHeight()/2.0,step*2.0))){
