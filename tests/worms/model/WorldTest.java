@@ -2,7 +2,6 @@ package worms.model;
 
 import static org.junit.Assert.*;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -123,8 +122,8 @@ public class WorldTest {
 		assertTrue(world.isPassablePixel(12, 10));
 		assertFalse(world.isPassablePixel(90, 0));			
 		
-		assertEquals(100, world.getDimensionInPixels(true));
-		assertEquals(100, world.getDimensionInPixels(false));
+		assertEquals(100, world.getWidthInPixels());
+		assertEquals(100, world.getHeightInPixels());
 		
 		assertTrue(world.isPassableLocation(14.5, 12.3));
 		assertFalse(world.isPassableLocation(18.5, 0.05));

@@ -33,14 +33,14 @@ public class World {
 	private boolean status;
 	private Random random;
 	private final List<GameObject> gameObjects = new ArrayList<GameObject>();
-	private int indexOfActiveWorm;
+	private int indexOfActiveWorm=0;
 	private final List<Team> teams = new ArrayList<Team>();
 	private final List<String> randomNames = Arrays.asList("Bob", "Emmitt","Parker", "Sergio", "Elias", "Clifton",
 		    "Gregg", "Derick", "Porter", "Archie", "Robbie", "Salvador", "Erich", "Wilfredo", "Casey",
 		    "Sung", "Christopher", "Jude", "Logan", "Roosevelt", "Rich");
 	
 	
-	public World(double width, double height,boolean[][] passableMap, Random random) 
+	protected World(double width, double height,boolean[][] passableMap, Random random) 
 			throws ModelException {
 		this.setHeight(height);
 		this.setWidth(width);
@@ -106,7 +106,7 @@ public class World {
 	/**
 	 * Returns a game object at a certain postion in the list of game objects.
 	 */
-	public GameObject getGameObjectAt(int i) throws ModelException {
+	protected GameObject getGameObjectAt(int i) throws ModelException {
 		if (! (i < this.getNbOfGameObjects()))
 			throw new ModelException("Index out of bound!");
 		return this.getGameObjects().get(i);
@@ -124,12 +124,17 @@ public class World {
 		this.gameObjects.add(gameObject);
 	}
 	
-	public void removeAsGameObject(GameObject gameObject) throws ModelException{
+	protected void removeAsGameObject(GameObject gameObject) throws ModelException{
 		int index = getAllWorms().indexOf(gameObject);
 		this.gameObjects.remove(gameObject);
-		
-		if (index < getIndexOfActiveWorm())
-			setIndexOfActiveWorm(getIndexOfActiveWorm()-1);
+		if (gameObject instanceof Worm){
+			if (index == getIndexOfActiveWorm()){
+				nextTurn();
+			}
+			if (index < getIndexOfActiveWorm()){
+				setIndexOfActiveWorm(getIndexOfActiveWorm()-1);
+			}
+	}
 	}
 
 
@@ -162,13 +167,12 @@ public class World {
 	
 	protected void startGame(){
 		this.status = true;
-		this.nextTurn();
 	}
 	
 	
 	protected void nextTurn() {
 		
-		if (getIndexOfActiveWorm()+1 == getAllWorms().size()){
+		if (getIndexOfActiveWorm()+1 >= getAllWorms().size()){
 			setActionPointsToMax();
 			setIndexOfActiveWorm(0);
 		}
@@ -186,7 +190,7 @@ public class World {
 		return this.indexOfActiveWorm;
 	}
 
-	public void setActionPointsToMax(){
+	private void setActionPointsToMax(){
 		for(int counter  = 0;counter < getAllWorms().size(); counter = counter+1){
 			getAllWorms().get(counter).setActionPoints(getAllWorms().get(counter).getMaximumActionPoints());
 		}
@@ -195,7 +199,7 @@ public class World {
 	/**
 	 * Returns the width of this world.
 	 */
-	public double getWidth(){
+	protected double getWidth(){
 		return this.width;
 	}
 	
@@ -203,7 +207,7 @@ public class World {
 	/**
 	 * Returns the height of this world.
 	 */
-	public double getHeight(){
+	protected double getHeight(){
 		return this.height;
 	}
 	
@@ -221,7 +225,7 @@ public class World {
 	 * 			The dimension is invalid
 	 * 			|!isValidDimension(height)
 	 */
-	public void setHeight(double height) throws ModelException{
+	private void setHeight(double height) throws ModelException{
 		if (!isValidDimension(height))
 			throw new ModelException("Invalid height for world!");
 		this.height = height;
@@ -242,7 +246,7 @@ public class World {
 	 * 			The dimension is invalid
 	 * 			|!isValidDimension(width)
 	 */
-	public void setWidth(double width){
+	private void setWidth(double width){
 		if (!isValidDimension(width))
 			throw new ModelException("Invalid width for world!");
 		this.width = width;
@@ -259,7 +263,7 @@ public class World {
 	 * @return	Returns whether the dimension is positive and below the upper bound.
 	 * 			| result == 0 <= dimension && dimension <= getMaxDimension()
 	 */	
-	public static boolean isValidDimension(double dimension){
+	private static boolean isValidDimension(double dimension){
 		return 0 <= dimension && dimension <= getMaxDimension();
 	}
 	
@@ -276,7 +280,7 @@ public class World {
 	 * @return	
 	 * 			|result == this.passableMap[row][column]
 	 */
-	public boolean isPassablePixel(int row, int column) throws ModelException{
+	protected boolean isPassablePixel(int row, int column) throws ModelException{
 		if (row < this.getHeightInPixels() && row >= 0 && column < this.getWidthInPixels() && column >= 0) 
 			return this.passableMap[row][column];
 		throw new ModelException("Tested passable pixel outside of range!");
@@ -289,7 +293,7 @@ public class World {
 	 * @return	Returns the height in pixels of this world.
 	 * 			|	result == this.passableMap.length
 	 */
-	public int getWidthInPixels(){
+	protected int getWidthInPixels(){
 		return this.passableMap[0].length;
 		
 	}
@@ -300,7 +304,7 @@ public class World {
 	 * @return	Returns the width in pixels of this world.
 	 * 			|	result == this.passableMap[0].length
 	 */
-	public int getHeightInPixels(){
+	protected int getHeightInPixels(){
 		return this.passableMap.length;
 	}
 	
@@ -319,19 +323,19 @@ public class World {
 	 * 			|pixelWidth = (getWidth()/getDimensionInPixels(true))
 	 *			| result == isPassablePixel((int)(y/pixelHeight),(int)(x/pixelWidth))
 	 */
-	public boolean isPassableLocation(double x, double y){
+	protected boolean isPassableLocation(double x, double y){
 		double pixelHeight = (getHeight()/getHeightInPixels());
 		double pixelWidth = (getWidth()/getWidthInPixels());
 		return isPassablePixel((getHeightInPixels()-1-(int)(y/pixelHeight)),(int)(x/pixelWidth));
 	}
 	
 	
-	public String getRandomName() {
+	private String getRandomName() {
 		int random = this.getRandom().nextInt(this.randomNames.size());
 		return randomNames.get(random);
 	}
 	
-	public void addWorm(){
+	protected void addWorm(){
 		if (getStatus())
 			throw new ModelException("Cannot place worms once game has started!");
 		double radius = 0.3;
@@ -349,7 +353,7 @@ public class World {
 		}	
 	}
 	
-	public void addFood(){
+	protected void addFood(){
 		if (getStatus())
 			throw new ModelException("Cannot place worms once game has started!");
 		try {
@@ -374,7 +378,7 @@ public class World {
 	 * @param radius
 	 * @return
 	 */
-	public boolean isPassableArea(double x, double y, double radius){
+	protected boolean isPassableArea(double x, double y, double radius){
 		double step = Math.min(getStep()*10, getStep(radius));
 		if ((x-radius) < 0 || (x+radius) > getWidth() || (y-radius) < 0 || (y + radius) > getHeight())
 			return false;
@@ -412,14 +416,14 @@ public class World {
 	 * @return	Returns whether entity at location is adjacent to impassable terrain.
 	 * 			| result  == isPassableArea(x,y,1.1*radius)
 	 */
-	public boolean isAdjacent(double x, double y,double radius){
+	protected boolean isAdjacent(double x, double y,double radius){
 		if ((x-radius*1.1) < 0 || (x+radius*1.1) > getWidth() || (y-radius*1.1) < 0 || (y + radius*1.1) > getHeight())
 			return false;
 		return !isPassableArea(x,y,1.1*radius) && isPassableArea(x,y,radius);
 	}
 	
 	
-	public double[] getRandomAdjacentLocation(double radius){
+	private double[] getRandomAdjacentLocation(double radius){
 		double X = (getRandom().nextDouble())*(getWidth()-radius*2.0)+radius;
 		double Y = 0;
 		double angle = Math.tan(getHeight()*0.5/(getWidth()*0.5-X));
@@ -441,29 +445,29 @@ public class World {
 	
 	
 	
-	public List<Team> getTeams() {
+	private List<Team> getTeams() {
 		return this.teams;
 	}
 	
 	
-	public void addAsTeam(Team team) {
+	private void addAsTeam(Team team) {
 		this.teams.add(team);
 	}
 	
 	
-	public int getNumberOfTeams() {
+	private int getNumberOfTeams() {
 		return this.getTeams().size();
 	}
 	
 	
-	public Team getTeamAt(int i) throws ModelException {
+	private Team getTeamAt(int i) throws ModelException {
 		if (i >= this.getNumberOfTeams())
 			throw new ModelException("Not possible to select that team!");
 		return this.getTeams().get(i);
 	}
 	
 	
-	public void addTeam(String name) throws ModelException {
+	protected void addTeam(String name) throws ModelException {
 		if (this.getStatus())
 			throw new ModelException("Cannot make team once game has started!");
 		if (this.getNumberOfTeams() > 10)
@@ -472,7 +476,7 @@ public class World {
 		this.addAsTeam(team);
 	}
 
-	public boolean isGameFinished() {
+	protected boolean isGameFinished() {
 		Set<Team> set = new HashSet<Team>();
 		for(int counter=0;counter<getAllWorms().size();counter++){
 			set.add(getAllWorms().get(counter).getTeam());
@@ -490,7 +494,7 @@ public class World {
 	 * @param worm
 	 * @return
 	 */
-	public Food getFoodThatOverlaps(Worm worm) {
+	protected Food getFoodThatOverlaps(Worm worm) {
 		for(int counter=0;counter<getAllFood().size();counter++){
 			if ((getAllFood().get(counter).getCoordinateX()-getAllFood().get(counter).getRadius() < worm.getCoordinateX()+worm.getRadius())
 					&& 
@@ -507,7 +511,7 @@ public class World {
 	}
 	
 	
-	public String getWinner(){
+	protected String getWinner(){
 		if (getAllWorms().size() ==0)
 			return "Nobody";
 		if (getAllWorms().get(0).getTeam() == null)

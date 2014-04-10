@@ -45,6 +45,7 @@ public class Worm extends MovableObject{
 	private Projectile projectile;
 	private int propulsionYield;
 	private Team team;
+	private boolean hasJustEaten;
 	
 	
 	
@@ -688,7 +689,7 @@ public class Worm extends MovableObject{
 			double finalY = startY;
 			for(double Y = startY; this.canFall(this.getCoordinateX(), Y)&&(Y>-0.1*getRadius());
 					Y = Y - (this.getRadius()*0.1)) {
-					finalY = Y- (this.getWorld().getStep(this.getRadius()));
+					finalY = Y- 0.2*(this.getWorld().getStep(this.getRadius()));
 			}
 			this.setY(finalY);
 			this.setHitPoints(this.getHitPoints() - (int) ((startY - finalY)*3.0));
@@ -699,7 +700,7 @@ public class Worm extends MovableObject{
 	 * Checks if this worm can fall.
 	 */
 	public boolean canFall() {
-		return canFall(this.getCoordinateX(), this.getCoordinateY());
+		return canFall(this.getCoordinateX(), this.getCoordinateY()) && !this.hasJustEaten;
 	}
 	
 	/**
@@ -727,7 +728,7 @@ public class Worm extends MovableObject{
 		double maxSuccesOfMoveValue = 0.0;
 		double toBeExecutedDirection = getDirection();
 		double toBeExecutedSteps = 0.0;
-		for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.1575){
+		for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.0175){
 			double possibleMaxSuccesOfMoveValue = Math.abs(getMaxCoverableDistanceAdjacent(direction)/(direction-getDirection()+0.5));
 			if (maxSuccesOfMoveValue < possibleMaxSuccesOfMoveValue){
 				maxSuccesOfMoveValue = possibleMaxSuccesOfMoveValue;
@@ -741,7 +742,7 @@ public class Worm extends MovableObject{
 			return;
 		}
 			
-		for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.1575){
+		for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.0175){
 				double possibleMaxSuccesOfMoveValue = Math.abs(getMaxCoverableDistancePassable(direction)/(direction-getDirection()+0.5));
 				if (maxSuccesOfMoveValue < possibleMaxSuccesOfMoveValue){
 					maxSuccesOfMoveValue = possibleMaxSuccesOfMoveValue;
@@ -764,7 +765,6 @@ public class Worm extends MovableObject{
 		double theta = direction;
 		int currentActionPoints = this.getActionPoints();
 		int usedActionPoints = (int) usedActionPointsMove((int)steps+1, theta);
-		
 		this.setCoordinates(x + this.getRadius()*steps*Math.cos(theta),y + this.getRadius()*steps*Math.sin(theta));
 		this.setActionPoints(currentActionPoints - usedActionPoints);
 	}
@@ -774,7 +774,7 @@ public class Worm extends MovableObject{
 		if (!getStatus())
 			return false;
 		for(double steps = 0.1; steps <= 1.0;steps = steps +0.45){
-			for(double direction = getDirection()-0.7875; direction <= getDirection()+0.7875;direction = direction + 0.1575){
+			for(double direction = getDirection()-0.7875; direction <= getDirection()+0.7875;direction = direction + 0.0175){
 				if (canMove(steps,direction))
 					return true;
 			}
@@ -835,6 +835,7 @@ public class Worm extends MovableObject{
 	
 	@Override
 	protected void setCoordinates(double x, double y) {
+		this.hasJustEaten = false;
 		super.setCoordinates(x, y);
 		eatFoodIfPossible();
 	}
@@ -850,6 +851,7 @@ public class Worm extends MovableObject{
 	private void eat(Food food) {
 		food.terminate();
 		this.setRadius(1.1*this.getRadius());
+		this.hasJustEaten = true;
 		
 	}
 	
