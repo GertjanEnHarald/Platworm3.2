@@ -491,6 +491,7 @@ public class World {
 	
 	/**
 	 * Dit werkt met vierkanten en het moet met cirkels. Dit klopt dus niet.
+	 * door Overlap(..) zou het wel moeten werken 
 	 * @param worm
 	 * @return
 	 */
