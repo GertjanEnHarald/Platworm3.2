@@ -495,17 +495,9 @@ public class World {
 	 * @return
 	 */
 	protected Food getFoodThatOverlaps(Worm worm) {
-		for(int counter=0;counter<getAllFood().size();counter++){
-			if ((getAllFood().get(counter).getCoordinateX()-getAllFood().get(counter).getRadius() < worm.getCoordinateX()+worm.getRadius())
-					&& 
-					(getAllFood().get(counter).getCoordinateX()+getAllFood().get(counter).getRadius() > worm.getCoordinateX()-worm.getRadius())
-					&&
-					(getAllFood().get(counter).getCoordinateY()-getAllFood().get(counter).getRadius() < worm.getCoordinateY()+worm.getRadius())
-					&& 
-					(getAllFood().get(counter).getCoordinateY()+getAllFood().get(counter).getRadius() > worm.getCoordinateY()-worm.getRadius())){
-						return getAllFood().get(counter);
-			}
-				
+		for(Food food: this.getAllFood()){
+			if (worm.Overlaps(food))
+				return food;
 		}
 		return null;
 	}
@@ -518,6 +510,8 @@ public class World {
 			return getAllWorms().get(0).getName();
 		return getAllWorms().get(0).getTeam().getName();
 	}
+	
+	
 	
 }
 

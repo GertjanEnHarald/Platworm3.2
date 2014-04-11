@@ -209,4 +209,15 @@ public abstract class GameObject {
 	}
 	
 	
+
+	protected boolean Overlaps(GameObject obj) {
+		double x1 = this.getCoordinateX();
+		double y1 = this.getCoordinateY();
+		double x2 = obj.getCoordinateX();
+		double y2 = obj.getCoordinateY();
+		
+		double distance = Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
+		return distance < (this.getRadius() + obj.getRadius()); 
+	}
+	
 }
