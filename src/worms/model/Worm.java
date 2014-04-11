@@ -550,28 +550,32 @@ public class Worm extends MovableObject{
 			throw new ModelException("Cannot jump!");
 		}
 		
-//		double x = this.getCoordinateX();
-//		double y = this.getCoordinateY();
-//		timeStep = 10.0*timeStep;
-//		for (double time = 0; time <= this.getJumpTime(); time = time + timeStep) {
-//			double[] position = this.getJumpStep(time);
-//			x = position[0];
-//			y = position[1];
-//			if (this.getWorld().isAdjacent(position[0], position[1], this.getRadius())) {
-//				double[] position2 = this.getJumpStep(time + timeStep);
-//				double x2 = position2[0];
-//				double y2 = position2[1];
-//				if (! this.getWorld().isPassableArea(x2, y2, this.getRadius())) {
-//					break;
-//				}
-//			}
-//		}
+		double x = this.getCoordinateX();
+		double y = this.getCoordinateY();
+		timeStep = 10.0*timeStep;
+		for (double time = 0; time <= this.getJumpTime(); time = time + timeStep) {
+			double[] position = this.getJumpStep(time);
+			x = position[0];
+			y = position[1];
+			if (this.getWorld().isAdjacent(position[0], position[1], this.getRadius())) {
+				double[] position2 = this.getJumpStep(time + timeStep);
+				double x2 = position2[0];
+				double y2 = position2[1];
+				if (! this.getWorld().isPassableArea(x2, y2, this.getRadius())) {
+					break;
+				}
+			}
+		}
+
+		this.setX(x);
+		this.setY(y);
+		this.setActionPoints(0);
 		
 		// I think that this also works
-		double[] position = this.getJumpStep(this.getJumpRealTimeInAir());
-		this.setX(position[0]);
-		this.setY(position[1]);
-		this.setActionPoints(0);
+//		double[] position = this.getJumpStep(this.getJumpRealTimeInAir());
+//		this.setX(position[0]);
+//		this.setY(position[1]);
+//		this.setActionPoints(0);
 	
 		if (this.canFall())
 			this.fall();
@@ -581,7 +585,7 @@ public class Worm extends MovableObject{
 	public double getJumpRealTimeInAir() {
 		double maxTime = this.getJumpTime();
 		double time = 0.0;
-		double step = maxTime/500;
+		double step = maxTime/200;
 
 		for (double t = 0; t <= maxTime - step; t = t + step) {
 			double[] position = this.getJumpStep(time);
@@ -595,6 +599,7 @@ public class Worm extends MovableObject{
 		}
 		return time;
 	}
+
 
 	
 	
