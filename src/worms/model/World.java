@@ -504,6 +504,20 @@ public class World {
 	}
 	
 	
+	protected Worm getWormThatOverlaps(Projectile projectile) {
+		for (Worm worm: this.getAllWorms()) {
+			if (projectile.Overlaps(worm))
+				return worm;
+		}
+		return null;
+	}
+	
+	
+	protected Projectile getActiveProjectile() {
+		return this.getActiveWorm().getProjectile();
+	}
+	
+	
 	protected String getWinner(){
 		if (getAllWorms().size() ==0)
 			return "Nobody";

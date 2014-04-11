@@ -65,8 +65,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public Projectile getActiveProjectile(World world) {
-		// TODO Auto-generated method stub
-		return null;
+		return world.getActiveProjectile();
 	}
 
 	@Override
@@ -211,7 +210,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean isActive(Projectile projectile) {
-		return false;
+		return projectile.isTerminated();
 	}
 
 	@Override
@@ -237,8 +236,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public void jump(Projectile projectile, double timeStep) {
-		//TODO Something with timestep
-		projectile.jump();
+		projectile.jump(timeStep);
 		
 	}
 

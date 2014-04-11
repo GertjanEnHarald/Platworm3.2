@@ -110,11 +110,44 @@ public abstract class Projectile extends MovableObject {
 	}
 
 	@Override
-	public void jump(double timeStep) {
-		if (! this.canJump()) {
-			throw new ModelException("Cannot jump!");
+	public double getJumpRealTimeInAir(double step) {
+		double maxTime = this.getJumpTime();
+		double time = 0.0;
+
+		for (double t = 0; t <= maxTime - step; t = t + step) {
+			double[] position = this.getJumpStep(time);
+			time = t;
+			if (this.getWorld().isAdjacent(position[0], position[1], this.getRadius())) {
+				double[] position2 = this.getJumpStep(time + step);
+				if (! this.getWorld().isPassableArea(position2[0], position2[1], this.getRadius())) {
+					break;
+				}
+			}
 		}
-		this.setCoordinates(this.getCoordinateX()+this.getJumpDistance(),getCoordinateY());
+		return time;
+	}
+	
+	@Override
+	public void jump(double timeStep) {
+		if (! this.canJump()) 
+			throw new ModelException("Cannot jump!");
+		
+		double x = this.getCoordinateX();
+		double y = this.getCoordinateY();
+		int counter = 0; 
+		System.out.println(this.getJumpTime() - timeStep);
+		for (double time = timeStep; time <= this.getJumpTime() - timeStep; time = time + timeStep) {
+			double[] position = this.getJumpStep(time);
+			x = position[0];
+			y = position[1];
+			counter++;
+			if (! this.getWorld().isPassableArea(x, y, this.getRadius())) {
+				System.out.println("Loop broke in projectile" + counter);
+				break;
+				}
+			}
+		
+		this.setCoordinates(x, y);
 	}
 
 	public abstract double getForce();

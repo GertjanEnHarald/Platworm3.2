@@ -21,9 +21,8 @@ public class Tester {
 				{ true, true, true }, { false, false, false } }, random);
 		Worm worm = facade.createWorm(world, 1.5, 2.5, Math.PI / 4, 0.5,
 				"Test");
-		System.out.println(worm.getJumpTime());
-		System.out.println(worm.getJumpRealTimeInAir());
-		
+		worm.selectWeapon();
+		facade.shoot(worm, 100);
 		
 //		assertFalse(facade.canFall(worm));
 //		worm.move(2);

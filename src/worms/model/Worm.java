@@ -274,7 +274,7 @@ public class Worm extends MovableObject{
 		if ((0 <= hitPoints) && (hitPoints <= this.getMaximumHitPoints()))
 			this.hitPoints = hitPoints;
 		else if (hitPoints < 0)
-			this.hitPoints = 0;
+			this.terminate();
 		else if (hitPoints > this.getMaximumHitPoints())
 			this.hitPoints = this.getMaximumHitPoints();
 	}
@@ -683,8 +683,24 @@ public class Worm extends MovableObject{
 	
 	
 	public void shoot(int yield) {
+		System.out.println("Xworm is: " + this.getCoordinateX());
+		System.out.println("Yworm is: " + this.getCoordinateY());
+		
 		this.setPropulsionYield(yield);
-		this.getProjectile().jump();
+		
+		System.out.println("Xproj is: " + this.getProjectile().getCoordinateX());
+		System.out.println("Yproj is: " + this.getProjectile().getCoordinateY());
+		
+		//this.getProjectile().jump(Math.pow(10, -10));
+		
+		//System.out.println("Xproj new is: " + this.getProjectile().getCoordinateX());
+		//System.out.println("Yproj new is: " + this.getProjectile().getCoordinateY());
+		
+		this.setActionPoints(this.getActionPoints()-this.getProjectile().getCostActionPoints());
+		Worm target = this.getWorld().getWormThatOverlaps(this.getProjectile());
+		if (target != null) {
+			target.setHitPoints(target.getHitPoints()-this.getProjectile().getLostHitPoints());
+		}
 	}
 	
 	
