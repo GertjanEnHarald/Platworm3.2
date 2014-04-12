@@ -60,9 +60,8 @@ public abstract class Projectile extends MovableObject {
 	 * 			| result == (this.getMass()*(3/4)*(1/getDensity())
 	 *			|			*(1/Math.PI))^(1/3)
 	 */
-	private static double getRadius(double mass) {
-		return Math.pow(mass*(3/4)*(1/getDensity())
-				*(1/Math.PI), 1/3);
+	public static double getRadius(double mass) {
+		return Math.pow((3*mass)/(getDensity()*4*Math.PI), 1.0/3);
 	}
 	
 	public double getRadius() {
@@ -132,13 +131,15 @@ public abstract class Projectile extends MovableObject {
 	public double getJumpRealTimeInAir(double step) {
 		double maxTime = this.getJumpTime();
 		double time = 0.0;
+		step = step*10;
 
 		for (double t = 0; t <= maxTime - step; t = t + step) {
 			double[] position = this.getJumpStep(time);
 			time = t;
 			if (this.getWorld().isAdjacent(position[0], position[1], this.getRadius())) {
 				double[] position2 = this.getJumpStep(time + step);
-				if (! this.getWorld().isPassableArea(position2[0], position2[1], this.getRadius())) {
+				if (! this.getWorld().isPassableArea(position2[0], position2[1], this.getRadius())
+						|| this.getWorld().projectileOverlapsWorm(this)) {
 					break;
 				}
 			}
@@ -150,38 +151,27 @@ public abstract class Projectile extends MovableObject {
 	public void jump(double timeStep) {
 		if (! this.canJump()) 
 			throw new ModelException("Cannot jump!");
-		System.out.println("Initial X "+this.getCoordinateX());
-		System.out.println("Initial Y "+this.getCoordinateY());
-		
 		
 		double x = this.getCoordinateX();
 		double y = this.getCoordinateY();
-		int counter = 0; 
-		System.out.println("Jumptime "+this.getJumpTime());
-		System.out.println("Timestep "+timeStep);
-		System.out.println("NB " + this.getJumpTime()/timeStep);
+		timeStep = timeStep*100;
 		
 		for (double time = timeStep; time <= this.getJumpTime() - timeStep; time = time + timeStep) {
 			double[] position = this.getJumpStep(time);
 			x = position[0];
 			y = position[1];
-			counter = counter +1;
-			if (! this.getWorld().isPassableArea(x, y, this.getRadius()) || 
+			if ((! this.getWorld().isPassableArea(x, y, this.getRadius())) || 
 					this.getWorld().projectileOverlapsWorm(this)) {
-				System.out.println("Loop broke in projectile" + counter);
+				System.out.println("Not passable: "+(! this.getWorld().isPassableArea(x, y, this.getRadius())));
+				System.out.println("Worm hit: "+this.getWorld().projectileOverlapsWorm(this));
 				break;
-				}
 			}
-		System.out.println("Counter "+counter);
+		}
 		
 		this.setCoordinates(x, y);
-		System.out.println("X "+this.getCoordinateX());
-		System.out.println("Y "+this.getCoordinateY());
 		
-		System.out.println("Target selected");
 		Worm target = this.getWorld().getWormThatOverlaps(this);
 		if (target != null) {
-			System.out.println("HIT!");
 			target.setHitPoints(target.getHitPoints()-this.getLostHitPoints());
 		}
 	}

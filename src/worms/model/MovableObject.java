@@ -134,8 +134,8 @@ public abstract class MovableObject extends GameObject {
 	public double[] getJumpStep(double time) throws ModelException {
 		if (! this.canJump())
 			throw new ModelException("Cannot jump!");
-//		if(time > this.getJumpTime())
-//			throw new ModelException("Cannot calculate position at time, movable object has already landed!");
+		if(time > this.getJumpTime())
+			throw new ModelException("Cannot calculate position at time, movable object has already landed!");
 		double initialJumpVelocityX = this.getJumpVelocity()*Math.cos(this.getDirection());
 		double initialJumpVelocityY= this.getJumpVelocity()*Math.sin(this.getDirection());
 		double[] result = 
@@ -144,23 +144,7 @@ public abstract class MovableObject extends GameObject {
 		return result;
 	}
 	
-	public double getJumpRealTimeInAir(double step) {
-		double maxTime = this.getJumpTime();
-		double time = 0.0;
-		step = 500*step;
-
-		for (double t = 0; t <= maxTime - step; t = t + step) {
-			double[] position = this.getJumpStep(time);
-			time = t;
-			if (this.getWorld().isAdjacent(position[0], position[1], this.getRadius())) {
-				double[] position2 = this.getJumpStep(time + step);
-				if (! this.getWorld().isPassableArea(position2[0], position2[1], this.getRadius())) {
-					break;
-				}
-			}
-		}
-		return time;
-	}
+	public abstract double getJumpRealTimeInAir(double step);
 	
 	public abstract boolean canJump();
 	
