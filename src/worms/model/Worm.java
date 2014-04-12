@@ -43,7 +43,6 @@ public class Worm extends MovableObject{
 	private static final double minimumRadius=0.25;
 	private final double density=1062;
 	private Projectile projectile;
-	private int propulsionYield;
 	private Team team;
 	private boolean hasJustEaten;
 	
@@ -270,7 +269,7 @@ public class Worm extends MovableObject{
 	 * 			| if (actionPoints > getMaximumHitPoints())
 	 * 			| 	new.getHitPoints() == this.getMaximumHitPoints()	
 	 */
-	private void setHitPoints(int hitPoints) {
+	protected void setHitPoints(int hitPoints) {
 		if ((0 <= hitPoints) && (hitPoints <= this.getMaximumHitPoints()))
 			this.hitPoints = hitPoints;
 		else if (hitPoints < 0)
@@ -409,6 +408,7 @@ public class Worm extends MovableObject{
 		this.setDirection(this.getDirection()+angle);
 		int usedActionPoints = (int) usedActionPointsTurn(angle);
 		this.setActionPoints(this.getActionPoints() - usedActionPoints);
+		this.updateProjectile();
 	}
 
 	
@@ -569,6 +569,7 @@ public class Worm extends MovableObject{
 
 		this.setCoordinates(x, y);
 		this.setActionPoints(0);
+		this.updateProjectile();
 		
 		// I think that this also works
 //		double[] position = this.getJumpStep(this.getJumpRealTimeInAir());
@@ -661,18 +662,9 @@ public class Worm extends MovableObject{
 		if (this.getCurrentWeaponNumber() == 1)
 			this.projectile = new Bazooka(this.getCoordinateX() + this.getRadius()*Math.cos(this.getDirection()),
 					this.getCoordinateY() + this.getRadius()*Math.sin(this.getDirection()), 
-					true, this.getWorld(), this.getDirection(), this.getPropulsionYield());	
+					true, this.getWorld(), this.getDirection());	
 	}
-	
-	
-	public int getPropulsionYield() {
-		return this.propulsionYield;
-	}
-	
-	
-	private void setPropulsionYield(int yield) {
-		this.propulsionYield = yield;
-	}
+
 	
 	
 	public void selectWeapon() {
@@ -683,26 +675,18 @@ public class Worm extends MovableObject{
 	
 	
 	public void shoot(int yield) {
-		System.out.println("Xworm is: " + this.getCoordinateX());
-		System.out.println("Yworm is: " + this.getCoordinateY());
-		
-		this.setPropulsionYield(yield);
-		
-		System.out.println("Xproj is: " + this.getProjectile().getCoordinateX());
-		System.out.println("Yproj is: " + this.getProjectile().getCoordinateY());
-		
-		//this.getProjectile().jump(Math.pow(10, -10));
-		
-		//System.out.println("Xproj new is: " + this.getProjectile().getCoordinateX());
-		//System.out.println("Yproj new is: " + this.getProjectile().getCoordinateY());
-		
+		this.getProjectile().setYield(yield);
 		this.setActionPoints(this.getActionPoints()-this.getProjectile().getCostActionPoints());
-		Worm target = this.getWorld().getWormThatOverlaps(this.getProjectile());
-		if (target != null) {
-			target.setHitPoints(target.getHitPoints()-this.getProjectile().getLostHitPoints());
-		}
+
 	}
 	
+	
+	private void updateProjectile() {
+		if (this.getProjectile() != null) {
+			this.getProjectile().setCoordinates(this.getCoordinateX(), this.getCoordinateY());
+			this.getProjectile().setDirection(this.getDirection());
+		}
+	}
 	
 	
 	
@@ -716,6 +700,7 @@ public class Worm extends MovableObject{
 			}
 			this.setY(finalY);
 			this.setHitPoints(this.getHitPoints() - (int) ((startY - finalY)*3.0));
+			this.updateProjectile();
 		}
 	}
 	
@@ -775,7 +760,8 @@ public class Worm extends MovableObject{
 		}
 		if (toBeExecutedSteps > 0.0)
 			move(toBeExecutedSteps,toBeExecutedDirection);
-		}
+		this.updateProjectile();
+	}
 	
 	
 	

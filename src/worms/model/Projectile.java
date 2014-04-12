@@ -9,7 +9,8 @@ public abstract class Projectile extends MovableObject {
 	private final int lostHitPoints;
 	private final int costActionPoints;
 	private boolean isTerminated;
-	protected String name;
+	private String name;
+	private int yield;
 	
 	
 	
@@ -45,6 +46,10 @@ public abstract class Projectile extends MovableObject {
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	protected void setName(String name) {
+		this.name = name;
 	}
 	
 	/**
@@ -109,6 +114,20 @@ public abstract class Projectile extends MovableObject {
 		return this.costActionPoints;
 	}
 
+	public int getYield() {
+		return this.yield;
+	}
+	
+	protected void setYield(int yield) throws ModelException {
+		if (! isValidYield(yield))
+			throw new ModelException("Invalid yield!");
+		this.yield = yield;
+	}
+	
+	public static boolean isValidYield(int yield) {
+		return (yield >= 0) && (yield <= 100);
+	}
+	
 	@Override
 	public double getJumpRealTimeInAir(double step) {
 		double maxTime = this.getJumpTime();
@@ -131,23 +150,40 @@ public abstract class Projectile extends MovableObject {
 	public void jump(double timeStep) {
 		if (! this.canJump()) 
 			throw new ModelException("Cannot jump!");
+		System.out.println("Initial X "+this.getCoordinateX());
+		System.out.println("Initial Y "+this.getCoordinateY());
+		
 		
 		double x = this.getCoordinateX();
 		double y = this.getCoordinateY();
 		int counter = 0; 
-		System.out.println(this.getJumpTime() - timeStep);
+		System.out.println("Jumptime "+this.getJumpTime());
+		System.out.println("Timestep "+timeStep);
+		System.out.println("NB " + this.getJumpTime()/timeStep);
+		
 		for (double time = timeStep; time <= this.getJumpTime() - timeStep; time = time + timeStep) {
 			double[] position = this.getJumpStep(time);
 			x = position[0];
 			y = position[1];
-			counter++;
-			if (! this.getWorld().isPassableArea(x, y, this.getRadius())) {
+			counter = counter +1;
+			if (! this.getWorld().isPassableArea(x, y, this.getRadius()) || 
+					this.getWorld().projectileOverlapsWorm(this)) {
 				System.out.println("Loop broke in projectile" + counter);
 				break;
 				}
 			}
+		System.out.println("Counter "+counter);
 		
 		this.setCoordinates(x, y);
+		System.out.println("X "+this.getCoordinateX());
+		System.out.println("Y "+this.getCoordinateY());
+		
+		System.out.println("Target selected");
+		Worm target = this.getWorld().getWormThatOverlaps(this);
+		if (target != null) {
+			System.out.println("HIT!");
+			target.setHitPoints(target.getHitPoints()-this.getLostHitPoints());
+		}
 	}
 
 	public abstract double getForce();

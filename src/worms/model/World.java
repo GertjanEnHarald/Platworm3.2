@@ -512,6 +512,10 @@ public class World {
 		return null;
 	}
 	
+	protected boolean projectileOverlapsWorm(Projectile projectile) {
+		Worm worm = this.getWormThatOverlaps(projectile);
+		return (worm != null) && (worm != this.getActiveWorm());
+	}
 	
 	protected Projectile getActiveProjectile() {
 		return this.getActiveWorm().getProjectile();
