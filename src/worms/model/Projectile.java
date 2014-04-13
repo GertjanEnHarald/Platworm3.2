@@ -131,17 +131,14 @@ public abstract class Projectile extends MovableObject {
 	public double getJumpRealTimeInAir(double step) {
 		double maxTime = this.getJumpTime();
 		double time = 0.0;
-		step = step*10;
+		step = step*200;
 
-		for (double t = 0; t <= maxTime - step; t = t + step) {
-			double[] position = this.getJumpStep(time);
+		for (double t = 0; t <= maxTime; t = t + step) {
 			time = t;
-			if (this.getWorld().isAdjacent(position[0], position[1], this.getRadius())) {
-				double[] position2 = this.getJumpStep(time + step);
-				if (! this.getWorld().isPassableArea(position2[0], position2[1], this.getRadius())
-						|| this.getWorld().projectileOverlapsWorm(this)) {
-					break;
-				}
+			double[] position = this.getJumpStep(t);
+			if ( (! this.getWorld().isPassableArea(position[0], position[1], this.getRadius())) ||
+					this.getWorld().projectileOverlapsWorm(this)) {
+				break;
 			}
 		}
 		return time;
@@ -154,16 +151,23 @@ public abstract class Projectile extends MovableObject {
 		
 		double x = this.getCoordinateX();
 		double y = this.getCoordinateY();
-		timeStep = timeStep*100;
+		System.out.println("Initial X: "+x);
+		System.out.println("Initial Y: "+y);
+		timeStep = timeStep*500;
 		
-		for (double time = timeStep; time <= this.getJumpTime() - timeStep; time = time + timeStep) {
+		System.out.println("Max number of loops "+this.getJumpTime()/timeStep);
+		
+		for (double time = timeStep; time <= this.getJumpTime(); time = time + timeStep) {
 			double[] position = this.getJumpStep(time);
 			x = position[0];
 			y = position[1];
 			if ((! this.getWorld().isPassableArea(x, y, this.getRadius())) || 
 					this.getWorld().projectileOverlapsWorm(this)) {
+				System.out.println("Out loop in "+(time-timeStep)/timeStep+" loops");
 				System.out.println("Not passable: "+(! this.getWorld().isPassableArea(x, y, this.getRadius())));
 				System.out.println("Worm hit: "+this.getWorld().projectileOverlapsWorm(this));
+				System.out.println("X is: "+this.getCoordinateX());
+				System.out.println("Y is: "+this.getCoordinateY());
 				break;
 			}
 		}
