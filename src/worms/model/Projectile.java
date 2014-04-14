@@ -5,7 +5,7 @@ import be.kuleuven.cs.som.annotate.*;
 public abstract class Projectile extends MovableObject {
 	
 	private static final double density = 7800;		// In kg/m³
-	private final double massOfProjectile;			// In gram
+	private final double massOfProjectile;			// In kg
 	private final int lostHitPoints;
 	private final int costActionPoints;
 	private boolean isTerminated;
@@ -131,7 +131,7 @@ public abstract class Projectile extends MovableObject {
 	public double getJumpRealTimeInAir(double step) {
 		double maxTime = this.getJumpTime();
 		double time = 0.0;
-		step = 100.0*step;
+		step = 150.0*step;
 
 		for (double t = 0; t <= 3.0*maxTime; t = t + step) {
 			time = t;

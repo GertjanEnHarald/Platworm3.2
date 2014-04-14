@@ -630,7 +630,7 @@ public class Worm extends MovableObject{
 	public double getJumpRealTimeInAir(double step) {
 		double maxTime = this.getJumpTime();
 		double time = 0.0;
-		step = 50.0*step;
+		step = 100.0*step;
 
 		for (double t = step; t <= maxTime*5.0 ; t = t + step) {
 			double[] position = this.getJumpStep(time);
@@ -672,9 +672,9 @@ public class Worm extends MovableObject{
 	}
 	
 	
-	//TODO: Shouldn't be done like this: OOP style requires the possibility to add a new class
-	//of projectile without changing any other code.
-	//This is clearly not handled in a proper manner. 
+	/*TODO: Shouldn't be done like this: OOP style requires the possibility to add a new class
+	of projectile without changing any other code.
+	This is clearly not handled in a proper manner.*/ 
 	private void setProjectile() {
 		if (this.getCurrentWeaponNumber() == 0)
 			this.projectile = new Rifle(this.getCoordinateX() + this.getRadius()*Math.cos(this.getDirection()),
@@ -886,21 +886,5 @@ public class Worm extends MovableObject{
 	}
 	
 	
-	}
+}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
