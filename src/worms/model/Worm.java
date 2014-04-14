@@ -553,7 +553,7 @@ public class Worm extends MovableObject{
 		double x = this.getCoordinateX();
 		double y = this.getCoordinateY();
 		timeStep = 10.0*timeStep;
-		for (double time = 0; time <= this.getJumpTime() - timeStep; time = time + timeStep) {
+		for (double time = 0; true /*time <= this.getJumpTime() - timeStep*/; time = time + timeStep) {
 			double[] position = this.getJumpStep(time);
 			x = position[0];
 			y = position[1];
@@ -577,8 +577,8 @@ public class Worm extends MovableObject{
 //		this.setY(position[1]);
 //		this.setActionPoints(0);
 	
-		if (this.canFall())
-			this.fall();
+		/*if (this.canFall())
+			this.fall();*/
 	}
 	
 	
@@ -630,15 +630,16 @@ public class Worm extends MovableObject{
 	public double getJumpRealTimeInAir(double step) {
 		double maxTime = this.getJumpTime();
 		double time = 0.0;
-		step = 75.0*step;
+		step = 50.0*step;
 
-		for (double t = step; t <= maxTime*2.0 ; t = t + step) {
+		for (double t = step; t <= maxTime*5.0 ; t = t + step) {
 			double[] position = this.getJumpStep(time);
 			time = t;
 			if (this.getWorld().isAdjacent(position[0], position[1], this.getRadius())) {
 				double[] position2 = this.getJumpStep(time + step);
 				if (! this.getWorld().isPassableArea(position2[0], position2[1], this.getRadius()) 
-						|| this.getWorld().isAdjacent(position2[0], position2[1], this.getRadius())) {
+						//|| this.getWorld().isAdjacent(position2[0], position2[1], this.getRadius())
+						) {
 					break;
 				}
 			}
