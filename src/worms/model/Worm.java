@@ -630,9 +630,9 @@ public class Worm extends MovableObject{
 	public double getJumpRealTimeInAir(double step) {
 		double maxTime = this.getJumpTime();
 		double time = 0.0;
-		step = 200.0*step;
+		step = 75.0*step;
 
-		for (double t = step; t <= maxTime ; t = t + step) {
+		for (double t = step; t <= maxTime*2.0 ; t = t + step) {
 			double[] position = this.getJumpStep(time);
 			time = t;
 			if (this.getWorld().isAdjacent(position[0], position[1], this.getRadius())) {

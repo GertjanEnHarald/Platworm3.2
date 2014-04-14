@@ -506,8 +506,9 @@ public class World {
 	
 	protected Worm getWormThatOverlaps(Projectile projectile) {
 		for (Worm worm: this.getAllWorms()) {
-			if (projectile.Overlaps(worm))
+			if (projectile.Overlaps(worm)) {
 				return worm;
+			}
 		}
 		return null;
 	}

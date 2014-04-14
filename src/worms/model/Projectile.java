@@ -131,13 +131,15 @@ public abstract class Projectile extends MovableObject {
 	public double getJumpRealTimeInAir(double step) {
 		double maxTime = this.getJumpTime();
 		double time = 0.0;
-		step = step*200;
+		step = 10.0*step;
 
 		for (double t = 0; t <= maxTime; t = t + step) {
 			time = t;
 			double[] position = this.getJumpStep(t);
 			if ( (! this.getWorld().isPassableArea(position[0], position[1], this.getRadius())) ||
 					this.getWorld().projectileOverlapsWorm(this)) {
+				//System.out.println("Not passable: "+(! this.getWorld().isPassableArea(position[0], position[1], this.getRadius())));
+				//System.out.println("Worm hit: "+this.getWorld().projectileOverlapsWorm(this));
 				break;
 			}
 		}
@@ -151,28 +153,35 @@ public abstract class Projectile extends MovableObject {
 		
 		double x = this.getCoordinateX();
 		double y = this.getCoordinateY();
-		System.out.println("Initial X: "+x);
-		System.out.println("Initial Y: "+y);
-		timeStep = timeStep*500;
+		double maxTime = this.getJumpTime();
+		double radiusProjectile = this.getRadius();
+
+//		System.out.println("Initial X: "+x);
+//		System.out.println("Initial Y: "+y);
+/*		System.out.println("Projectile radius: " + radiusProjectile);
+		System.out.println("Initial velocity: "+this.getJumpVelocity()); 
+		timeStep = 10*timeStep;*/
 		
-		System.out.println("Max number of loops "+this.getJumpTime()/timeStep);
+//		System.out.println("Max number of loops "+maxTime/timeStep);
 		
-		for (double time = timeStep; time <= this.getJumpTime(); time = time + timeStep) {
+		for (double time = timeStep; time <= maxTime; time = time + timeStep) {
 			double[] position = this.getJumpStep(time);
 			x = position[0];
 			y = position[1];
-			if ((! this.getWorld().isPassableArea(x, y, this.getRadius())) || 
+			this.setCoordinates(x, y);
+			if ((! this.getWorld().isPassableArea(x, y, radiusProjectile)) || 
 					this.getWorld().projectileOverlapsWorm(this)) {
-				System.out.println("Out loop in "+(time-timeStep)/timeStep+" loops");
-				System.out.println("Not passable: "+(! this.getWorld().isPassableArea(x, y, this.getRadius())));
-				System.out.println("Worm hit: "+this.getWorld().projectileOverlapsWorm(this));
-				System.out.println("X is: "+this.getCoordinateX());
-				System.out.println("Y is: "+this.getCoordinateY());
+//				System.out.println("Out loop in "+(time-timeStep)/timeStep+" loops");
+//				System.out.println("Not passable: "+(! this.getWorld().isPassableArea(x, y, radiusProjectile)));
+//				System.out.println("Worm hit: "+this.getWorld().projectileOverlapsWorm(this));
+//				System.out.println("X is: "+x);
+//				System.out.println("Y is: "+y);
 				break;
 			}
 		}
 		
 		this.setCoordinates(x, y);
+		
 		
 		Worm target = this.getWorld().getWormThatOverlaps(this);
 		if (target != null) {
