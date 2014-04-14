@@ -98,12 +98,16 @@ public abstract class GameObject {
 	protected void setX(double coordinateX) throws ModelException {
 		if (!isValidCoordinate(coordinateX))
 			throw new ModelException("Illegal X coordinate!");
-		if ((coordinateX < 0) || (coordinateX > this.getWorld().getWidth())){
+		if (isXCoordinateOutOfBounds(coordinateX)){
 			this.coordinateX = coordinateX;
 			this.terminate();
 			}
 		else
 			this.coordinateX = coordinateX;
+	}
+
+	protected boolean isXCoordinateOutOfBounds(double coordinateX) {
+		return (coordinateX < 0) || (coordinateX > this.getWorld().getWidth());
 	}
 	
 	
@@ -123,13 +127,18 @@ public abstract class GameObject {
 	@Raw
 	protected void setY(double coordinateY) throws ModelException {
 		if (!isValidCoordinate(coordinateY))
+			
 			throw new ModelException("Illegal Y coordinate!");
-		if ((coordinateY < 0) || (coordinateY > this.getWorld().getHeight())){
+		if (isYCoordinateOutOfBounds(coordinateY)){
 			this.coordinateY = coordinateY;
 			this.terminate();
 			}
 		else
 			this.coordinateY = coordinateY;
+	}
+
+	protected boolean isYCoordinateOutOfBounds(double coordinateY) {
+		return (coordinateY < 0) || (coordinateY > this.getWorld().getHeight());
 	}
 	
 	
