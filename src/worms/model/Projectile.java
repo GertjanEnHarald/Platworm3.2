@@ -131,9 +131,9 @@ public abstract class Projectile extends MovableObject {
 	public double getJumpRealTimeInAir(double step) {
 		double maxTime = this.getJumpTime();
 		double time = 0.0;
-		step = 10.0*step;
+		step = 100.0*step;
 
-		for (double t = 0; t <= maxTime; t = t + step) {
+		for (double t = 0; t <= 3.0*maxTime; t = t + step) {
 			time = t;
 			double[] position = this.getJumpStep(t);
 			if ( (! this.getWorld().isPassableArea(position[0], position[1], this.getRadius())) ||
@@ -153,7 +153,7 @@ public abstract class Projectile extends MovableObject {
 		
 		double x = this.getCoordinateX();
 		double y = this.getCoordinateY();
-		double maxTime = this.getJumpTime();
+		//double maxTime = this.getJumpTime();
 		double radiusProjectile = this.getRadius();
 
 //		System.out.println("Initial X: "+x);
@@ -164,7 +164,7 @@ public abstract class Projectile extends MovableObject {
 		
 //		System.out.println("Max number of loops "+maxTime/timeStep);
 		
-		for (double time = timeStep; time <= maxTime; time = time + timeStep) {
+		for (double time = timeStep; true; time = time + timeStep) {
 			double[] position = this.getJumpStep(time);
 			x = position[0];
 			y = position[1];
@@ -178,10 +178,7 @@ public abstract class Projectile extends MovableObject {
 //				System.out.println("Y is: "+y);
 				break;
 			}
-		}
-		
-		this.setCoordinates(x, y);
-		
+		}	
 		
 		Worm target = this.getWorld().getWormThatOverlaps(this);
 		if (target != null) {
