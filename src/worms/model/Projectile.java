@@ -152,17 +152,8 @@ public abstract class Projectile extends MovableObject {
 		
 		double x = this.getCoordinateX();
 		double y = this.getCoordinateY();
-		//double maxTime = this.getJumpTime();
 		double radiusProjectile = this.getRadius();
 
-//		System.out.println("Initial X: "+x);
-//		System.out.println("Initial Y: "+y);
-/*		System.out.println("Projectile radius: " + radiusProjectile);
-		System.out.println("Initial velocity: "+this.getJumpVelocity()); 
-		timeStep = 10*timeStep;*/
-		
-//		System.out.println("Max number of loops "+maxTime/timeStep);
-		
 		for (double time = timeStep; true; time = time + timeStep) {
 			double[] position = this.getJumpStep(time);
 			x = position[0];
@@ -170,11 +161,6 @@ public abstract class Projectile extends MovableObject {
 			this.setCoordinates(x, y);
 			if ((! this.getWorld().isPassableArea(x, y, radiusProjectile)) || 
 					this.getWorld().projectileOverlapsWorm(this)) {
-//				System.out.println("Out loop in "+(time-timeStep)/timeStep+" loops");
-//				System.out.println("Not passable: "+(! this.getWorld().isPassableArea(x, y, radiusProjectile)));
-//				System.out.println("Worm hit: "+this.getWorld().projectileOverlapsWorm(this));
-//				System.out.println("X is: "+x);
-//				System.out.println("Y is: "+y);
 				break;
 			}
 			else if (! this.getWorld().isInWorld(x, y, this.getRadius())) {
