@@ -565,20 +565,21 @@ public class Worm extends MovableObject{
 					break;
 				}
 			}
+			else if (! this.getWorld().isInWorld(x, y, this.getRadius())) {
+				x = x - this.getRadius();
+				y = y - this.getRadius();
+				break;
+			} 
 		}
 
 		this.setCoordinates(x, y);
-		this.setActionPoints(0);
-		this.updateProjectile();
 		
-		// I think that this also works
-//		double[] position = this.getJumpStep(this.getJumpRealTimeInAir());
-//		this.setX(position[0]);
-//		this.setY(position[1]);
-//		this.setActionPoints(0);
-	
-		/*if (this.canFall())
-			this.fall();*/
+		// If setCoordinates terminates this worm, these functions will throw a NullPointer.
+		try {
+			this.setActionPoints(0);
+			this.updateProjectile();
+		} catch (NullPointerException exc) {}
+		
 	}
 	
 	
@@ -868,7 +869,10 @@ public class Worm extends MovableObject{
 	protected void setCoordinates(double x, double y) {
 		this.hasJustEaten = false;
 		super.setCoordinates(x, y);
-		eatFoodIfPossible();
+		// If setCoordinates terminates this worm, this function will throw a NullPointer.
+		try {
+			eatFoodIfPossible();
+		} catch (NullPointerException exc) {}
 	}
 	
 	private void eatFoodIfPossible(){

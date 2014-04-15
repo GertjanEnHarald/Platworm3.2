@@ -380,7 +380,7 @@ public class World {
 	 */
 	protected boolean isPassableArea(double x, double y, double radius){
 		double step = Math.min(getStep()*10, getStep(radius));
-		if ((x-radius) < 0 || (x+radius) > getWidth() || (y-radius) < 0 || (y + radius) > getHeight())
+		if (! isInWorld(x, y, radius))
 			return false;
 		for(double distance=step; distance<=radius;distance = distance +step){
 			for(double angle=0; angle<=2*Math.PI; angle= angle + step/distance){
@@ -389,6 +389,12 @@ public class World {
 				}
 			}
 			}
+		return true;
+	}
+	
+	protected boolean isInWorld(double x, double y, double radius) {
+		if ((x-radius) < 0 || (x+radius) > getWidth() || (y-radius) < 0 || (y + radius) > getHeight())
+			return false;
 		return true;
 	}
 
