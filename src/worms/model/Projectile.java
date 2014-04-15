@@ -131,15 +131,14 @@ public abstract class Projectile extends MovableObject {
 	public double getJumpRealTimeInAir(double step) {
 		double maxTime = this.getJumpTime();
 		double time = 0.0;
+		double radius = this.getRadius();
 		step = 150.0*step;
 
 		for (double t = 0; t <= 3.0*maxTime; t = t + step) {
 			time = t;
 			double[] position = this.getJumpStep(t);
-			if ( (! this.getWorld().isPassableArea(position[0], position[1], this.getRadius())) ||
+			if ( (! this.getWorld().isPassableArea(position[0], position[1], radius)) ||
 					this.getWorld().projectileOverlapsWorm(this)) {
-				//System.out.println("Not passable: "+(! this.getWorld().isPassableArea(position[0], position[1], this.getRadius())));
-				//System.out.println("Worm hit: "+this.getWorld().projectileOverlapsWorm(this));
 				break;
 			}
 		}
@@ -176,6 +175,11 @@ public abstract class Projectile extends MovableObject {
 //				System.out.println("Worm hit: "+this.getWorld().projectileOverlapsWorm(this));
 //				System.out.println("X is: "+x);
 //				System.out.println("Y is: "+y);
+				break;
+			}
+			else if (! this.getWorld().isInWorld(x, y, this.getRadius())) {
+				x = x - this.getRadius();
+				y = y - this.getRadius();
 				break;
 			}
 		}	
