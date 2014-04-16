@@ -173,7 +173,7 @@ public class World {
 	protected void nextTurn() {
 		
 		if (getIndexOfActiveWorm()+1 >= getAllWorms().size()){
-			setActionPointsToMax();
+			setActionPointsToMaxAndAdd10HitPoints();
 			setIndexOfActiveWorm(0);
 		}
 		else{
@@ -190,9 +190,10 @@ public class World {
 		return this.indexOfActiveWorm;
 	}
 
-	private void setActionPointsToMax(){
+	private void setActionPointsToMaxAndAdd10HitPoints(){
 		for(int counter  = 0;counter < getAllWorms().size(); counter = counter+1){
 			getAllWorms().get(counter).setActionPoints(getAllWorms().get(counter).getMaximumActionPoints());
+			getAllWorms().get(counter).setHitPoints(getAllWorms().get(counter).getHitPoints()+10);
 		}
 	}
 	
