@@ -7,6 +7,15 @@ public abstract class MovableObject extends GameObject {
 
 	private double direction;
 	
+	/**
+	 * 
+	 * @param 	direction
+	 * 			The new direction of this movable object.
+	 * 
+	 * 
+	 * @post	The new direction of this movable object will be equal to the given direction.
+	 * 			| new.getDirection() == direction
+	 */
 	public MovableObject(double coordinateX, double coordinateY, boolean isActive, 
 			double radius, World world, double direction) {
 		super(coordinateX, coordinateY, isActive, radius,world);

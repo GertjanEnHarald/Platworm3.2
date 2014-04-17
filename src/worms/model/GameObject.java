@@ -13,6 +13,29 @@ public abstract class GameObject {
 	private World world;
 	private static final double g=9.80665;
 	
+	
+	/**
+	 * 
+	 * @param 	coordinateX
+	 * 			The x coordinate for this new game object.
+	 * @param 	coordinateY
+	 * 			The y coordinate for this new game object.
+	 * @param	radius
+	 * 			The radius for this new game object.
+	 * @param 	isActive
+	 * 			The status for this new game object.
+	 * @param 	world
+	 * 			The world for this new game object.
+	 * 
+	 * @post	The new x coordinate of this game object will be equal to the given coordinateX.
+	 * 			| new.getCoordinateX() == coordinateX
+	 * @post	The new y coordinate of this game object will be equal to the given coordinateY.
+	 * 			| new.getCoordinateY() == coordinateY
+	 * @post	The new status of this game object will be equal to the given isActive.
+	 * 			| new.getStatus() == isActive
+	 * @post	The new world of this game object will be equal to the given world.
+	 * 			| new.getWorld() == world
+	 */
 	public GameObject(double coordinateX, double  coordinateY, boolean isActive, double radius, World world) {
 		this.setWorld(world);
 		this.setCoordinates(coordinateX, coordinateY);

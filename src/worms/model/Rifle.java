@@ -4,7 +4,12 @@ import be.kuleuven.cs.som.annotate.*;
 
 public class Rifle extends Projectile {
 	
-	
+	/**
+	 * Constructor to make a rifle.
+	 * 
+	 * @post	The name of this weapon will be set.
+	 * 			| new.getName() == 'Rifle'
+	 */
 	public Rifle(double coordinateX, double coordinateY, boolean isActive,
 			World world, double direction) throws ModelException {
 		super(coordinateX, coordinateY, isActive, world, direction,
@@ -14,7 +19,6 @@ public class Rifle extends Projectile {
 	
 	/**
 	 * Returns the force in Newton at which projectiles from a rifle are propelled.
-	 * 
 	 * 
 	 * @return	Returns the force.
 	 * 			| result == 1.5

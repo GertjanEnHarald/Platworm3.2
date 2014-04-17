@@ -5,16 +5,20 @@ import be.kuleuven.cs.som.annotate.*;
 public class Bazooka extends Projectile {
 	
 
+	/**
+	 * Constructor to make a bazooka.
+	 * 
+	 * @post	The name of this weapon will be set.
+	 * 			| new.getName() == 'Bazooka'
+	 */
 	public Bazooka(double coordinateX, double coordinateY, boolean isActive,
 			World world, double direction) throws ModelException {
 		super(coordinateX, coordinateY, isActive, world, direction,
 				0.300, 80, 50);
 		this.setName("Bazooka");
 	}
-
-	public static boolean isValidPropulsionYield(int propulsionYield) {
-		return (propulsionYield >= 0) && (propulsionYield <= 100);
-	}
+	
+	
 	
 	
 	/**
