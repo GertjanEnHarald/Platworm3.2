@@ -3,7 +3,7 @@ package worms.model;
 
 import be.kuleuven.cs.som.annotate.*;
 
-public abstract class GameObject {
+public abstract class GameObject implements Cloneable {
 	
 
 	private double coordinateX;
@@ -360,4 +360,13 @@ public abstract class GameObject {
 		return distance < (this.getRadius() + gameObject.getRadius()); 
 	}
 	
+	
+	
+	
+	@Override
+	protected GameObject clone() throws CloneNotSupportedException {
+		GameObject cloned = (GameObject) super.clone();
+		cloned.setWorld(cloned.getWorld().clone());
+		return cloned;
+	}
 }

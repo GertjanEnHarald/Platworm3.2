@@ -366,10 +366,15 @@ public class Worm extends MovableObject{
 	
 	
 	public void joinTeam(Team team) throws ModelException {
-		if (! isValidTeam(team))
-			throw new ModelException("Invalid team assignment!");
 		if (this.getWorld().getStatus())
 			throw new ModelException("Game has already started, cannot assign to team!");
+		this.setTeam(team);
+	}
+	
+	
+	private void setTeam(Team team) throws ModelException {
+		if (! isValidTeam(team))
+			throw new ModelException("Invalid team assignment!");
 		this.team = team;
 	}
 	
@@ -884,9 +889,19 @@ public class Worm extends MovableObject{
 		food.terminate();
 		this.setRadius(1.1*this.getRadius());
 		this.hasJustEaten = true;
-		
 	}
 	
+	
+	
+	
+	@Override
+	protected Worm clone() throws CloneNotSupportedException {
+		Worm cloned = (Worm) super.clone();
+		if (this.getTeam() != null)
+			cloned.setTeam(this.getTeam().clone());
+		cloned.setProjectile();
+		return cloned;
+	}
 	
 }
 	

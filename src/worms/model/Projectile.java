@@ -397,4 +397,10 @@ public abstract class Projectile extends MovableObject {
 	}
 	
 	
+	
+	
+	@Override
+	protected Projectile clone() throws CloneNotSupportedException {
+		return (Projectile) super.clone();
+	}
 }

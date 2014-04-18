@@ -25,7 +25,7 @@ import worms.util.Util;
  *
  *
  */
-public class World {
+public class World implements Cloneable {
 	
 	
 	
@@ -980,7 +980,10 @@ public class World {
 	
 	
 	
-	
+	@Override
+	protected World clone() throws CloneNotSupportedException {
+		return (World) super.clone();
+	}
 	
 	
 	

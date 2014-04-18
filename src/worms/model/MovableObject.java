@@ -195,4 +195,10 @@ public abstract class MovableObject extends GameObject {
 	 */
 	public abstract boolean canJump();
 	
+	
+	
+	@Override
+	protected MovableObject clone() throws CloneNotSupportedException {
+		return (MovableObject) super.clone();
+	}
 }

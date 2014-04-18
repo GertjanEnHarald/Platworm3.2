@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import be.kuleuven.cs.som.annotate.*;
 
-public class Team {
+public class Team implements Cloneable {
 
 	private final String name;
 	private final List<Worm> worms = new ArrayList<Worm>();
@@ -72,6 +72,10 @@ public class Team {
 	}
 	
 	public void removeFromTeam(Worm worm){
-		
+		this.worms.remove(worm);
+	}
+	
+	protected Team clone() throws CloneNotSupportedException {
+		return (Team) super.clone();
 	}
 }

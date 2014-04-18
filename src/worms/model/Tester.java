@@ -19,15 +19,22 @@ public class Tester {
 		}, random);
 		Worm worm = facade.createWorm(world, 1, 1, Math.PI / 4, 0.5,
 				"Test");
-		System.out.println(worm.getProjectile().getName());
-		System.out.println("Projectile "+worm.getProjectile().getRadius());
-		worm.selectWeapon();
-		System.out.println(worm.getProjectile().getName());
-		System.out.println("Projectile "+worm.getProjectile().getRadius());
-		System.out.println(worm.canFall());
-		worm.fall();
-		System.out.println(worm.getCoordinateY());
 		
+		try {
+			Worm cloned = worm.clone();
+			System.out.println(worm.getDirection());
+			System.out.println(cloned.getDirection());
+			System.out.println(worm.getWorld());
+			System.out.println(cloned.getWorld());
+			System.out.println(worm.getProjectile());
+			System.out.println(cloned.getProjectile());
+			worm.selectWeapon();
+			System.out.println(worm.getProjectile());
+			System.out.println(cloned.getProjectile());
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	
 	}
