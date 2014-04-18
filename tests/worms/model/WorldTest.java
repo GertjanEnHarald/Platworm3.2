@@ -125,10 +125,6 @@ public class WorldTest {
 		assertEquals(100, world.getWidthInPixels());
 		assertEquals(100, world.getHeightInPixels());
 		
-		assertTrue(world.isPassableLocation(14.5, 12.3));
-		assertFalse(world.isPassableLocation(18.5, 0.05));
-		assertTrue(world.isPassableLocation(18.5, 2.2));
-		
 		assertTrue(world.isPassableArea(10, 10, 0.5));
 		assertFalse(world.isPassableArea(10, 3, 2));
 		

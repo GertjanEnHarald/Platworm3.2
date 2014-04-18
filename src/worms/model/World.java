@@ -325,10 +325,10 @@ public class World {
 	 * 			The given radius on which to base the step size.
 	 * 
 	 * @return	The step size
-	 * 			| result == 0.03*radius
+	 * 			| result == 0.02*radius
 	 */
 	protected double getStep(double radius) {
-		return 0.03*radius;
+		return 0.02*radius;
 	}
 	
 	
@@ -756,7 +756,7 @@ public class World {
 	 * Starts the game.
 	 * 
 	 * @post 	The game has started
-	 * 			|this.getStatus == true
+	 * 			|new.getStatus == true
 	 */
 	protected void startGame(){
 		this.status = true;
@@ -767,9 +767,17 @@ public class World {
 	 * Adds given game object to the world.
 	 * 
 	 * 
-	 * @param gameObject
-	 * @throws ModelException
-	 */
+	 * @param 	gameObject
+	 * 			Game object to be added.
+	 * 
+	 * @post 	The given game object is in the world.
+	 * 			| new.gameObjects.contains(gameObject)
+	 * 
+	 * @throws 	ModelException
+	 * 			The world cannot have this object as a game object.
+	 * 			|(! this.canHaveAsGameObject(gameObject))
+	 * 
+	 */			
 	private void addAsGameObject(GameObject gameObject) throws ModelException {
 		if (! this.canHaveAsGameObject(gameObject))
 			throw new ModelException("Cannot assign this game object to this world!");
@@ -781,8 +789,17 @@ public class World {
 	 * Removes given gameobject from the world.
 	 * 
 	 * 
-	 * @param gameObject
-	 * @throws ModelException
+	 * @param 	gameObject
+	 * 			Game object to be removed.
+	 * @post	The object has been removed from the world.
+	 * 			If the object that is removed is the active worm,
+	 * 			The next worm's turn is started.
+	 * 			| !this.gameObjects.contains(gameObject)
+	 * 			|if (gameObject instanceof Worm){
+	 * 			|	if (index == getIndexOfActiveWorm())
+	 *			|		(nextTurn() has been executed)
+	 *			|	else if (index < getIndexOfActiveWorm())
+	 *			|		new.getIndexOfActiveWorm == getIndexOfActiveWorm-1
 	 */
 	protected void removeAsGameObject(GameObject gameObject) throws ModelException{
 		int index = getAllWorms().indexOf(gameObject);
@@ -799,7 +816,21 @@ public class World {
 	
 	
 	/**
+	 * Adds a new worm to the world at a random adjacent location.
 	 * 
+	 *@post		The new Worm has been added at a random adjacent location on the map.
+	 *			Or no worm has been added. The radius of this worm is 0.3. This worm
+	 *			will receive a random name and may or may not be in a team.
+	 *			| new.getAllWorms() == this.getAllWorms()+1 || new.getAllWorms() == this.getAllWorms()
+	 *			| if (new.getAllWorms() == this.getAllWorms()+1)
+	 *			|	radius = new.getAllWorms().get(new.getAllWorms().size-1).getRadius()
+	 *			|	x = new.getAllWorms().get(new.getAllWorms().size-1).getCoordinateX
+	 *			|	y = new.getAllWorms().get(new.getAllWorms().size-1).getCoordinateY
+	 * 			|	isAdjacent(x,y,radius)
+	 * @throws	ModelException
+	 * 			The game has already started.
+	 * 			| getStatus()
+	 * 			
 	 */
 	protected void addWorm(){
 		if (getStatus())
@@ -821,7 +852,19 @@ public class World {
 	
 	
 	/**
+	 * Adds a new food to the world at a random adjacent location.
 	 * 
+	 *@post		The new food has been added at a random adjacent location on the map.
+	 *			Or no food has been added.
+	 *			| new.getAllFood() == this.getAllFood()+1 || new.getAllFood() == this.getAllFood()
+	 *			| if (new.getAllWorms() == this.getAllWorms()+1)
+	 *			|	x = new.getAllFood().get(new.getAllFood().size-1).getCoordinateX
+	 *			|	y = new.getAllFood().get(new.getAllFood().size-1).getCoordinateY
+	 * 			|	isAdjacent(x,y,0.2)
+	 * @throws	ModelException
+	 * 			The game has already started.
+	 * 			| getStatus()
+	 * 			
 	 */
 	protected void addFood(){
 		if (getStatus())
@@ -834,18 +877,34 @@ public class World {
 		catch(ModelException modelException){
 		}
 	}
+	
+	
 	/**
+	 * Adds given team to this world
 	 * 
-	 * @param team
+	 * @param 	team
+	 * 			The team to be added.
+	 * @post	The team has been added.
+	 * 			|new.teams.contains(team)
 	 */
 	private void addAsTeam(Team team) {
 		this.teams.add(team);
 	}
 
 	/**
+	 * Creates a team with the given name and adds it to this world.
 	 * 
-	 * @param name
-	 * @throws ModelException
+	 * 
+	 * @param 	name
+	 * 			The name of the team to be created
+	 * @post	The team with the given name has been created and added to this world.
+	 * 			|new.teams.get(new.teams.size-1).getName() == name
+	 * @throws 	ModelException
+	 * 			The maximum number of teams has been reached.
+	 * 			| (this.getNumberOfTeams() > 10)
+	 * @throws	ModelException
+	 * 			The game has already started.
+	 * 			| getStatus()
 	 */
 	protected void addTeam(String name) throws ModelException {
 		if (this.getStatus())
@@ -861,6 +920,15 @@ public class World {
 	 * Starts the next turn of the game. This means that it is the next worm's turn to move/jump/shoot.
 	 * If all worms in the world have had their turn, all action points are set to the max, the hit
 	 * points are increased by 10 and the it is the first worm's turn again.
+	 * 
+	 * 
+	 * @post	The index of the active worm is now the index of the next worm 
+	 * 			or the first worm if all worms have had their turn this round.
+	 * 			|if (this.getIndexOfActiveWorm()+1 >= this.getAllWorms().size()){
+   	 *			|	this.setActionPointsToMaxAndAdd10HitPoints() has been executed &&
+	 *			|	new.getIndexOfActiveWorm() == 0
+	 *			|else 
+	 *			|	new.getIndexOfActiveWorm() == this.getIndexOfActiveWorm()+1
 	 * 
 	 * 
 	 */
@@ -880,7 +948,10 @@ public class World {
 	 * Sets the index of the active worm in the list of all the worms in this world.
 	 * 
 	 * 
-	 * @param indexToBeSet
+	 * @param 	indexToBeSet
+	 * 			The index to be set.
+	 * @post 	The index has been set.
+	 * 			new.getIndexOfActiveWorm() == indexToBeSet
 	 */
 	private void setIndexOfActiveWorm(int indexToBeSet) {
 		this.indexOfActiveWorm = indexToBeSet;
@@ -889,6 +960,15 @@ public class World {
 	
 	
 	/**
+	 * These are the consequences of a new round starting. This means that
+	 * the action points of all the worms are set to the max and the hit
+	 * points of each worm are increased by 10.
+	 * 
+	 * @post 	The action points have been set to the max and the hit points
+	 * 			been increased by 10.
+	 * 			| for each oldWorm in this.getAllWorms() and each newWorm in new.getAllWorms()
+	 * 			|	newWorm.getActionPoints() == newWorm.getMaximumActionPoints() &&
+	 * 			|	newWorm.getHitPoints() == oldWorm.getHitpoints() +10
 	 * 
 	 */
 	private void setActionPointsToMaxAndAdd10HitPoints(){
