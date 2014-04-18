@@ -384,7 +384,8 @@ public class World {
 	 *			|		result == new double[] {X,Y}
 	 *
 	 *@throws	No location was found.
-	 */
+	 *			| If the nothing is returned during the while loop.
+	 */		
 	private double[] getRandomAdjacentLocation(double radius){
 		double X = (getRandom().nextDouble())*(getWidth()-radius*2.0)+radius;
 		double Y = 0;
@@ -426,6 +427,10 @@ public class World {
 	
 	/**
 	 * Returns all the worms in this world.
+	 * 
+	 * @return	Returns all the worms that are currently in this world as a list.
+	 * 			|for each gameObject in this.getGameObjects
+	 * 			| result.contains(gameObject) if gameObject instanceof Worm
 	 */
 	protected List<Worm> getAllWorms(){
 		List<Worm> worms = new ArrayList<Worm>();
@@ -440,6 +445,11 @@ public class World {
 	
 	/**
 	 * Returns all the food in this world.
+	 * 
+	 *  @return	Returns all the food that are currently in this world as a list.
+	 * 			|for each gameObject in this.getGameObjects
+	 * 			| result.contains(gameObject) if gameObject instanceof Food.
+	 * 
 	 */
 	protected List<Food> getAllFood(){
 		List<Food> food = new ArrayList<Food>();
@@ -454,7 +464,17 @@ public class World {
 	
 	
 	/**
+	 * Returns the food that overlaps with a given worm if there is a food that overlaps.
 	 * 
+	 * 
+	 * @param	worm
+	 * 			The worm to check.
+	 * @return	Returns the requested food or null if no food is found that overlaps.
+	 * 			| for any food in this.getAllFood()
+	 * 			| if worm.Overlaps(food)
+	 * 			|		result == food
+	 * 			| else
+	 * 			| 		result == null
 	 */
 	protected Food getFoodThatOverlaps(Worm worm) {
 		for(Food food: this.getAllFood()){
@@ -465,9 +485,17 @@ public class World {
 	}
 	
 	/**
+	 * Returns the worm that overlaps with a given projectile if there is a worm that overlaps.
 	 * 
-	 * @param projectile
-	 * @return
+	 * 
+	 * @param	projectile
+	 * 			The projectile to check.
+	 * @return	Returns the requested worm or null if no worm is found that overlaps.
+	 * 			| for any worm in this.getAllWorms()
+	 * 			| if projectile.Overlaps(worm)
+	 * 			|		result == worm
+	 * 			| else
+	 * 			| 		result == null
 	 */
 	protected Worm getWormThatOverlaps(Projectile projectile) {
 		for (Worm worm: this.getAllWorms()) {
@@ -480,9 +508,15 @@ public class World {
 	
 	
 	/**
+	 * Returns whether a given projectile overlaps with a worm.
 	 * 
-	 * @param projectile
-	 * @return
+	 * 
+	 * @param	projectile
+	 * 			The projectile to check.
+	 * @return	Returns true if the given projectile overlaps with a worm that is not the active worm
+	 * 			(the worm that fired the projectile).
+	 * 			| Worm worm = this.getWormThatOverlaps(projectile)
+	 *			| result == (worm != null) && (worm != this.getActiveWorm())
 	 */
 	protected boolean projectileOverlapsWorm(Projectile projectile) {
 		Worm worm = this.getWormThatOverlaps(projectile);
@@ -500,6 +534,9 @@ public class World {
 	
 	/**
 	 * Returns the active worm(the worm who's turn it is). 
+	 * 
+	 * @return	The active worm.
+	 * 			|result == this.getAllWorms().get(getIndexOfActiveWorm())
 	 */
 	protected Worm getActiveWorm(){
 		return this.getAllWorms().get(getIndexOfActiveWorm());
@@ -508,6 +545,9 @@ public class World {
 	
 	/**
 	 * Returns the projectile equipped by the active worm.
+	 * 
+	 * @return	The projectile.
+	 * 			| result == this.getActiveWorm().getProjectile()
 	 */
 	protected Projectile getActiveProjectile() {
 		return this.getActiveWorm().getProjectile();
@@ -515,7 +555,14 @@ public class World {
 	
 	
 	/**
-	 * Returns a game object at a certain postion in the list of game objects.
+	 * Returns a game object at a certain position in the list of game objects.
+	 * 
+	 * @return	The game object at the given index in the list of game objects.
+	 * 			| result == this.getGameObjects().get(i)
+	 * 
+	 * @throws	ModelException
+	 * 			The given index does not exist.
+	 * 			| (! (i < this.getNbOfGameObjects()))
 	 */
 	protected GameObject getGameObjectAt(int i) throws ModelException {
 		if (! (i < this.getNbOfGameObjects()))
@@ -529,8 +576,13 @@ public class World {
 	 * Checks if this world can have the given game object. 
 	 * 
 	 * 
-	 * @param gameObject
-	 * @return
+	 * @param 	gameObject
+	 * 			The game object to be checked.
+	 * 
+	 * @return	True if this world can have the game object as a game object.
+	 * 			This means true if the given game object already has this world
+	 * 			as it's world.
+	 * 			| result == (gameObject.getWorld() == this)
 	 */
 	private boolean canHaveAsGameObject(GameObject gameObject) {
 		return (gameObject.getWorld() == this);
@@ -552,6 +604,24 @@ public class World {
 	
 	/**
 	 * Checks if the game is over.
+	 * 
+	 * @return	Creates a list of all the remaining teams still in the game.
+	 * 			With null being the team of the worms that are not in a team.
+	 * 			If this list contains more than 1 element the game is not over,
+	 * 			and if the list contains only null, but there are multiple worms
+	 * 			in the "null team" the game is also not yet over. In all the other 
+	 * 			cases the game is over.
+	 * 			|Set<Team> set = new HashSet<Team>();
+	 * 			|
+	 * 			|for(int counter=0;counter<getAllWorms().size();counter++){
+	 *			|set.add(getAllWorms().get(counter).getTeam())}
+	 *			|
+	 *			|if (set.size() > 1)
+	 * 			|	result == false
+	 *			|else if (set.size()==1 && set.contains(null) && getAllWorms().size()>1)
+	 *			|	result == false
+	 *			|else
+	 *			|	result == true
 	 */
 	protected boolean isGameFinished() {
 		Set<Team> set = new HashSet<Team>();
@@ -560,16 +630,26 @@ public class World {
 		}
 		if (set.size() > 1)
 			return false;
-		if (set.size()==1 && set.contains(null) && getAllWorms().size()>1)
+		else if (set.size()==1 && set.contains(null) && getAllWorms().size()>1)
 			return false;
-		return true;
+		else
+			return true;
 	}
 	
 	
 	/**
 	 * Returns the winner of the game (only applicable if the game is over).
 	 * 
-	 * @return
+	 * @return	Returns the name of the winning worm or the name
+	 * 			of the winning team if the worm that is still
+	 * 			alive was part of a team. If no worms are still 
+	 * 			alive "nobody" will be returned.
+	 * 			|if (getAllWorms().size() ==0)
+	 *			|	result == "Nobody"
+	 *			|else if (getAllWorms().get(0).getTeam() == null)
+	 *			|	result ==getAllWorms().get(0).getName()
+	 *			|else
+	 *			|	result == getAllWorms().get(0).getTeam().getName()
 	 */
 	protected String getWinner(){
 		if (getAllWorms().size() ==0)
@@ -754,12 +834,19 @@ public class World {
 		catch(ModelException modelException){
 		}
 	}
-	
+	/**
+	 * 
+	 * @param team
+	 */
 	private void addAsTeam(Team team) {
 		this.teams.add(team);
 	}
 
-		
+	/**
+	 * 
+	 * @param name
+	 * @throws ModelException
+	 */
 	protected void addTeam(String name) throws ModelException {
 		if (this.getStatus())
 			throw new ModelException("Cannot make team once game has started!");
