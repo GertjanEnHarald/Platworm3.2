@@ -175,6 +175,7 @@ public abstract class Projectile extends MovableObject {
 	 * 			| result == getRadius(this.getMass())
 	 */
 	@Raw
+	@Override
 	public double getRadius() {
 		return getRadius(this.getMass());
 	}
@@ -213,7 +214,6 @@ public abstract class Projectile extends MovableObject {
 	 * @return	Returns whether the given points are positive.
 	 * 			| result == (points > 0)
 	 */
-	@Basic
 	@Raw
 	public static boolean isValidLostHitPoints(int points) {
 		return (points > 0);
@@ -242,6 +242,7 @@ public abstract class Projectile extends MovableObject {
 	 * @return	Returns whether the given points are positive.
 	 * 			| result == (points > 0)
 	 */
+	@Raw
 	public static boolean isValidCostActionPoints(int points) {
 		return (points > 0);
 	}
@@ -251,6 +252,8 @@ public abstract class Projectile extends MovableObject {
 	 * Returns the action points that a worm will lose, 
 	 * when it fires this projectile.
 	 */
+	@Basic
+	@Raw
 	public int getCostActionPoints() {
 		return this.costActionPoints;
 	}
@@ -296,7 +299,7 @@ public abstract class Projectile extends MovableObject {
 	 * 			The yield that needs to be checked.
 	 * 
 	 * @return	Returns if the yield is between 0 and 100.
-	 * 			| result == (0 <= yield) && (yield <= 100)
+	 * 			| result == ((0 <= yield) && (yield <= 100))
 	 */
 	@Raw
 	public static boolean isValidYield(int yield) {

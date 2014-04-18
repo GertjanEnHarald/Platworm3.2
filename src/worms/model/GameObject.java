@@ -15,6 +15,7 @@ public abstract class GameObject {
 	
 	
 	/**
+	 * The constructor to make a new game object. 
 	 * 
 	 * @param 	coordinateX
 	 * 			The x coordinate for this new game object.
@@ -43,6 +44,9 @@ public abstract class GameObject {
 		this.setStatus(isActive);
 	}
 	
+	
+	
+	
 	/**
 	 *Returns the gravity used in this game. 
 	 */
@@ -52,6 +56,9 @@ public abstract class GameObject {
 	public static final double getGravity(){
 		return g;
 	}
+	
+	
+	
 	
 	/**
 	 * Returns the world in which this object is.
@@ -63,19 +70,55 @@ public abstract class GameObject {
 		return this.world;
 	}
 	
-	public void setWorld(World world) {
+	
+	/**
+	 * Set the world of this game object to the given world.
+	 * 
+	 * @param 	world
+	 * 			The new world of this game object.
+	 * 
+	 * @post	The new world of this game object will be the given world.
+	 * 			| new.getWorld() == world
+	 */
+	@Raw
+	private void setWorld(@Raw World world) {
 		this.world = world;
 	}
 	
+	
+	/**
+	 * Returns whether or not this game object has a proper world.
+	 * 
+	 * @return	The world of this game object contains this game object.
+	 * 			Or this game object doesn't have a world.
+	 * 			| result == (this.getWorld() == null) || 
+	 * 			|	(this.getWorld().getGameObjects().contains(this))
+	 */
 	public boolean hasProperWorld() {
 		return (this.getWorld() == null) || (this.getWorld().getGameObjects().contains(this));
 	}
 	
+	
+	
+	
+	/**
+	 * Terminate this game object and remove it from its world.
+	 * 
+	 * @post	The new status of this game object is false.
+	 * 			| new.getStatus() == false
+	 * @post	Its world doesn't contain this game object anymore.
+	 * 			| ! (new this.getWorld()).getGameObjects().contains(this)
+	 * @post	This game object doesn't have a world anymore.
+	 * 			| new.getWorld() == null
+	 */
 	public void terminate() {
 		this.setStatus(false);
 		this.getWorld().removeAsGameObject(this);
 		this.setWorld(null);
 	}
+	
+	
+	
 	
 	/**
 	 * Returns the X coordinate of the position of this game object.
@@ -97,25 +140,22 @@ public abstract class GameObject {
 	}
 	
 	
-	
-	
-	protected void setCoordinates(double x, double y){
-		setX(x);
-		setY(y);
-	}
-	
 	/**
 	 * Set the x coordinate of this game object to the given coordinateX.
-	 * 
 	 * 
 	 * @param 	coordinateX
 	 * 			The new x coordinate of this game object.
 	 * 
 	 * @post	The new x coordinate of this game object is equal to the given coordinateX.
-	 * 			| new.getCoordinateX() == coordinateX 
+	 * 			| new.getCoordinateX() == coordinateX
+	 * 
+	 * @effect	If the new x coordinate is out of bounds, then this game object will be terminated.
+	 * 			| if isXCoordinateOutOfBounds(coordinateX)
+	 * 			| 	then this.terminate()
+	 * 
 	 * @throws	ModelException 
 	 * 			The given coordinateX is not a valid coordinate for a game object.
-	 *       	| ! isValidCoordinate(coordinateX)
+	 *       	| (! isValidCoordinate(coordinateX))
 	 */
 	@Raw
 	protected void setX(double coordinateX) throws ModelException {
@@ -124,11 +164,23 @@ public abstract class GameObject {
 		if (isXCoordinateOutOfBounds(coordinateX)){
 			this.coordinateX = coordinateX;
 			this.terminate();
-			}
+		}
 		else
 			this.coordinateX = coordinateX;
 	}
 
+	
+	/**
+	 * Checks if the given coordinateX lies in the world of this game object.
+	 * 
+	 * @param 	coordinateX
+	 * 			The coordinate that needs to be checked.
+	 * 
+	 * @return	Returns if the coordinate is negative or
+	 * 			larger than the width of its world.
+	 * 			| result == (coordinateX < 0) || (coordinateX > this.getWorld().getWidth())
+	 */
+	@Raw
 	protected boolean isXCoordinateOutOfBounds(double coordinateX) {
 		return (coordinateX < 0) || (coordinateX > this.getWorld().getWidth());
 	}
@@ -137,12 +189,16 @@ public abstract class GameObject {
 	/**
 	 * Set the y coordinate of this game object to the given coordinateY.
 	 * 
-	 * 
 	 * @param 	coordinateY
 	 * 			The new y coordinate of this game object.
 	 * 
 	 * @post	The new y coordinate of this game object is equal to the given coordinateY.
 	 * 			| new.getCoordinateY() == coordinateY 
+	 * 
+	 * @effect	If the new y coordinate is out of bounds, then this game object will be terminated.
+	 * 			| if isYCoordinateOutOfBounds(coordinateY)
+	 * 			| 	then this.terminate()
+	 * 
 	 * @throws	ModelException 
 	 * 			The given coordinateY is not a valid coordinate for a game object.
 	 *       	| ! isValidCoordinate(coordinateY)
@@ -150,7 +206,6 @@ public abstract class GameObject {
 	@Raw
 	protected void setY(double coordinateY) throws ModelException {
 		if (!isValidCoordinate(coordinateY))
-			
 			throw new ModelException("Illegal Y coordinate!");
 		if (isYCoordinateOutOfBounds(coordinateY)){
 			this.coordinateY = coordinateY;
@@ -160,6 +215,18 @@ public abstract class GameObject {
 			this.coordinateY = coordinateY;
 	}
 
+	
+	/**
+	 * Checks if the given coordinateY lies in the world of this game object.
+	 * 
+	 * @param 	coordinateY
+	 * 			The coordinate that needs to be checked.
+	 * 
+	 * @return	Returns if the coordinate is negative or
+	 * 			larger than the height of its world.
+	 * 			| result == (coordinateY < 0) || (coordinateY > this.getWorld().getHeight())
+	 */
+	@Raw
 	protected boolean isYCoordinateOutOfBounds(double coordinateY) {
 		return (coordinateY < 0) || (coordinateY > this.getWorld().getHeight());
 	}
@@ -167,7 +234,6 @@ public abstract class GameObject {
 	
 	/**
 	 * Check whether the given coordinate is a valid coordinate for a game object.
-	 * 
 	 * 
 	 * @param  	coordinate
 	 *         	The coordinate to check.
@@ -178,6 +244,26 @@ public abstract class GameObject {
 	@Raw
 	public static boolean isValidCoordinate(double coordinate) {
 		return ! Double.isNaN(coordinate);
+	}
+	
+
+	/**
+	 * Set the coordinates of this game object to x and y.
+	 * 
+	 * @param 	x
+	 * 			The new x coordinate of this game object.
+	 * @param 	y
+	 * 			The new y coordinate of this game object.
+	 * 
+	 * @effect	The new x coordinate of this game object will be set to x.
+	 * 			| this.setX(x)
+	 * @effect	The new y coordinate of this game object will be set to y.
+	 * 			| this.setY(y)
+	 */
+	@Raw
+	protected void setCoordinates(double x, double y) throws ModelException {
+		setX(x);
+		setY(y);
 	}
 	
 	
@@ -196,16 +282,17 @@ public abstract class GameObject {
 	/**
 	 * Set the radius of this game object to the given radius.
 	 * 
-	 * 
 	 * @param 	radius
 	 * 			The new radius of this game object.
 	 * 
 	 * @post	The new radius of this game object is equal to the given radius.
 	 * 			| new.getRadius() == radius
+	 * 
 	 * @throws 	ModelException
 	 * 			The given radius for this game object is not a legal radius.
 	 * 			| ! isValidRadius(radius)
 	 */
+	@Raw
 	public void setRadius(double radius) throws ModelException {
 		if (! isValidRadius(radius))
 			throw new ModelException("Illegal radius!");
@@ -213,6 +300,13 @@ public abstract class GameObject {
 	}
 	
 	
+	/**
+	 * Checks if the given radius is a valid radius for this game object.
+	 *  
+	 * @param 	radius
+	 * 			The radius that needs to be checked.
+	 */
+	@Raw
 	public abstract boolean isValidRadius(double radius);
 	
 	
@@ -221,6 +315,8 @@ public abstract class GameObject {
 	/**
 	 * Returns whether a game object is currently active or not.
 	 */
+	@Basic
+	@Raw
 	public boolean getStatus() {
 		return this.isActive;
 	}
@@ -228,28 +324,40 @@ public abstract class GameObject {
 	/**
 	 * Set the status of a game object to the given status.
 	 * 
-	 * 
 	 * @param 	status
 	 * 			The new status of this game object.
-	 * 
 	 * 
 	 * @post	The new status of this game object is equal to the given status.
 	 * 			| new.getStatus() == status
 	 */
+	@Raw
 	protected void setStatus(boolean status) {
 		this.isActive = status;
 	}
 	
 	
 
-	protected boolean Overlaps(GameObject obj) {
+	
+	/**
+	 * Checks whether another game object overlaps with this game object.
+	 * 
+	 * @param 	gameObject
+	 * 			The other game object.
+	 * 
+	 * @return	Returns if the distance between the center of those game objects
+	 * 			is smaller than the sum of their radiuses.
+	 * 			| result == (SquareRoot((gameObject.getCoordinateX() - this.getCoordinateX())²
+	 * 			|				 		+ (gameObject.getCoordinateY() - this.getCoordinateY())²)
+	 * 			|			< (this.getRadius() + gameObject.getRadius()))
+	 */
+	protected boolean Overlaps(GameObject gameObject) {
 		double x1 = this.getCoordinateX();
 		double y1 = this.getCoordinateY();
-		double x2 = obj.getCoordinateX();
-		double y2 = obj.getCoordinateY();
+		double x2 = gameObject.getCoordinateX();
+		double y2 = gameObject.getCoordinateY();
 		
 		double distance = Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
-		return distance < (this.getRadius() + obj.getRadius()); 
+		return distance < (this.getRadius() + gameObject.getRadius()); 
 	}
 	
 }
