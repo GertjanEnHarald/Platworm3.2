@@ -45,6 +45,7 @@ public class Worm extends MovableObject{
 	private Projectile projectile;
 	private Team team;
 	private boolean hasJustEaten;
+	private int currentWeaponNumber = 0;
 	
 	
 	
@@ -470,19 +471,20 @@ public class Worm extends MovableObject{
 	/**
 	 * Changes the direction of this worm by adding given angle and using the appropriate number of action points.
 	 * 
-	 * 
 	 * @param 	angle
 	 * 			The angle to be added to the direction.
 	 * 
 	 * @pre		New direction should be an existing angle and this worm needs enough
 	 * 			action points to turn.
 	 * 			| this.canTurn(angle)
+
 	 * @post	The given angle is added to this worm's direction.
-	 * 			| new.getDirection == changeAngleModulo2PI(this.getDirection() + angle)
+	 * 			| new.getDirection() == changeAngleModulo2PI(this.getDirection() + angle)
 	 * @post	The action points needed to execute the turn are subtracted from
 	 * 			this worm's action points.
 	 * 			| new.getActionPoints() == this.getActionPoints() - (int) usedActionPointsTurn(angle)
-	 * 
+	 * @post	The direction of the worm's projectile is also updated.
+	 * 			| new.getProjectile().getDirection() == new.getDirection()
 	 */
 	public void turn(double angle){
 		assert this.canTurn(angle);
@@ -496,7 +498,6 @@ public class Worm extends MovableObject{
 	/**
 	 * Checks if this worm can turn the given angle.
 	 * 
-	 * 
 	 * @param 	angle
 	 * 			The angle this worm should turn.
 	 * 
@@ -509,19 +510,21 @@ public class Worm extends MovableObject{
 	 */
 	public boolean canTurn(double angle){
 		double usedActionPoints = usedActionPointsTurn(angle);
-		return (usedActionPoints <= this.getActionPoints()) && (isValidDirection(this.getDirection()+angle)) && (usedActionPoints <= Integer.MAX_VALUE);
+		return (usedActionPoints <= this.getActionPoints()) 
+				&& (isValidDirection(this.getDirection()+angle)) && (usedActionPoints <= Integer.MAX_VALUE);
 	}
 
 	
 	/**
 	 * Calculates the action points needed for a worm to execute a turn over the given angle.
 	 *
-	 *
 	 * @param 	angle
 	 * 			The angle the worm should turn.
 	 * 
-	 * @return	Returns the action points needed to execute the turn.
-	 * 			| result ==  ((60*Math.abs(changeAngleModulo2PI(angle))/(2*Math.PI)))
+	 * @return	Returns the minimum action points needed to execute the turn.
+	 * 			The minimum is calculated of both possible rotations, clockwise and counterclockwise.
+	 * 			| result ==  MIN(((60*Math.abs(changeAngleModulo2PI(angle))/(2*Math.PI))),
+	 * 			|					((60*Math.abs(changeAngleModulo2PI(angle)-2*Math.PI)/(2*Math.PI))))
 	 */
 	@Raw
 	public static double usedActionPointsTurn(double angle) {
@@ -531,32 +534,8 @@ public class Worm extends MovableObject{
 	
 	
 	
-	
-	
-
-	
 	/**
-	 * Calculates the amount of action points needed to move the given number of steps.
-	 *
-	 * 
-	 * @param 	NbSteps
-	 * 			The number of steps the worm should move.
-	 * @param 	theta
-	 * 			The direction of movement.
-	 * 
-	 * @return	Returns the amount of action points needed to execute the moves.
-	 * 			| result == NbSteps*((Math.abs(Math.cos(theta)) + 4*Math.abs(Math.sin(theta))))
-	 */
-	@Raw
-	public static double usedActionPointsMove(int NbSteps, double theta) {
-		double usedActionPoints = NbSteps*( (Math.abs(Math.cos(theta)) + 4*Math.abs(Math.sin(theta))));
-		return usedActionPoints;
-	}
-	
-	
-	
-	
-	/**
+	 * TODO
 	 * Changes the position of this worm as the result of a jump in the current direction
 	 * of this worm consuming all action points. The direction does not change during the jump.
 	 * If this worm is facing downwards, it will not move, but jumping consumes all the action points.
@@ -619,7 +598,6 @@ public class Worm extends MovableObject{
 	/**
 	 * Returns the initial velocity of the potential jump of this worm.
 	 * 
-	 * 
 	 * @return	The initial velocity of the jump.
 	 * 			| F = 5*this.getActionPoints()+this.getMass()*getGravity()
 	 *			| result == F*0.5/this.getMass()
@@ -634,27 +612,18 @@ public class Worm extends MovableObject{
 	/**
 	 * Checks whether this worm can jump in his current situation.
 	 * 
-	 * 
-	 * @return	Returns true if this worm still has some action points and 
-	 * 			if he is facing upwards (direction between 0 and Pi radial).
-	 * 			| result == ((this.getActionPoints() > 0) &&
-	 * 			|			 (this.getDirection() > Math.PI && this.getDirection() < Math.PI*2))
+	 * @return	Returns true if this worm still has some action points.
+	 * 			| result == ((this.getActionPoints() > 0)
 	 */
 	@Override
 	public boolean canJump() {
-		if (this.getActionPoints() == 0)
-			return false;
-		if (this.getDirection() > Math.PI && this.getDirection() < Math.PI*2)
-			return false;
-		
-//		for(double time = 0; time <= this.getJumpTime(); time = time + this.getJumpTime()/1000.0){
-//			double[] position = this.getJumpStep(time);
-//			if (! (this.getWorld()).isPassableArea(position[0], position[1], this.getRadius()))
-//				return false;
-//		}
-		return true;
+		return this.getActionPoints() > 0;
 	}
 	
+	
+	/**
+	 * TODO
+	 */
 	@Override
 	public double getJumpRealTimeInAir(double step) {
 		double maxTime = this.getJumpTime();
@@ -675,24 +644,44 @@ public class Worm extends MovableObject{
 	}
 	
 	
-
-	private int currentWeaponNumber = 0;
 	
+
+	/**
+	 * Returns the number of the current weapon.
+	 */
 	public int getCurrentWeaponNumber() {
 		return this.currentWeaponNumber;
 	}
 	
-	private void setCurrentWeaponNumber(int number) {
+	/**
+	 * Set the current weapon number to the given number.
+	 * 
+	 * @param 	number
+	 * 			The new weapon number of this worm.
+	 * 
+	 * @post	The new weapon number of this worm is equal to the given number.
+	 * 			| new.getCurrentWeaponNumber()  == number
+	 * 
+	 * @throws	ModelException
+	 * 			Throws an exception if there is no weapon that corresponds to the given number.
+	 * 			| getNumberOfProjectiles() <= number
+	 */
+	private void setCurrentWeaponNumber(int number) throws ModelException{
+		if (getNumberOfProjectiles() <= number)
+			throw new ModelException("Illegal weapon assignment!");
 		this.currentWeaponNumber = number;
 	}
 	
+	/**
+	 * Returns the number of possible weapons to propel projectiles.
+	 */
 	public static int getNumberOfProjectiles() {
 		return 2;
 	}
 	
 	
 	/**
-	 * Returns the projectile of this worm.
+	 * Returns the current projectile of this worm.
 	 */
 	public Projectile getProjectile(){
 		try {
@@ -709,6 +698,9 @@ public class Worm extends MovableObject{
 	/*TODO: Shouldn't be done like this: OOP style requires the possibility to add a new class
 	of projectile without changing any other code.
 	This is clearly not handled in a proper manner.*/ 
+	/**
+	 * 
+	 */
 	private void setProjectile() {
 		if (this.getCurrentWeaponNumber() == 0)
 			this.projectile = new Rifle(this.getCoordinateX() + this.getRadius()*Math.cos(this.getDirection()),
@@ -722,6 +714,18 @@ public class Worm extends MovableObject{
 
 	
 	
+	/**
+	 * Selects the newt weapon for this worm and terminates the old weapon.
+	 * 
+	 * @effect	Terminates the old projectile.
+	 * 			| this.getProjectile().terminate()
+	 * @effect	Creates a new projectile for this worm, corresponding with the new current weapon number.
+	 * 			| this.setWeapon()
+	 * 
+	 * @post	The current weapon number is increased with one 
+	 * 			and becomes 0 if it equals getNumberOfProjectiles()
+	 * 			| new.getCurrentWeaponNumber() == (this.getCurrentWeaponNumber() + 1) % getNumberOfProjectiles()
+	 */
 	public void selectWeapon() {
 		this.projectile.terminate();
 		this.setCurrentWeaponNumber((this.getCurrentWeaponNumber()+1) % getNumberOfProjectiles());
@@ -729,22 +733,49 @@ public class Worm extends MovableObject{
 	}
 	
 	
+	/**
+	 * Shoot a projectile from this worm's current weapon with the given yield.
+	 * 
+	 * @param 	yield
+	 * 			The yield to determine the force to propel the projectile.
+	 * 
+	 * @post	Set the yield of this projectile to the given yield.
+	 * 			| (new this.getProjectile()).getYield == yield
+	 * @post	Subtract the action points that it requires to shoot this weapon.
+	 * 			| new.getActionPoints() == this.getActionPoints() - this.getProjectile().getCostActionPoints() 
+	 */
 	public void shoot(int yield) {
 		this.projectile.setYield(yield);
 		this.setActionPoints(this.getActionPoints()-this.projectile.getCostActionPoints());
-
 	}
 	
 	
-	private void updateProjectile() {
+	/**
+	 * Update a projectile's position and direction according to this worm.
+	 * 
+	 * @post	The new x coordinate of this worm's projectile is equal to the sum of this worm's x coordinate
+	 * 			and the projection of this worm's radius to the x-axis.
+	 * 			| (new this.getProjectile()).getCoordinateX() == this.getCoordinateX() + this.getRadius()*Math.cos(this.getDirection())
+	 * @post	The new y coordinate of this worm's projectile is equal to the sum of this worm's y coordinate
+	 * 			and the projection of this worm's radius to the y-axis.
+	 * 			| (new this.getProjectile()).getCoordinateY() == this.getCoordinateY() + this.getRadius()*Math.sin(this.getDirection())
+	 * @post	The new direction of this worm's projectile is equal to this worm's direction.
+	 * 			| (new this.getProjectile()).getDirection() == this.getDirection()
+	 */
+	private void updateProjectile() throws ModelException {
 		if (this.getProjectile() != null) {
-			this.projectile.setCoordinates(this.getCoordinateX(), this.getCoordinateY());
+			this.projectile.setCoordinates(this.getCoordinateX() + this.getRadius()*Math.cos(this.getDirection()),
+										   this.getCoordinateY() + this.getRadius()*Math.sin(this.getDirection()));
 			this.projectile.setDirection(this.getDirection());
 		}
 	}
 	
 	
 	
+	
+	/**
+	 * TODO
+	 */
 	public void fall() {
 		if (this.canFall()) {
 			double startY = this.getCoordinateY();
@@ -760,7 +791,7 @@ public class Worm extends MovableObject{
 	}
 	
 	/**
-	 * Checks if this worm can fall.
+	 * Checks if this worm can fall. TODO(laatste deel van de voorlopige commentaar)
 	 */
 	public boolean canFall() {
 		return canFall(this.getCoordinateX(), this.getCoordinateY()) && !this.hasJustEaten;
@@ -785,6 +816,24 @@ public class Worm extends MovableObject{
 	/**
 	 * Nieuwe moves voor deel 2.
 	 */
+	
+	/**
+	 * Calculates the amount of action points needed to move the given number of steps.
+	 *
+	 * 
+	 * @param 	NbSteps
+	 * 			The number of steps the worm should move.
+	 * @param 	theta
+	 * 			The direction of movement.
+	 * 
+	 * @return	Returns the amount of action points needed to execute the moves.
+	 * 			| result == NbSteps*((Math.abs(Math.cos(theta)) + 4*Math.abs(Math.sin(theta))))
+	 */
+	@Raw
+	public static double usedActionPointsMove(int NbSteps, double theta) {
+		double usedActionPoints = NbSteps*( (Math.abs(Math.cos(theta)) + 4*Math.abs(Math.sin(theta))));
+		return usedActionPoints;
+	}
 	
 	
 	public void move(){
