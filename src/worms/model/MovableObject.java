@@ -10,14 +10,38 @@ public abstract class MovableObject extends GameObject {
 	/**
 	 * The constructor to make a movable object.
 	 * 
+	 * @param 	coordinateX
+	 * 			The x coordinate for this new game object.
+	 * @param 	coordinateY
+	 * 			The y coordinate for this new game object.
+	 * @param	radius
+	 * 			The radius for this new game object.
+	 * @param 	isActive
+	 * 			The status for this new game object.
+	 * @param 	world
+	 * 			The world for this new game object.
 	 * @param 	direction
 	 * 			The new direction of this movable object.
 	 * 
+	 * @post	The new x coordinate of this game object will be equal to the given coordinateX.
+	 * 			| new.getCoordinateX() == coordinateX
+	 * @post	The new y coordinate of this game object will be equal to the given coordinateY.
+	 * 			| new.getCoordinateY() == coordinateY
+	 * @post	The new status of this game object will be equal to the given isActive.
+	 * 			| new.getStatus() == isActive
+	 * @post	The new world of this game object will be equal to the given world.
+	 * 			| new.getWorld() == world
 	 * @post	The new direction of this movable object will be equal to the given direction.
 	 * 			| new.getDirection() == changeAngleModulo2PI(direction)
+	 * 
+	 * @throws	ModelException
+	 * 			The exception is thrown if one or more of the given parameters are illegal 
+	 * 			assignments for this game object.
+	 * 			| (! isValidCoordinate(coordinateX)) || (! isValidCoordinate(coordinateY))
+	 * 			|		|| (! isValidRadius(radius)) 
 	 */
 	public MovableObject(double coordinateX, double coordinateY, boolean isActive, 
-			double radius, World world, double direction) {
+			double radius, World world, double direction) throws ModelException {
 		super(coordinateX, coordinateY, isActive, radius,world);
 		this.setDirection(direction);
 	}

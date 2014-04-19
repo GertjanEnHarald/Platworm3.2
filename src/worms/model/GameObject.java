@@ -36,8 +36,15 @@ public abstract class GameObject implements Cloneable {
 	 * 			| new.getStatus() == isActive
 	 * @post	The new world of this game object will be equal to the given world.
 	 * 			| new.getWorld() == world
+	 * 
+	 * @throws	ModelException
+	 * 			The exception is thrown if one or more of the given parameters are illegal 
+	 * 			assignments for this game object.
+	 * 			| (! isValidCoordinate(coordinateX)) || (! isValidCoordinate(coordinateY))
+	 * 			|		|| (! isValidRadius(radius))
 	 */
-	public GameObject(double coordinateX, double  coordinateY, boolean isActive, double radius, World world) {
+	public GameObject(double coordinateX, double  coordinateY, boolean isActive, double radius, World world) 
+			throws ModelException {
 		this.setWorld(world);
 		this.setCoordinates(coordinateX, coordinateY);
 		this.setRadius(radius);
@@ -65,7 +72,6 @@ public abstract class GameObject implements Cloneable {
 	 */
 	@Basic
 	@Raw
-	@Immutable
 	public World getWorld(){
 		return this.world;
 	}

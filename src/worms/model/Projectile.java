@@ -22,6 +22,16 @@ public abstract class Projectile extends MovableObject {
 	/**
 	 * The constructor to make a projectile.
 	 * 
+	 * @param 	coordinateX
+	 * 			The x coordinate for this new projectile.
+	 * @param 	coordinateY
+	 * 			The y coordinate for this new projectile.
+	 * @param	radius
+	 * 			The radius for this new projectile.
+	 * @param 	isActive
+	 * 			The status for this new projectile.
+	 * @param 	world
+	 * 			The world for this new projectile.
 	 * @param 	direction
 	 * 			The direction for this new projectile.
 	 * @param 	massOfProjectile
@@ -33,6 +43,14 @@ public abstract class Projectile extends MovableObject {
 	 * 			The amount of action points that a worm will lose,
 	 * 			if it fires this projectile.
 	 * 
+	 * @post	The new x coordinate of this projectile will be equal to the given coordinateX.
+	 * 			| new.getCoordinateX() == coordinateX
+	 * @post	The new y coordinate of this projectile will be equal to the given coordinateY.
+	 * 			| new.getCoordinateY() == coordinateY
+	 * @post	The new status of this projectile will be equal to the given isActive.
+	 * 			| new.getStatus() == isActive
+	 * @post	The new world of this projectile will be equal to the given world.
+	 * 			| new.getWorld() == world
 	 * @post	The new mass of this projectile will be equal to the given massOfProjectile.
 	 * 			| new.getMass() == massOfProjectile
 	 * @post	The new radius of this projectile will be deduced from the density and the mass,
@@ -47,8 +65,10 @@ public abstract class Projectile extends MovableObject {
 	 * 
 	 * @throws 	ModelException
 	 * 			The exception is thrown if one or more of the given parameters are illegal 
-	 * 			assignments for this worm.
-	 * 			| (! isValidMass(massOfProjectile)) || (! isValidLostHitPoints(lostHitPoints))
+	 * 			assignments for this projectile.
+	 * 			| (! isValidCoordinate(coordinateX)) || (! isValidCoordinate(coordinateY))
+	 * 			|		|| (! isValidRadius(radius)) || (! isValidMass(massOfProjectile)) 
+	 * 			| 		|| (! isValidLostHitPoints(lostHitPoints)) 
 	 * 			|		||  (! isValidCostActionPoints(costActionPoints))
 	 */
 	public Projectile(double coordinateX, double coordinateY, boolean isActive,	World world,
