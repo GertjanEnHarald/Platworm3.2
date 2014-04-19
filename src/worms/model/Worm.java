@@ -390,14 +390,15 @@ public class Worm extends MovableObject{
 	 * If the worm has not joined a team, null is returned.
 	 */
 	public Team getTeam() {
-		try {
-			if (this.team == null)
-				return null;
-			return this.team.clone();
-		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
-			return null;
-		}
+		return this.team;
+//		try {
+//			if (this.team == null)
+//				return null;
+//			return this.team.clone();
+//		} catch (CloneNotSupportedException e) {
+//			// TODO Auto-generated catch block
+//			return null;
+//		}
 	}
 	
 	
