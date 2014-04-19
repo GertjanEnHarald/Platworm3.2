@@ -361,7 +361,14 @@ public class Worm extends MovableObject{
 	
 	
 	public Team getTeam() {
-		return this.team;
+		try {
+			if (this.team == null)
+				return null;
+			return this.team.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
 	}
 	
 	
@@ -385,7 +392,7 @@ public class Worm extends MovableObject{
 	
 	
 	public boolean hasProperTeam() {
-		return this.getTeam().getWorms().contains(this);
+		return this.team.getWorms().contains(this);
 	}
 
 
@@ -671,7 +678,14 @@ public class Worm extends MovableObject{
 	 * Returns the projectile of this worm.
 	 */
 	public Projectile getProjectile(){
-		return this.projectile;
+		try {
+			if (this.projectile == null)
+				return null;
+			return this.projectile.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
 	}
 	
 	
@@ -692,23 +706,23 @@ public class Worm extends MovableObject{
 	
 	
 	public void selectWeapon() {
-		this.getProjectile().terminate();
+		this.projectile.terminate();
 		this.setCurrentWeaponNumber((this.getCurrentWeaponNumber()+1) % getNumberOfProjectiles());
 		this.setProjectile();
 	}
 	
 	
 	public void shoot(int yield) {
-		this.getProjectile().setYield(yield);
-		this.setActionPoints(this.getActionPoints()-this.getProjectile().getCostActionPoints());
+		this.projectile.setYield(yield);
+		this.setActionPoints(this.getActionPoints()-this.projectile.getCostActionPoints());
 
 	}
 	
 	
 	private void updateProjectile() {
 		if (this.getProjectile() != null) {
-			this.getProjectile().setCoordinates(this.getCoordinateX(), this.getCoordinateY());
-			this.getProjectile().setDirection(this.getDirection());
+			this.projectile.setCoordinates(this.getCoordinateX(), this.getCoordinateY());
+			this.projectile.setDirection(this.getDirection());
 		}
 	}
 	
