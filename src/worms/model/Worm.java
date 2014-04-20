@@ -134,6 +134,31 @@ public class Worm extends MovableObject{
 	
 	
 	/**
+	 * Sets the coordinates of this worm.
+	 * 
+	 * @post	If this worm does not overlap with a food object, it will not have just eaten.
+	 * 			| if (this.getWorld.getFoodThatOverlaps(this) != null)
+	 * 			|		then new.hasJustEaten() == true
+	 * 			| else new.hasJustEaten() == false
+	 *
+	 * @effect	If this worm overlaps with a food object, this worm will eat it.
+	 * 			| if (this.getWorld.getFoodThatOverlaps(this) != null)
+	 * 			|		then this.eat()
+	 */
+	@Override
+	protected void setCoordinates(double x, double y) {
+		this.hasJustEaten = false;
+		super.setCoordinates(x, y);
+		// If setCoordinates terminates this worm, this function will throw a NullPointer.
+		try {
+			eatFoodIfPossible();
+		} catch (NullPointerException exc) {}
+	}
+	
+	
+	
+	
+	/**
 	 * Returns the minimum radius of this worm.
 	 * 
 	 * @return 	The radius is a positive number.
@@ -583,10 +608,6 @@ public class Worm extends MovableObject{
 	}
 
 	
-	
-
-	
-	
 	/**
 	 * Returns the initial velocity of the potential jump of this worm.
 	 * 
@@ -680,11 +701,25 @@ public class Worm extends MovableObject{
 	}
 	
 	
-	/*TODO: Shouldn't be done like this: OOP style requires the possibility to add a new class
-	of projectile without changing any other code.
-	This is clearly not handled in a proper manner.*/ 
 	/**
+	 * Creates a new projectile for this worm.
 	 * 
+	 * @post	The new projectile's x coordinate lies at the border of this worm, according to its direction.
+	 * 			| (new this.getProjectile()).getCoordinateX() == this.getCoordinateX() 
+	 * 			|												+ this.getRadius()*Math.cos(this.getDirection())
+	 * @post	The new projectile's y coordinate lies at the border of this worm, according to its direction.
+	 * 			| (new this.getProjectile()).getCoordinateY() == this.getCoordinateY() 
+	 * 			|												+ this.getRadius()*Math.sin(this.getDirection())
+	 * @post	The new projectile is active.
+	 * 			| (new this.getProjectile()).getStatus()
+	 * @post	The new projectile is in the same world as this worm.
+	 * 			| (new this.getProjectile()).getWorld() == this.getWorld()
+	 * @post	The new projectile has the same direction as this worm.
+	 * 			| (new this.getProjectile()).getDirection() == this.getDirection()
+	 * @post	The new projectile is fired from a rifle or a bazooka, according to the current waepon number.
+	 * 			| if (this.getCurrentWeaponNumber() == 0)
+	 * 			|		then this.getProjectile() isinstance Rifle
+	 * 			| else this.getProjectile() isinstance Bazooka
 	 */
 	private void setProjectile() {
 		if (this.getCurrentWeaponNumber() == 0)
@@ -759,7 +794,20 @@ public class Worm extends MovableObject{
 	
 	
 	/**
-	 * TODO
+	 * Let this worm fall until it leaves the world or hit impassable terrain.
+	 * 3 hit points are deduced for each meter of this fall.
+	 * 
+	 * @post	3 hit points are deduced for each meter that the worm has fallen.
+	 * 			| new.getHitPoints() == this.getHitPoints() - 3*(new.getCoordinateY() - this.getCoordinateY())
+	 * 
+	 * @effect	Set the y coordinate to the first coordinate underneath
+	 * 			from where this worm cannot fall any further.
+	 * 			| Y = this.getCoordinateY()
+	 * 			| while(this.canFall(this.getCoordinateX(), Y)
+	 * 			|		then Y = Y - 0.1*this.getRadius()
+	 * 			| this.setY(Y)
+	 * @effect	Update the location of this worm's projectile.
+	 * 			| this.updateProjectile()
 	 */
 	public void fall() {
 		if (this.canFall()) {
@@ -770,20 +818,29 @@ public class Worm extends MovableObject{
 					finalY = Y; //- 0.2*(this.getWorld().getStep(this.getRadius())); TODO Harald: waarom heb je dit zo gedaan?
 			}
 			this.setY(finalY);
-			this.setHitPoints(this.getHitPoints() - (int) ((startY - finalY)*3.0));
+			this.setHitPoints(this.getHitPoints() - (int) (Math.round((startY - finalY)*3.0)));
 			this.updateProjectile();
 		}
 	}
 	
+	
 	/**
-	 * Checks if this worm can fall. TODO(laatste deel van de voorlopige commentaar)
+	 * Checks if this worm can fall.
+	 * 
+	 * @return	This worm can fall if it is not at an adjacent location and if has not just eaten.
+	 * 			| result == this.canFall(this.getCoordinateX(), this.getCoordinateY())
+	 * 			|				&& (! this.hasJustEaten())
 	 */
 	public boolean canFall() {
-		return canFall(this.getCoordinateX(), this.getCoordinateY()) && !this.hasJustEaten;
+		return this.canFall(this.getCoordinateX(), this.getCoordinateY()) && !this.hasJustEaten();
 	}
+	
 	
 	/**
 	 * Checks if this worm could fall from a given position x,y.
+	 * 
+	 * @return	This worm can fall if it is not located at an adjacent location inn its world.
+	 * 			| result == (! this.getWorld().isAdjacent(x, y, this.getRadius()))
 	 */
 	public boolean canFall(double x, double y) {
 		return (! this.getWorld().isAdjacent(x, y, this.getRadius()));
@@ -922,9 +979,24 @@ public class Worm extends MovableObject{
 	}
 	
 	
+	
+	
+	/**
+	 * Terminates this worm and terminates all relations of this worm.
+	 * 
+	 * @post	If this worm is part of a team, that team no longer holds this worm.
+	 * 			| if (this.getTeam() != null)
+	 * 			| 		then (! this.getTeam().getAllWorms().contains(this))
+	 * @post	This worm is no longer part of a team.
+	 * 			| new.getTeam() == null
+	 * 
+	 * @effect	This worm's projectile is terminated.
+	 * 			| this.getProjectile().terminate()
+	 */
 	@Override
 	public void terminate(){
 		super.terminate();
+		this.projectile.terminate();
 		if (getTeam() != null){
 			this.team.removeFromTeam(this);
 			this.team=null;
@@ -932,28 +1004,49 @@ public class Worm extends MovableObject{
 	}
 		
 	
-	@Override
-	protected void setCoordinates(double x, double y) {
-		this.hasJustEaten = false;
-		super.setCoordinates(x, y);
-		// If setCoordinates terminates this worm, this function will throw a NullPointer.
-		try {
-			eatFoodIfPossible();
-		} catch (NullPointerException exc) {}
-	}
 	
+	
+	/**
+	 * This worm eats the possible food if it overlaps with a food object.
+	 * 
+	 * @effect	If this worm overlaps with a food object in its world,
+	 * 			this worm will eat that food object.
+	 * 			| if (this.getWorld().getFoodThatOverlaps(this) != null)
+	 * 			|		then eat(this.getWorld().getFoodThatOverlaps(this))
+	 */
 	private void eatFoodIfPossible(){
 		if (getWorld().getFoodThatOverlaps(this)!=null)
 			eat(getWorld().getFoodThatOverlaps(this));
 	}
 
 
-
-
+	/**
+	 * This worm eats the given food.
+	 * 
+	 * @param 	food
+	 * 			The food that the worm will eat.
+	 * 
+	 * @post	The radius of this worm grows with 10 percent.
+	 * 			| new.getRadius() == 1.1*this.getRadius()
+	 * @post	This worm has just eaten.
+	 * 			| new.hasJustEaten()
+	 * 
+	 * @effect	The given food no longer exists.
+	 * 			| food.terminate()
+	 * 
+	 */
 	private void eat(Food food) {
 		food.terminate();
 		this.setRadius(1.1*this.getRadius());
 		this.hasJustEaten = true;
+	}
+	
+	
+	/**
+	 * Returns if this worm has just eaten.
+	 */
+	public boolean hasJustEaten() {
+		return this.hasJustEaten;
 	}
 	
 	

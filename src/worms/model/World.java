@@ -337,7 +337,7 @@ public class World implements Cloneable {
 	 * on the given locations x and y is adjacent to impassable terrain..
 	 * 
 	 * 
-	 *  @param  	x
+	 * @param  	x
 	 * 			The x coordinate of the center of the circle to be checked.
 	 * @param 	y
 	 * 			The x coordinate of the center of the circle to be checked.
@@ -347,12 +347,13 @@ public class World implements Cloneable {
 	 * @return	Returns whether entity at location is adjacent to impassable terrain.
 	 * 			|if (!(isInWorld(x, y, radius*1.1)))
 	 *			|	result == false
-	 * 			|result  == isPassableArea(x,y,1.1*radius)
+	 * 			|result  == (! isPassableArea(x,y,1.1*radius)) && isPassableArea(x, y, radius)
 	 * 
-	 * @throws	One of the inputs is not a number.
+	 * @throws	ModelException
+	 * 			One of the inputs is not a number.
 	 * 			| (Double.isNaN(radius) || Double.isNaN(y) || Double.isNaN(x))
 	 */
-	protected boolean isAdjacent(double x, double y,double radius){
+	protected boolean isAdjacent(double x, double y,double radius) throws ModelException {
 		if (Double.isNaN(radius) || Double.isNaN(y) || Double.isNaN(x))
 			throw new ModelException("Doubles must be real numbers as input of isAdjacent!");
 		if (!(isInWorld(x, y, radius*1.1)))

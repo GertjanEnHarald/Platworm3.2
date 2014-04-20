@@ -1401,12 +1401,14 @@ public class Tests {
 
 	@Test
 	public void testFall() {
-		Worm testWorm = new Worm(12.0, 4.0, Math.PI / 4, 1, "Bob", true, world);
+		Worm testWorm = new Worm(12.0, 10.0, Math.PI / 4, 1, "Bob", true, world);
 		world.addAsGameObject(testWorm);
+		int hitPoints = testWorm.getHitPoints();
 		testWorm.fall();
 		assertEquals(testWorm.getCoordinateX(),12.0,EPS);
 		assertEquals(testWorm.getCoordinateY(), 2.0+testWorm.getRadius(), EPS);
 		assertTrue(world.isAdjacent(testWorm.getCoordinateX(), testWorm.getCoordinateY(), testWorm.getRadius()));
+		assertEquals(testWorm.getHitPoints(),hitPoints - 3*((int) Math.round((10.0-testWorm.getCoordinateY()))));
 	}
 	
 	/*
