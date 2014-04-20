@@ -142,16 +142,16 @@ public abstract class MovableObject extends GameObject {
 	 * (This means that the y coordinate remains the same.)
 	 * 
 	 * @return 	Returns the time in the air.
-	 * 			If the direction equals zero, then the time in the air will be approximated
-	 * 			by assuming that the direction equals 2^(-1074). This value is the smallest positive value that
-	 * 			the type Double can represent.
-	 * 			| if this.getDirection() == 0
-	 * 			|	then result == this.getJumpDistance()/(this.getJumpVelocity()*Math.cos(2^(-1047)))
+	 * 			If the direction equals PI/2, then the time in the air will be approximated
+	 * 			by assuming that the direction equals PI/2+2^(-1074). The value that is added 
+	 * 			is the smallest positive value that the type Double can represent.
+	 * 			| if this.getDirection() == Math.PI/2
+	 * 			|	then result == this.getJumpDistance()/(this.getJumpVelocity()*Math.cos(Math.PI/2+2^(-1047)))
 	 * 			| result == this.getJumpDistance()/(this.getJumpVelocity()*Math.cos(this.getDirection()))
 	 */
 	public double getJumpTime(){
-		if (this.getDirection() == 0)
-			return this.getJumpDistance()/(this.getJumpVelocity()*Math.cos(Double.MIN_VALUE));
+		if (this.getDirection() == Math.PI/2)
+			return this.getJumpDistance()/(this.getJumpVelocity()*Math.cos(Math.PI/2+Double.MIN_VALUE));
 		return this.getJumpDistance()/(this.getJumpVelocity()*Math.cos(this.getDirection()));
 	}
 	

@@ -219,15 +219,6 @@ public class Worm extends MovableObject{
 	
 	
 	/**
-	 * Aangezien AP nooit echt op 0, moet er een minum zijn waarvoor de beurt eindigt.
-	 * TODO
-	 * @return
-	 */
-	public int getMinimumActionPoints(){
-		return getMaximumActionPoints()/50;
-	}
-	
-	/**
 	 * Set the action points that this worm has.
 	 * 
 	 * @param 	actionPoints
@@ -247,9 +238,9 @@ public class Worm extends MovableObject{
 	 * 			| 	then new.getActionPoints() == this.getMaximumActionPoints()
 	 */
 	protected void setActionPoints(int actionPoints){
-		if ((getMinimumActionPoints() < actionPoints) && (actionPoints <= this.getMaximumActionPoints()))
+		if ((0 <= actionPoints) && (actionPoints <= this.getMaximumActionPoints()))
 			this.actionPoints = actionPoints;
-		else if (actionPoints < 0 || actionPoints == 0 || (getMinimumActionPoints() >= actionPoints)){
+		else if (actionPoints < 0){
 			this.actionPoints = 0;
 			this.getWorld().nextTurn();
 		}
@@ -391,14 +382,6 @@ public class Worm extends MovableObject{
 	 */
 	public Team getTeam() {
 		return this.team;
-//		try {
-//			if (this.team == null)
-//				return null;
-//			return this.team.clone();
-//		} catch (CloneNotSupportedException e) {
-//			// TODO Auto-generated catch block
-//			return null;
-//		}
 	}
 	
 	
@@ -490,7 +473,7 @@ public class Worm extends MovableObject{
 	public void turn(double angle){
 		assert this.canTurn(angle);
 		this.setDirection(this.getDirection()+angle);
-		int usedActionPoints = (int) usedActionPointsTurn(angle);
+		int usedActionPoints = (int) Math.round(usedActionPointsTurn(angle));
 		this.setActionPoints(this.getActionPoints() - usedActionPoints);
 		this.updateProjectile();
 	}
@@ -685,14 +668,7 @@ public class Worm extends MovableObject{
 	 * Returns the current projectile of this worm.
 	 */
 	public Projectile getProjectile(){
-		try {
-			if (this.projectile == null)
-				return null;
-			return this.projectile.clone();
-		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
-			return null;
-		}
+		return this.projectile;
 	}
 	
 	

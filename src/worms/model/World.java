@@ -778,7 +778,7 @@ public class World implements Cloneable {
 	 * 			|(! this.canHaveAsGameObject(gameObject))
 	 * 
 	 */			
-	private void addAsGameObject(GameObject gameObject) throws ModelException {
+	protected void addAsGameObject(GameObject gameObject) throws ModelException {
 		if (! this.canHaveAsGameObject(gameObject))
 			throw new ModelException("Cannot assign this game object to this world!");
 		this.gameObjects.add(gameObject);
