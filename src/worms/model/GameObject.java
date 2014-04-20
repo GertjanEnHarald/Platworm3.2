@@ -37,6 +37,10 @@ public abstract class GameObject implements Cloneable {
 	 * @post	The new world of this game object will be equal to the given world.
 	 * 			| new.getWorld() == world
 	 * 
+	 * @effect	If one of the given coordinates is not in this world, this game object is terminated.
+	 * 			| if (this.isXCoordinateOutOfBounds(coordinateX) || this.isYCoordinateOutOfBounds(coordinateY))
+	 * 			|		then this.terminate()
+	 * 
 	 * @throws	ModelException
 	 * 			The exception is thrown if one or more of the given parameters are illegal 
 	 * 			assignments for this game object.
@@ -45,10 +49,10 @@ public abstract class GameObject implements Cloneable {
 	 */
 	public GameObject(double coordinateX, double  coordinateY, boolean isActive, double radius, World world) 
 			throws ModelException {
-		this.setWorld(world);
-		this.setCoordinates(coordinateX, coordinateY);
-		this.setRadius(radius);
 		this.setStatus(isActive);
+		this.setWorld(world);
+		this.setRadius(radius);
+		this.setCoordinates(coordinateX, coordinateY);
 	}
 	
 	
@@ -213,10 +217,10 @@ public abstract class GameObject implements Cloneable {
 	protected void setY(double coordinateY) throws ModelException {
 		if (!isValidCoordinate(coordinateY))
 			throw new ModelException("Illegal Y coordinate!");
-		if (isYCoordinateOutOfBounds(coordinateY)){
+		if (this.isYCoordinateOutOfBounds(coordinateY)){
 			this.coordinateY = coordinateY;
 			this.terminate();
-			}
+		}
 		else
 			this.coordinateY = coordinateY;
 	}
@@ -269,7 +273,8 @@ public abstract class GameObject implements Cloneable {
 	@Raw
 	protected void setCoordinates(double x, double y) throws ModelException {
 		setX(x);
-		setY(y);
+		if (this.getStatus())
+			setY(y);
 	}
 	
 	

@@ -34,6 +34,10 @@ public abstract class MovableObject extends GameObject {
 	 * @post	The new direction of this movable object will be equal to the given direction.
 	 * 			| new.getDirection() == changeAngleModulo2PI(direction)
 	 * 
+	 * @effect	If one of the given coordinates is not in this world, this movable object is terminated.
+	 * 			| if (this.isXCoordinateOutOfBounds(coordinateX) || this.isYCoordinateOutOfBounds(coordinateY))
+	 * 			|		then this.terminate()
+	 * 
 	 * @throws	ModelException
 	 * 			The exception is thrown if one or more of the given parameters are illegal 
 	 * 			assignments for this game object.
@@ -43,7 +47,8 @@ public abstract class MovableObject extends GameObject {
 	public MovableObject(double coordinateX, double coordinateY, boolean isActive, 
 			double radius, World world, double direction) throws ModelException {
 		super(coordinateX, coordinateY, isActive, radius,world);
-		this.setDirection(direction);
+		if (this.getStatus())
+			this.setDirection(direction);
 	}
 	
 	
@@ -73,7 +78,7 @@ public abstract class MovableObject extends GameObject {
 	 * 			| new.getDirection() == changeAngleModulo2PI(direction)
 	 */
 	@Raw
-	public void setDirection(double direction){
+	protected void setDirection(double direction){
 		assert isValidDirection(direction);
 		this.direction = changeAngleModulo2PI(direction);
 	}

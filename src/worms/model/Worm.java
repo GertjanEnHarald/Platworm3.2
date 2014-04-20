@@ -92,6 +92,10 @@ public class Worm extends MovableObject{
 	 * @post	This worm is equipped with a weapon.
 	 * 			| new.getProjectile() isinstance Projectile
 	 * 
+	 * @effect	If one of the given coordinates is not in this world, this worm is terminated.
+	 * 			| if (this.isXCoordinateOutOfBounds(coordinateX) || this.isYCoordinateOutOfBounds(coordinateY))
+	 * 			|		then this.terminate()
+	 * 
 	 * @throws	ModelException
 	 * 			The exception is thrown if one or more of the given parameters are illegal 
 	 * 			assignments for this worm.
@@ -105,10 +109,12 @@ public class Worm extends MovableObject{
 			String name, boolean isActive, World world) 
 			throws ModelException {
 		super(coordinateX, coordinateY, isActive, radius, world, direction);
-		this.setActionPoints(this.getMaximumActionPoints());
-		this.setHitPoints(this.getMaximumHitPoints());
-		this.setName(name);
-		this.setProjectile();
+		if (this.getStatus()){
+			this.setActionPoints(this.getMaximumActionPoints());
+			this.setHitPoints(this.getMaximumHitPoints());
+			this.setName(name);
+			this.setProjectile();
+		}
 	}	
 	
 	
@@ -214,7 +220,7 @@ public class Worm extends MovableObject{
 	 * worm can have.
 	 */
 	public int getMaximumActionPoints(){
-		return (int) (this.getMass());
+		return (int) (Math.round(this.getMass()));
 	}
 	
 	
@@ -283,8 +289,10 @@ public class Worm extends MovableObject{
 	protected void setHitPoints(int hitPoints) {
 		if ((0 <= hitPoints) && (hitPoints <= this.getMaximumHitPoints()))
 			this.hitPoints = hitPoints;
-		else if (hitPoints < 0)
+		else if (hitPoints < 0) {
+			this.hitPoints = 0;
 			this.terminate();
+		}
 		else if (hitPoints > this.getMaximumHitPoints())
 			this.hitPoints = this.getMaximumHitPoints();
 	}
@@ -294,7 +302,7 @@ public class Worm extends MovableObject{
 	 * Returns the maximum number of hit points this worm can have.
 	 */
 	public int getMaximumHitPoints() {
-		return (int) this.getMass();
+		return (int) Math.round(this.getMass());
 	}
 	
 	
@@ -302,11 +310,11 @@ public class Worm extends MovableObject{
 	 * Returns if this worm is alive or not.
 	 * 
 	 * @return	This worm is alive if its number of hitpoints is 
-	 * 			larger than or equal to 0.
-	 * 			| result == (this.getHitPoints() >= 0)
+	 * 			larger than 0.
+	 * 			| result == (this.getHitPoints() > 0)
 	 */
 	public boolean isAlive() {
-		return (this.getHitPoints() >= 0);
+		return (this.getHitPoints() > 0);
 	}
 	
 	
@@ -757,9 +765,9 @@ public class Worm extends MovableObject{
 		if (this.canFall()) {
 			double startY = this.getCoordinateY();
 			double finalY = startY;
-			for(double Y = startY; this.canFall(this.getCoordinateX(), Y)&&(Y>-0.1*getRadius());
+			for(double Y = startY; this.canFall(this.getCoordinateX(), finalY)&&(Y>-0.1*getRadius());
 					Y = Y - (this.getRadius()*0.1)) {
-					finalY = Y- 0.2*(this.getWorld().getStep(this.getRadius()));
+					finalY = Y; //- 0.2*(this.getWorld().getStep(this.getRadius())); TODO Harald: waarom heb je dit zo gedaan?
 			}
 			this.setY(finalY);
 			this.setHitPoints(this.getHitPoints() - (int) ((startY - finalY)*3.0));
