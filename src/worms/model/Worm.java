@@ -552,21 +552,41 @@ public class Worm extends MovableObject{
 	
 	
 	/**
-	 * TODO
 	 * Changes the position of this worm as the result of a jump in the current direction
-	 * of this worm consuming all action points. The direction does not change during the jump.
-	 * If this worm is facing downwards, it will not move, but jumping consumes all the action points.
-	 *
+	 * of this worm, consuming all action points. The direction does not change during the jump.
 	 * 
-	 * @post	All the action points have been consumed.
-	 * 			| new.getActionPoints() == 0;
-	 * @post	The new position of this worm is the result of a jump
-	 * 			from the previous position of this worm.
-	 * 			| new.getCoordinateX() == this.getCoordinateX() + this.getJumpDistance()
+	 * @param	timeStep
+	 * 			A time interval during which the worm will not move completely trough impassable terrain.
+	 * 
+	 * @effect	The new x and y coordinates are assigned to this worm.
+	 * 			This worm will perform a parabolic movement, until it reaches impassable area or leaves the world.
+	 * 			If this worm leaves the world at the end of a jump, its radius will be subtracted from 
+	 * 			its coordinates to visually make the worm disappear from the world. 
+	 * 			| x = this.getCoordinateX()
+	 * 			| y = this.getCoordinateY()
+	 * 			| hasLanded = false
+	 * 			| for (time = 0; (! hasLanded); time = time + timeStep)
+	 * 			|		position = this.getJumpStep(time)
+	 * 			|		x = position[0]
+	 * 			|		y = position[1]
+	 * 			|		if (this.getWorld().isAdjacent(x,y,this.getRadius()))
+	 * 			|				position2 = this.getJumpStep(time + timeStep)
+	 * 			|				if (! this.getWorldIsPassableArea(position2[0], position2[1], this.getRadius()))
+	 * 			|						hasLanded = true
+	 * 			|		else if (! this.getWorld().isInWorld(x, y, this.getRadius()))
+	 * 			|				x = x - this.getRadius()
+	 * 			|				y = y - this.getRadius()
+	 * 			|				hasLanded = true
+	 * 			| this.setCoordinates(x, y)
+	 * @effect	The coordinates of this worm's projectile are updated.
+	 * 			| this.updateProjectile()
+	 * 
+	 * @post	All action points are used, even if this worm couldn't jump in its current situation.
+	 * 			| new.getActionPoints() == 0
+	 * 
 	 * @throws	ModelException
-	 *			Throws exception when this worm is facing downwards and the jump is thus impossible
-	 *			or when this worm has no action points left.
-	 *			| (! this.canJump)
+	 * 			The exception is thrown if this worm cannot jump in its current situation.
+	 * 			| ! this.canJump()
 	 */
 	@Override
 	public void jump(double timeStep) throws ModelException {
@@ -578,7 +598,9 @@ public class Worm extends MovableObject{
 		double x = this.getCoordinateX();
 		double y = this.getCoordinateY();
 		timeStep = 10.0*timeStep;
-		for (double time = 0; true; time = time + timeStep) {
+		boolean hasLanded = false;
+		
+		for (double time = 0; (! hasLanded); time = time + timeStep) {
 			double[] position = this.getJumpStep(time);
 			x = position[0];
 			y = position[1];
@@ -587,13 +609,13 @@ public class Worm extends MovableObject{
 				double x2 = position2[0];
 				double y2 = position2[1];
 				if (! this.getWorld().isPassableArea(x2, y2, this.getRadius())) {
-					break;
+					hasLanded = true;
 				}
 			}
 			else if (! this.getWorld().isInWorld(x, y, this.getRadius())) {
 				x = x - this.getRadius();
 				y = y - this.getRadius();
-				break;
+				hasLanded = true;
 			} 
 		}
 
@@ -635,22 +657,39 @@ public class Worm extends MovableObject{
 	
 	
 	/**
-	 * TODO
+	 * Calculates the time that this worm will be in the air.
+	 * 
+	 * @param	timeStep
+	 * 			A time interval during which the worm will not move completely trough impassable terrain.
+	 * 
+	 * @return	Returns the time that this worm is in the air until it reaches impassable terrain
+	 * 			or it leaves the world. If the worm leaves the world, extra time is provided to make 
+	 * 			the worm visually disappear.
+	 * 			| time = 0
+	 * 			| hasLanded = false
+	 * 			| for (t = step; (! hasLanded); t = t + step)
+	 * 			|		position = this.getJumpTime(t)
+	 * 			|		time = t
+	 * 			| 		if (! this.getWorld().isPassableArea(position[0], position[1], this.getRadius()))
+	 * 			|				hasLanded = true
+	 * 			|				if (! this.getWorld().isInWorld(position[0], position[1], this.getRadius()))
+	 * 			|						time = time + 0.15
+	 * 			| result == time
 	 */
 	@Override
 	public double getJumpRealTimeInAir(double step) {
-		double maxTime = this.getJumpTime();
 		double time = 0.0;
+		boolean hasLanded = false;
 		step = 200.0*step;
 
-		for (double t = step; t <= maxTime*5.0 ; t = t + step) {
+		for (double t = step; (! hasLanded) ; t = t + step) {
 			double[] position = this.getJumpStep(time);
 			time = t;
 			if (! this.getWorld().isPassableArea(position[0], position[1], this.getRadius())) {
 				if (! this.getWorld().isInWorld(position[0], position[1], this.getRadius()))
 					// Extra time provided to give the worm the chance to jump off the screen.
 					time = time + 0.15;
-				break;
+				hasLanded = true;
 			}
 		}
 		return time;
@@ -665,6 +704,7 @@ public class Worm extends MovableObject{
 	public int getCurrentWeaponNumber() {
 		return this.currentWeaponNumber;
 	}
+	
 	
 	/**
 	 * Set the current weapon number to the given number.
@@ -684,6 +724,7 @@ public class Worm extends MovableObject{
 			throw new ModelException("Illegal weapon assignment!");
 		this.currentWeaponNumber = number;
 	}
+	
 	
 	/**
 	 * Returns the number of possible weapons to propel projectiles.
@@ -731,7 +772,6 @@ public class Worm extends MovableObject{
 					this.getCoordinateY() + this.getRadius()*Math.sin(this.getDirection()), 
 					true, this.getWorld(), this.getDirection());	
 	}
-
 	
 	
 	/**
