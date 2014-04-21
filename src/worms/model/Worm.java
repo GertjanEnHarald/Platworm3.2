@@ -267,6 +267,10 @@ public class Worm extends MovableObject{
 	 * 			the actionPoints of this worm are set to the maximum number of action points.
 	 * 			| if (actionPoints > getMaximumActionPoints())
 	 * 			| 	then new.getActionPoints() == this.getMaximumActionPoints()
+	 * 
+	 * @effect	If the action points are set to zero, the turn of this worm ends.
+	 * 			| if (new.getActionPoints() == 0)
+	 * 			|		then this.getWorld().nextTurn()
 	 */
 	protected void setActionPoints(int actionPoints){
 		if ((0 < actionPoints) && (actionPoints <= this.getMaximumActionPoints()))
@@ -506,7 +510,7 @@ public class Worm extends MovableObject{
 	public void turn(double angle){
 		assert this.canTurn(angle);
 		this.setDirection(this.getDirection()+angle);
-		int usedActionPoints = (int)(usedActionPointsTurn(angle)) + 1 ;
+		int usedActionPoints = (int) (usedActionPointsTurn(angle)) + 1;
 		this.setActionPoints(this.getActionPoints() - usedActionPoints);
 		this.updateProjectile();
 	}

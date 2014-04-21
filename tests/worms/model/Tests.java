@@ -1408,8 +1408,7 @@ public class Tests {
 		Worm testWorm = new Worm(10.0, 10.0, Math.PI, 1, "Bob", true, world);
 		testWorm.turn(Math.PI / 4);
 		assertEquals(5 * Math.PI / 4, testWorm.getDirection(), EPS);
-		int actionPoints = (int) (testWorm.getMaximumActionPoints() - (Math
-				.round((60 * Math.PI / 4) / (2 * Math.PI))));
+		int actionPoints = (int) (testWorm.getMaximumActionPoints() - (	(60 * Math.PI / 4) / (2 * Math.PI)));
 		assertEquals(actionPoints, testWorm.getActionPoints());
 	}
 
@@ -1542,6 +1541,8 @@ public class Tests {
 	public void testJumpLegalCaseFlatJump() {
 		Worm testWorm = new Worm(12.0, 4.0, Math.PI / 4, 1, "Bob", true, world);
 		world.addAsGameObject(testWorm);
+		Worm testWorm2 = new Worm(12.0, 4.0, Math.PI / 4, 1, "Bob", true, world);
+		world.addAsGameObject(testWorm2);
 		testWorm.fall();
 		testWorm.jump(Math.pow(10, -4));
 		assertEquals(
