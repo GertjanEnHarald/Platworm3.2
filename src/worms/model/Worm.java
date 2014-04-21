@@ -634,12 +634,12 @@ public class Worm extends MovableObject{
 	 * Returns the initial velocity of the potential jump of this worm.
 	 * 
 	 * @return	The initial velocity of the jump.
-	 * 			| F = 5*this.getActionPoints()+this.getMass()*getGravity()
+	 * 			| F = 5*this.getActionPoints()+this.getMass()*this.getWorld().getGravity()
 	 *			| result == F*0.5/this.getMass()
 	 */
 	@Override
 	public double getJumpVelocity(){
-		double F = 5*this.getActionPoints()+this.getMass()*getGravity();
+		double F = 5*this.getActionPoints()+this.getMass()*this.getWorld().getGravity();
 		return F*0.5/this.getMass();
 	}
 	
@@ -1036,7 +1036,8 @@ public class Worm extends MovableObject{
 	@Override
 	public void terminate(){
 		super.terminate();
-		this.projectile.terminate();
+		if (this.getProjectile() != null)
+			this.projectile.terminate();
 		if (getTeam() != null){
 			this.team.removeFromTeam(this);
 			this.team=null;

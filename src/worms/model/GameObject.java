@@ -11,7 +11,7 @@ public abstract class GameObject implements Cloneable {
 	private double radius;
 	private boolean isActive;
 	private World world;
-	private static final double g=9.80665;
+	
 	
 	
 	/**
@@ -53,19 +53,6 @@ public abstract class GameObject implements Cloneable {
 		this.setWorld(world);
 		this.setRadius(radius);
 		this.setCoordinates(coordinateX, coordinateY);
-	}
-	
-	
-	
-	
-	/**
-	 *Returns the gravity used in this game. 
-	 */
-	@Basic
-	@Immutable
-	@Raw
-	public static final double getGravity(){
-		return g;
 	}
 	
 	

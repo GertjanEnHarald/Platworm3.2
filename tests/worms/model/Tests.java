@@ -1155,7 +1155,8 @@ public class Tests {
 
 	@Test
 	public void testGravity() {
-		assertEquals(9.80665, Worm.getGravity(), EPS);
+		Worm testWorm = new Worm(0, 0, 0, 1, "James O'Hare", true, world);
+		assertEquals(9.80665, testWorm.getWorld().getGravity(), EPS);
 	}
 
 	@Test
@@ -1431,7 +1432,7 @@ public class Tests {
 	 */
 
 	@Test
-	public void testJumpLegalCase() {
+	public void testJumpLegalCaseFlatJump() {
 		Worm testWorm = new Worm(12.0, 4.0, Math.PI / 4, 1, "Bob", true, world);
 		world.addAsGameObject(testWorm);
 		testWorm.fall();

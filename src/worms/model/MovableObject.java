@@ -172,10 +172,10 @@ public abstract class MovableObject extends GameObject {
 	 * 
 	 * @return	The horizontal distance.
 	 * 			| result == Math.pow(this.getJumpVelocity(), 2)*
-	 * 			|				Math.sin(2*this.getDirection())/getGravity()
+	 * 			|				Math.sin(2*this.getDirection())/this.getWorld().getGravity()
 	 */
 	public double getJumpDistance(){
-		return Math.pow(this.getJumpVelocity(), 2)*Math.sin(2*this.getDirection())/getGravity();
+		return Math.pow(this.getJumpVelocity(), 2)*Math.sin(2*this.getDirection())/this.getWorld().getGravity();
 	}
 	
 	
@@ -189,7 +189,7 @@ public abstract class MovableObject extends GameObject {
 	 * 			| initialJumpVelocityX = this.getJumpVelocity()*Math.cos(this.getDirection())
 	 * 			| initialJumpVelocityY = this.getJumpVelocity()*Math.sin(this.getDirection())
 	 * 			| result == {this.getCoordinateX()+initialJumpVelocityX*time, 
-	 * 			| 			 this.getCoordinateY()+initialJumpVelocityY*time-0.5*getGravity()*Math.pow(time, 2)}
+	 * 			| 			 this.getCoordinateY()+initialJumpVelocityY*time-0.5*this.getWorld().getGravity()*Math.pow(time, 2)}
 	 * 
 	 * @throws	ModelException
 	 * 			This worm cannot jump.
@@ -202,7 +202,7 @@ public abstract class MovableObject extends GameObject {
 		double initialJumpVelocityY= this.getJumpVelocity()*Math.sin(this.getDirection());
 		double[] result = 
 		        {this.getCoordinateX()+initialJumpVelocityX*time,
-				this.getCoordinateY()+initialJumpVelocityY*time-0.5*getGravity()*Math.pow(time, 2)};
+				this.getCoordinateY()+initialJumpVelocityY*time-0.5*this.getWorld().getGravity()*Math.pow(time, 2)};
 		return result;
 	}
 	

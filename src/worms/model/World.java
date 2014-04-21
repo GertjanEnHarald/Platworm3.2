@@ -2,7 +2,7 @@ package worms.model;
 
 import java.util.*;
 
-import be.kuleuven.cs.som.annotate.Basic;
+import be.kuleuven.cs.som.annotate.*;
 import worms.util.Util;
 
 /**
@@ -33,6 +33,7 @@ public class World implements Cloneable {
 	 // Variable initialization
 	 //
 	
+	private final double g=9.80665;
 	private static double maxDimension=Double.MAX_VALUE;
 	private double height;
 	private double width;
@@ -82,6 +83,16 @@ public class World implements Cloneable {
 	//
 	//Getters and other inspectors.
 	//
+	
+	/**
+	 *Returns the gravity used in this game. 
+	 */
+	@Basic
+	@Immutable
+	@Raw
+	public final double getGravity(){
+		return g;
+	}
 	
 	/**
 	 * Returns the random seed of this world.
