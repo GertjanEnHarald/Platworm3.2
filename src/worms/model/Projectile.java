@@ -122,7 +122,9 @@ public abstract class Projectile extends MovableObject {
 	 * 			| new.isTerminated() == true
 	 */
 	@Raw
+	@Override
 	public void terminate() {
+		super.terminate();
 		this.isTerminated = true;
 	}
 	
@@ -202,11 +204,17 @@ public abstract class Projectile extends MovableObject {
 	
 	
 	/**
-	 * TODO
+	 * Returns if this projectile has a valid radius.
+	 * 
+	 * @param	radius
+	 * 			The radius that needs to be checked.
+	 * 
+	 * @return	Returns if the radius is positive.
+	 * 			| result == (radius > 0)
 	 */
 	@Override
 	public boolean isValidRadius(double radius) {
-		return true;
+		return (radius > 0);
 	}
 	
 	
@@ -330,29 +338,78 @@ public abstract class Projectile extends MovableObject {
 	
 	
 	/**
-	 * TODO
+	 * Calculates the time that this worm will be in the air.
+	 * 
+	 * @param	timeStep
+	 * 			A time interval during which the worm will not move completely trough impassable terrain.
+	 * 
+	 * @return	Returns the time that this projectile is in the air until it hits impassable terrain
+	 * 			or it hits another worm.
+	 * 			| time = 0
+	 * 			| hasLanded = false
+	 * 			| for (t=0; (! hasLanded); t = t +step)
+	 * 			|		time = t
+	 * 			|		position = this.getJumpStep(t)
+	 * 			|		if (! this.getWorld().isPassableArea(position[0], position[1], this.getRadius())
+	 * 			|			|| this.getWorld().projectileOverlapsWorm(this))
+	 * 			|				hasLanded = true
+	 * 			| result == time
 	 */
 	@Override
 	public double getJumpRealTimeInAir(double step) {
-		double maxTime = this.getJumpTime();
 		double time = 0.0;
 		double radius = this.getRadius();
 		step = 150.0*step;
-
-		for (double t = 0; t <= 3.0*maxTime; t = t + step) {
+		boolean hasLanded = false;
+		
+		for (double t = 0; (! hasLanded); t = t + step) {
 			time = t;
 			double[] position = this.getJumpStep(t);
 			if ( (! this.getWorld().isPassableArea(position[0], position[1], radius)) ||
 					this.getWorld().projectileOverlapsWorm(this)) {
-				break;
+				hasLanded = true;
 			}
 		}
 		return time;
 	}
 	
 	
+
 	/**
-	 * TODO
+	 * Changes the position of this projectile as the result of a jump in the current direction
+	 * of this projectile. The direction does not change during the jump.
+	 * 
+	 * @param	timeStep
+	 * 			A time interval during which this projectile will not move completely trough impassable terrain.
+	 * 
+	 * @effect	The new x and y coordinates are assigned to this projectile.
+	 * 			This projectile will perform a parabolic movement, until it reaches impassable area 
+	 * 			or leaves the world or hits a worm.
+	 * 			If this projectile leaves the world at the end of a jump, its radius will be subtracted from 
+	 * 			its coordinates to visually make the worm disappear from the world. 
+	 * 			| x = this.getCoordinateX()
+	 * 			| y = this.getCoordinateY()
+	 * 			| hasLanded = false
+	 * 			| for (time = 0; (! hasLanded); time = time + timeStep)
+	 * 			|		position = this.getJumpStep(time)
+	 * 			|		x = position[0]
+	 * 			|		y = position[1]
+	 * 			| 		this.setCoordinates(x, y)
+	 * 			|		if (! this.getWorldIsPassableArea(position2[0], position2[1], this.getRadius())
+	 * 			|			|| this.getWorld().projectileOverlapsWorm(this))
+	 * 			|				hasLanded = true
+	 * 			|		else if (! this.getWorld().isInWorld(x, y, this.getRadius()))
+	 * 			|				x = x - this.getRadius()
+	 * 			|				y = y - this.getRadius()
+	 * 			|				hasLanded = true
+	 * @effect	If a worm is hit, it will lose the amount of hit points specific to this projectile.
+	 * 			| if (this.getWorld().projectileOverlapsWorm(this))
+	 * 			|		target = this.getWormThatOverlaps(this)
+	 * 			|		target.setHitPoints(target.getHitpoints() - this.getLostHitpoints())
+	 * 
+	 * @throws	ModelException
+	 * 			The exception is thrown if this worm cannot jump in its current situation.
+	 * 			| ! this.canJump()
 	 */
 	@Override
 	public void jump(double timeStep) {
@@ -362,20 +419,21 @@ public abstract class Projectile extends MovableObject {
 		double x = this.getCoordinateX();
 		double y = this.getCoordinateY();
 		double radiusProjectile = this.getRadius();
+		boolean hasLanded = false;
 
-		for (double time = timeStep; true; time = time + timeStep) {
+		for (double time = timeStep; (! hasLanded); time = time + timeStep) {
 			double[] position = this.getJumpStep(time);
 			x = position[0];
 			y = position[1];
 			this.setCoordinates(x, y);
 			if ((! this.getWorld().isPassableArea(x, y, radiusProjectile)) || 
 					this.getWorld().projectileOverlapsWorm(this)) {
-				break;
+				hasLanded = true;
 			}
 			else if (! this.getWorld().isInWorld(x, y, this.getRadius())) {
 				x = x - this.getRadius();
 				y = y - this.getRadius();
-				break;
+				hasLanded = true;
 			}
 		}	
 		
@@ -409,11 +467,14 @@ public abstract class Projectile extends MovableObject {
 	
 	
 	/**
-	 * TODO
+	 * Returns whether or not this projectile can jump in its current situation.
+	 * 
+	 * @return	This projectile can jump if it is not terminated.
+	 * 			| result == (! this.isTerminated())
 	 */
 	@Override
 	public boolean canJump() {
-		return true;
+		return (! this.isTerminated());
 	}
 	
 	

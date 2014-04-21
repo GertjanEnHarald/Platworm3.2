@@ -647,12 +647,12 @@ public class Worm extends MovableObject{
 	/**
 	 * Checks whether this worm can jump in his current situation.
 	 * 
-	 * @return	Returns true if this worm still has some action points.
-	 * 			| result == ((this.getActionPoints() > 0)
+	 * @return	Returns true if this worm still has some action points and is still alive.
+	 * 			| result == (this.isAlive()) && ((this.getActionPoints() > 0)
 	 */
 	@Override
 	public boolean canJump() {
-		return this.getActionPoints() > 0;
+		return (this.isAlive()) && (this.getActionPoints() > 0);
 	}
 	
 	
