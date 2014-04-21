@@ -680,7 +680,7 @@ public class Worm extends MovableObject{
 	public double getJumpRealTimeInAir(double step) {
 		double time = 0.0;
 		boolean hasLanded = false;
-		step = 200.0*step;
+		step = 50.0*step;
 
 		for (double t = step; (! hasLanded) ; t = t + step) {
 			double[] position = this.getJumpStep(time);
