@@ -208,7 +208,7 @@ public class World implements Cloneable {
 	protected int getHeightInPixels(){
 		return this.passableMap.length;
 	}
-	
+
 	
 	
 	/**

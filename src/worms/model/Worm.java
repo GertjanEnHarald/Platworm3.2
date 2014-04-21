@@ -858,8 +858,8 @@ public class Worm extends MovableObject{
 			double startY = this.getCoordinateY();
 			double finalY = startY;
 			for(double Y = startY; this.canFall(this.getCoordinateX(), finalY)&&(Y>-0.1*getRadius());
-					Y = Y - (this.getRadius()*0.1)) {
-					finalY = Y; //- 0.2*(this.getWorld().getStep(this.getRadius())); TODO Harald: waarom heb je dit zo gedaan?
+					Y = Y - (this.getWorld().getStep(this.getRadius()))) {
+					finalY = Y; 
 			}
 			this.setY(finalY);
 			this.setHitPoints(this.getHitPoints() - (int) (Math.round((startY - finalY)*3.0)));
