@@ -965,9 +965,15 @@ public class Worm extends MovableObject{
 	 *			|}
 	 *			|if (toBeExecutedSteps > 0.0)
 	 *			|	move(toBeExecutedSteps,toBeExecutedDirection)
-	 
+	 *
+	 *@throws	ModelException
+	 *			This worm cannot move.
+	 *			| !this.canMove()	
+	 *
 	 */
 	public void move(){
+		if (!canMove())
+			throw new ModelException("This worm cannot move!");
 		double maxSuccesOfMoveValue = 0.0;
 		double toBeExecutedDirection = getDirection();
 		double toBeExecutedSteps = 0.0;

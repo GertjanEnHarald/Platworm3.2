@@ -1518,25 +1518,51 @@ public class Tests {
 		assertEquals(testWorm.getHitPoints(),hitPoints - 3*((int) Math.round((10.0-testWorm.getCoordinateY()))));
 	}
 	
-	/*
-	 * TODO test move
-	 * 
-	 * @Test public void testMoveLegalCase1(){ Worm testWorm = new
-	 * Worm(10.0,5.0,Math.PI*3/5,1,"Bob",true,world); testWorm.move();
-	 * assertEquals(testWorm.getCoordinateX(),
-	 * 10+0.5*testWorm.getRadius()*Math.cos(Math.PI*3/5), EPS);
-	 * assertEquals(testWorm.getCoordinateY(),
-	 * 5+0.5*testWorm.getRadius()*Math.sin(Math.PI*3/5), EPS);
-	 * assertEquals(testWorm.getActionPoints(),
-	 * testWorm.getMaximumActionPoints()-((int) (Math.abs(Math.cos(Math.PI*3/5))
-	 * + 4*Math.abs(Math.sin(Math.PI*3/5))))); }
-	 * 
-	 * @Test(expected=ModelException.class) public void
-	 * testMoveIllegalCaseCannotMove() throws ModelException { Worm testWorm =
-	 * new Worm(10.0,5.0,0,1,"Bob",true,world); while(testWorm.canMove(1,
-	 * testWorm.getDirection())) { testWorm.move(); } }
-	 */
-
+	
+	@Test
+	public void testMoveVertical(){
+		Worm testWorm = new Worm(12.0, 3.05, Math.PI/2.0, 1, "Bob", true, world);
+		testWorm.move();
+		assertEquals(testWorm.getCoordinateY(), 4.05,EPS);
+		assertEquals(testWorm.getCoordinateX(), 12.0,EPS);
+		testWorm.fall();
+		assertEquals(testWorm.getCoordinateY(), 3.05,EPS);
+		assertEquals(testWorm.getCoordinateX(), 12.0,EPS);
+	}
+	
+	
+	@Test
+	public void testMoveHorizontal(){
+		Worm testWorm = new Worm(12.0, 3.05,0.0, 1, "Bob", true, world);
+		testWorm.move();
+		assertEquals(testWorm.getCoordinateY(), 3.05,EPS);
+		assertEquals(testWorm.getCoordinateX(), 13.0,EPS);
+	}
+	
+	@Test
+	public void testMoveToTheLeftAndUp(){
+		 Worm testWorm = new Worm(12.0, 3.0,Math.PI/2.0 + Math.PI/5.0, 1, "Bob", true, world);
+		 testWorm.move();
+		 testWorm.fall();
+		 assertEquals(testWorm.getCoordinateY(), 3.0,testWorm.getRadius()*0.1);
+		 assertEquals(testWorm.getCoordinateX(), 11.25,0.3);
+	}
+	
+	 @Test(expected=ModelException.class) 
+	 public void testMoveIllegalCaseCannotMoveInsufficientActionPoints() throws ModelException {
+		 Worm testWorm = new Worm(12.0, 3.05, Math.PI/2.0+Math.PI/8.0, 1, "Bob", true, world);
+		 testWorm.setActionPoints(0);
+		 System.out.println(testWorm.canMove());
+		 testWorm.move();
+	 }
+	
+	 @Test(expected=ModelException.class) 
+	 public void testMoveIllegalCaseCannotMoveIllegalDirection() throws ModelException {
+		 Worm testWorm = new Worm(12.0, 3.0, -Math.PI/2.0, 1, "Bob", true, world);
+		 testWorm.move();
+	 }
+	
+	
 	@Test
 	public void testJumpLegalCaseFlatJump() {
 		Worm testWorm = new Worm(12.0, 4.0, Math.PI / 4, 1, "Bob", true, world);
