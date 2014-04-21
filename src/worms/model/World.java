@@ -205,9 +205,10 @@ public class World implements Cloneable {
 	 * @return	Returns the height in pixels of this world.
 	 * 			|	result == this.passableMap.length
 	 */
-	protected int getWidthInPixels(){
-		return this.passableMap[0].length;
+	protected int getHeightInPixels(){
+		return this.passableMap.length;
 	}
+	
 	
 	
 	/**
@@ -216,8 +217,8 @@ public class World implements Cloneable {
 	 * @return	Returns the width in pixels of this world.
 	 * 			|	result == this.passableMap[0].length
 	 */
-	protected int getHeightInPixels(){
-		return this.passableMap.length;
+	protected int getWidthInPixels(){
+		return this.passableMap[0].length;
 	}
 	
 	
