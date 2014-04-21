@@ -2,6 +2,31 @@ package worms.model;
 
 import be.kuleuven.cs.som.annotate.*;
 
+
+/**
+ * A class describing the attributes and actions of a projectile.
+ * 
+ * @version 2.7
+ * @author 	Gertjan Maenhout (2Bbi Computerwetenschappen - Elektrotechniek) & 
+ * 			Harald Schafer (2Bbi Elektrotechniek - Computerwetenschappen)
+ * 
+ * @invar	The x coordinate of the projectile must be a valid coordinate.
+ * 			| isValidCoordinate(this.getCoordinateX()) 
+ * @invar	The y coordinate of the projectile must be a valid coordinate.
+ * 			| isValidCoordinate(this.getCoordinateY())
+ * @invar	The direction of the projectile must be a valid direction.
+ * 			| isValidDirection(this.getDirection())
+ * @invar	The direction of the projectile is between 0 and 2Pi radians.
+ *			| this.getDirection() >= 0 && this.getDirection() < Math.PI*2  
+ * @invar	The radius of the projectile must be a valid radius.
+ * 			| this.isValidRadius(this.getRadius())
+ * @invar	The mass of the projectile must be a valid mass.
+ * 			| isValidMass(this.getMass())
+ * @invar	The yield of this projectile should be a valid yield.
+ * 			| isValidYield(this.getYield())
+ * @invar	The projectile should be in a proper world.
+ * 			| this.hasProperWorld()
+ */
 public abstract class Projectile extends MovableObject {
 	
 	

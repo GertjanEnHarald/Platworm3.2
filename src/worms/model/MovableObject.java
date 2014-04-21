@@ -3,6 +3,27 @@ package worms.model;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
 
+
+/**
+ * A class describing the attributes and actions of a movable object.
+ * 
+ * @version 2.10
+ * @author 	Gertjan Maenhout (2Bbi Computerwetenschappen - Elektrotechniek) & 
+ * 			Harald Schafer (2Bbi Elektrotechniek - Computerwetenschappen)
+ *
+ * @invar	The x coordinate of the movable object must be a valid coordinate.
+ * 			| isValidCoordinate(this.getCoordinateX()) 
+ * @invar	The y coordinate of the movable object must be a valid coordinate.
+ * 			| isValidCoordinate(this.getCoordinateY())
+ * @invar	The direction of the movable object must be a valid direction.
+ * 			| isValidDirection(this.getDirection())
+ * @invar	The direction of the movable object is between 0 and 2Pi radians.
+ *			| this.getDirection() >= 0 && this.getDirection() < Math.PI*2  
+ * @invar	The radius of the movable object must be a valid radius.
+ * 			| this.isValidRadius(this.getRadius())
+ * @invar	The movable object should be in a proper world.
+ * 			| this.hasProperWorld()
+ */
 public abstract class MovableObject extends GameObject {
 
 	private double direction;

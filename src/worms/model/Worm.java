@@ -5,10 +5,9 @@ import java.util.List;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
- * 
  * A class describing the attributes and actions of worms.
  * 
- * @version 1.04
+ * @version 2.37
  * @author 	Gertjan Maenhout (2Bbi Computerwetenschappen - Elektrotechniek) & 
  * 			Harald Schafer (2Bbi Elektrotechniek - Computerwetenschappen)
  * 
@@ -18,16 +17,22 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| isValidCoordinate(this.getCoordinateY())
  * @invar	The direction of the worm must be a valid direction.
  * 			| isValidDirection(this.getDirection())
- * @invar	The radius of the worm must be a valid radius.
- * 			| isValidRadius(this.getRadius())
- * @invar	The name of the worm must be a valid name.
- * 			| isValidName(this.getName())
  * @invar	The direction of the worm is between 0 and 2Pi radians.
  *			| this.getDirection() >= 0 && this.getDirection() < Math.PI*2  
- * @invar	The worm has a valid number of action points.The action points
+ * @invar	The radius of the worm must be a valid radius.
+ * 			| this.isValidRadius(this.getRadius())
+ * @invar	The name of the worm must be a valid name.
+ * 			| isValidName(this.getName())
+ * @invar	The worm has a valid number of action points. The action points
  * 			must be greater than or equal to zero and smaller than or equal to the maximum action points of the worm.
  * 			| 0 <= this.getActionPoints() && this.getActionPoints() <= this.getMaximumActionPoints()
- *
+ * @invar	The worm has a valid number of hit points. The hit points
+ * 			must be greater than or equal to zero and smaller than or equal to the maximum hit points of the worm.
+ * 			| 0 <= this.getHitPoints() && this.getHitPoints() <= this.getMaximumHitPoints()
+ * @invar	The worm must have a proper world. This worm should be in a world that contains this worm.
+ * 			| this.hasProperWorld()
+ * @invar	The worm must be in a proper team. If this worm has a team, that team should contain this worm.
+ * 			| this.hasProperTeam()
  */
 
 

@@ -1,5 +1,22 @@
 package worms.model;
 
+
+/**
+ * A class describing the attributes and actions of a food.
+ * 
+ * @version 2.02
+ * @author 	Gertjan Maenhout (2Bbi Computerwetenschappen - Elektrotechniek) & 
+ * 			Harald Schafer (2Bbi Elektrotechniek - Computerwetenschappen)
+ *
+ * @invar	The x coordinate of the food must be a valid coordinate.
+ * 			| isValidCoordinate(this.getCoordinateX()) 
+ * @invar	The y coordinate of the food must be a valid coordinate.
+ * 			| isValidCoordinate(this.getCoordinateY())
+ * @invar	The radius of the food must be a valid radius.
+ * 			| this.isValidRadius(this.getRadius())
+ * @invar	The food should be in a proper world.
+ * 			| this.hasProperWorld()
+ */
 public class Food extends GameObject {
 
 	/**
@@ -36,14 +53,25 @@ public class Food extends GameObject {
 	}
 
 	
+	
+	
 	/**
 	 * Returns whether this food has a valid radius.
+	 * 
+	 * @param	radius
+	 * 			The radius that needs to be checked.
+	 * 
+	 * @return	Returns whether the given radius is positive.
+	 * 			| result == (radius > 0)
 	 */
 	@Override
 	public boolean isValidRadius(double radius) {
-		return true;
+		return (radius > 0);
 	}
 
+	
+	
+	
 	@Override
 	protected Food clone() throws CloneNotSupportedException {
 		return (Food) super.clone();

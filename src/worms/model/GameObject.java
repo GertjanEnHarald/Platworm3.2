@@ -3,6 +3,23 @@ package worms.model;
 
 import be.kuleuven.cs.som.annotate.*;
 
+
+/**
+ * A class describing the attributes and actions of a game object.
+ * 
+ * @version 2.10
+ * @author 	Gertjan Maenhout (2Bbi Computerwetenschappen - Elektrotechniek) & 
+ * 			Harald Schafer (2Bbi Elektrotechniek - Computerwetenschappen)
+ *
+ * @invar	The x coordinate of the game object must be a valid coordinate.
+ * 			| isValidCoordinate(this.getCoordinateX()) 
+ * @invar	The y coordinate of the game object must be a valid coordinate.
+ * 			| isValidCoordinate(this.getCoordinateY())
+ * @invar	The radius of the game object must be a valid radius.
+ * 			| this.isValidRadius(this.getRadius())
+ * @invar	The game object should be in a proper world.
+ * 			| this.hasProperWorld()
+ */
 public abstract class GameObject implements Cloneable {
 	
 

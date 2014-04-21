@@ -4,6 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import be.kuleuven.cs.som.annotate.*;
 
+
+/**
+ * A class describing the attributes and actions of teams.
+ * 
+ * @version 2.02
+ * @author 	Gertjan Maenhout (2Bbi Computerwetenschappen - Elektrotechniek) & 
+ * 			Harald Schafer (2Bbi Elektrotechniek - Computerwetenschappen)
+ * 
+ * @invar	The name of this team is a valid name.
+ * 			| isValidName(this.getName())
+ * @invar	The team has proper worms.
+ * 			| this.hasProperWorms()
+ */
 public class Team implements Cloneable {
 
 	private final String name;
@@ -81,6 +94,13 @@ public class Team implements Cloneable {
 	
 	/**
 	 * Returns all the worms in this team that are alive.
+	 * 
+	 * @return	Returns all the worms that are in this team and that are alive.
+	 * 			| livingWorms = {}
+	 * 			| for each worm in getWorms()
+	 * 			|		if worm.isAlive()
+	 * 			|			then livingWorms.add(worm)
+	 * 			| result == livingWorms
 	 */
 	public List<Worm> getLivingWorms() {
 		List<Worm> wormsAlive = new ArrayList<Worm>();
@@ -152,9 +172,29 @@ public class Team implements Cloneable {
 	 * 
 	 * @post	The given worm is no longer part of this team.
 	 * 			| ! this.getAllWorms().contains(worm)
+	 * 
+	 * @throws	ModelExceptionxception
+	 * 			The exception is thrown if this team cannot remove the given worm.
+	 * 			| ! this.canRemoveWorm(worm)
 	 */
-	public void removeFromTeam(Worm worm){
+	public void removeFromTeam(Worm worm) throws ModelException {
+		if (! this.canRemoveWorm(worm))
+			throw new ModelException("Cannot remove this worm from team!");
 		this.worms.remove(worm);
+	}
+	
+	
+	/**
+	 * Checks if a given worm can be removed from this team.
+	 * 
+	 * @param 	worm
+	 * 			The worm that needs to be checked.
+	 * 
+	 * @return	Returns if the given worm is in this team and if the given worm's team is this team.
+	 * 			| result == this.getWorms().contains(worm) && (worm.getTeam() == this)
+	 */
+	public boolean canRemoveWorm(Worm worm) {
+		return this.getWorms().contains(worm) && (worm.getTeam() == this);
 	}
 	
 	
