@@ -14,7 +14,6 @@ public class ProjectileTest {
 	private Random random;
 	private World world;
 	private Worm worm;
-	private boolean[][] map;
 	private static final double accuracyMapDimensions = 20.0 / 100;
 	
 	@Before
@@ -1255,19 +1254,4 @@ public class ProjectileTest {
 		assertEquals(target.getHitPoints(),target.getMaximumHitPoints()-worm.getProjectile().getLostHitPoints());
 	}
 	
-	@Test
-	public void testShootingProjectileWithoutHittingAWorm() {
-		World world3 = new World(20, 150, map,random);
-		Worm worm2 = new Worm(1.0, 3.0, Math.PI/4, 1, "James O'Hare", true, world3);
-		worm2.selectWeapon();
-		worm2.shoot(0);
-		worm2.turn(Math.PI/4-Math.pow(10, -2));
-		worm2.getProjectile().jump(Math.pow(10, -4));
-		System.out.println(worm.getProjectile().getJumpStep(worm.getProjectile().getJumpTime()/2.0)[1]);
-		System.out.println(worm.getProjectile().getCoordinateY());
-		assertEquals(worm2.getProjectile().getCoordinateX(),
-				1.0+Math.sqrt(2)/2.0 + worm2.getProjectile().getJumpDistance(),accuracyMapDimensions);
-		assertEquals(worm2.getProjectile().getCoordinateY(),3.0,accuracyMapDimensions);
-		assertEquals(worm2.getActionPoints(),worm2.getMaximumActionPoints()-worm2.getProjectile().getCostActionPoints());
-	}
 }
