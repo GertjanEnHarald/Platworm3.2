@@ -1252,6 +1252,7 @@ public class ProjectileTest {
 		assertEquals(worm.getProjectile().getCoordinateX(), 3-Math.sqrt(2)/2,accuracyMapDimensions);
 		assertEquals(worm.getProjectile().getCoordinateY(), 5-Math.sqrt(2)/2,accuracyMapDimensions);
 		assertEquals(target.getHitPoints(),target.getMaximumHitPoints()-worm.getProjectile().getLostHitPoints());
+		assertEquals(worm.getActionPoints(),worm.getMaximumActionPoints()-worm.getProjectile().getCostActionPoints());
 	}
 	
 }
