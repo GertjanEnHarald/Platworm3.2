@@ -292,10 +292,10 @@ public class World implements Cloneable {
 	 *			|result == true;
 	 */
 	protected boolean isPassableArea(double x, double y, double radius){
-		double step = getStep(radius);
+		double step = 0.5*Math.min(getHeight()/(1.0*getHeightInPixels()), getWidth()/(1.0*getWidthInPixels()));
 		if (! isInWorld(x, y, radius))
 			return false;
-		for(double distance=step; distance<=radius;distance = distance +step){
+		for(double distance=radius; distance>0;distance = distance -step){
 			for(double angle=0; angle<=2*Math.PI; angle= angle + step/distance){
 				if (!(isPassableLocation(x+Math.sin(angle)*distance,y+Math.cos(angle)*distance))){
 					return false;
