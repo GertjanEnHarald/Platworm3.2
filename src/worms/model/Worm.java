@@ -862,8 +862,10 @@ public class Worm extends MovableObject{
 					finalY = Y; 
 			}
 			this.setY(finalY);
-			this.setHitPoints(this.getHitPoints() - (int) (Math.round((startY - finalY)*3.0)));
-			this.updateProjectile();
+			if (this.getStatus()) {
+				this.setHitPoints(this.getHitPoints() - (int) (Math.round((startY - finalY)*3.0)));
+				this.updateProjectile();
+			}
 		}
 	}
 	
