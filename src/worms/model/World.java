@@ -804,14 +804,21 @@ public class World implements Cloneable {
 	 * @param 	gameObject
 	 * 			Game object to be removed.
 	 * @post	The object has been removed from the world.
-	 * 			If the object that is removed is the active worm,
-	 * 			The next worm's turn is started.
+	 * 			If the object that has been removed is a worm,
+	 * 			and this worm's index in the list of worms is
+	 * 			smaller than the index of the active worm.
+	 * 			The index of the active worm is adjusted.
 	 * 			| !this.gameObjects.contains(gameObject)
 	 * 			|if (gameObject instanceof Worm){
-	 * 			|	if (index == getIndexOfActiveWorm())
-	 *			|		(nextTurn() has been executed)
-	 *			|	else if (index < getIndexOfActiveWorm())
+	 *			|	if (index < getIndexOfActiveWorm())
 	 *			|		new.getIndexOfActiveWorm == getIndexOfActiveWorm-1
+	 *@effect	If the object that is removed is the active worm,
+	 * 			The next worm's turn is started.
+	 * 			|if (gameObject instanceof Worm){
+	 * 			|	if (index == getIndexOfActiveWorm())
+	 *			|		this.nextTurn()
+	 *
+	 *
 	 */
 	protected void removeAsGameObject(GameObject gameObject) throws ModelException{
 		int index = getAllWorms().indexOf(gameObject);
@@ -937,11 +944,15 @@ public class World implements Cloneable {
 	 * @post	The index of the active worm is now the index of the next worm 
 	 * 			or the first worm if all worms have had their turn this round.
 	 * 			|if (this.getIndexOfActiveWorm()+1 >= this.getAllWorms().size()){
-   	 *			|	this.setActionPointsToMaxAndAdd10HitPoints() has been executed &&
 	 *			|	new.getIndexOfActiveWorm() == 0
 	 *			|else 
 	 *			|	new.getIndexOfActiveWorm() == this.getIndexOfActiveWorm()+1
+	 * 			
 	 * 
+	 * @effect	If the next round is started the hit points of all worms are increased
+	 * 			by 10 and their action points set to max.
+	 * 			|if (this.getIndexOfActiveWorm()+1 >= this.getAllWorms().size())
+	 * 			|	this.setActionPointsToMaxAndAdd10HitPoints()
 	 * 
 	 */
 	protected void nextTurn() {

@@ -214,7 +214,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean isAdjacent(World world, double x, double y, double radius){		
-		return world.isPassableArea(x, y, radius);
+		return world.isAdjacent(x, y, radius);
 	}
 
 	@Override
