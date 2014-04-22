@@ -495,7 +495,7 @@ public class World implements Cloneable {
 	
 	/**
 	 * Returns all the worms in this world.
-	 * TODO eerder post dan return, maar return is kopie van code
+	 * 
 	 * @return	Returns all the worms that are currently in this world as a list.
 	 * 			|for each gameObject in this.getGameObjects
 	 * 			| 	if gameObject instanceof Worm
@@ -514,11 +514,11 @@ public class World implements Cloneable {
 	
 	/**
 	 * Returns all the food in this world.
-	 * TODO zie vorige
+	 * 
 	 * @return	Returns all the food that are currently in this world as a list.
 	 * 			|for each gameObject in this.getGameObjects
-	 * 			| result.contains(gameObject) if gameObject instanceof Food.
-	 * 
+	 * 			| if gameObject instanceof Food
+	 * 			|		result.contains(gameObject)
 	 */
 	protected List<Food> getAllFood(){
 		List<Food> food = new ArrayList<Food>();
@@ -643,7 +643,6 @@ public class World implements Cloneable {
 		if (! (i < this.getNbOfGameObjects()))
 			throw new ModelException("Index out of bound!");
 		return this.getGameObjects().get(i);
-		// TODO clone this given game object
 	}
 	
 	
@@ -911,12 +910,12 @@ public class World implements Cloneable {
 	 *			will receive a random name and may or may not be in a team.
 	 *			| new.getAllWorms() == this.getAllWorms()+1 || new.getAllWorms() == this.getAllWorms()
 	 *			| if (new.getAllWorms() == this.getAllWorms()+1)
-	 *			|	radius = new.getAllWorms().get(new.getAllWorms().size-1).getRadius()		TODO denk dat dit niete helemaal klopt
+	 *			|	radius = new.getAllWorms().get(new.getAllWorms().size-1).getRadius()
 	 *			|	x = new.getAllWorms().get(new.getAllWorms().size-1).getCoordinateX
 	 *			|	y = new.getAllWorms().get(new.getAllWorms().size-1).getCoordinateY
 	 * 			|	isAdjacent(x,y,radius)
 	 * 
-	 * @throws	ModelException TODO wordt toch geen exceptions gegooid
+	 * @throws	ModelException
 	 * 			The game has already started.
 	 * 			| getStatus()
 	 */
@@ -945,7 +944,7 @@ public class World implements Cloneable {
 	 * @post	The new food has been added at a random adjacent location on the map.
 	 *			Or no food has been added.
 	 *			| new.getAllFood() == this.getAllFood()+1 || new.getAllFood() == this.getAllFood()
-	 *			| if (new.getAllWorms() == this.getAllWorms()+1)		TODO zelfde als vorige
+	 *			| if (new.getAllWorms() == this.getAllWorms()+1)
 	 *			|	x = new.getAllFood().get(new.getAllFood().size-1).getCoordinateX
 	 *			|	y = new.getAllFood().get(new.getAllFood().size-1).getCoordinateY
 	 * 			|	isAdjacent(x,y,0.2)
