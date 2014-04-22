@@ -176,7 +176,7 @@ public abstract class GameObject implements Cloneable {
 		if (!isValidCoordinate(coordinateX))
 			throw new ModelException("Illegal X coordinate!");
 		if (isXCoordinateOutOfBounds(coordinateX)){
-			this.coordinateX = coordinateX;
+			this.coordinateX = coordinateX-this.getRadius();
 			this.terminate();
 		}
 		else
@@ -222,7 +222,7 @@ public abstract class GameObject implements Cloneable {
 		if (!isValidCoordinate(coordinateY))
 			throw new ModelException("Illegal Y coordinate!");
 		if (this.isYCoordinateOutOfBounds(coordinateY)){
-			this.coordinateY = coordinateY;
+			this.coordinateY = coordinateY-this.getRadius();
 			this.terminate();
 		}
 		else

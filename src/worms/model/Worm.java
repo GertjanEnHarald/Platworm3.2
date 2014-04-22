@@ -628,8 +628,9 @@ public class Worm extends MovableObject{
 			} 
 		}
 
+		//double[] position = this.getJumpStep(this.getJumpRealTimeInAir(Math.pow(10, -3)/50.0));	
+		//this.setCoordinates(position[0], position[1]);
 		this.setCoordinates(x, y);
-		
 		// If setCoordinates terminates this worm, these functions will throw a NullPointer.
 		try {
 			this.setActionPoints(0);

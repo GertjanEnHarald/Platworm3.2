@@ -417,10 +417,6 @@ public abstract class Projectile extends MovableObject {
 	 * 			|		if (! this.getWorldIsPassableArea(position2[0], position2[1], this.getRadius())
 	 * 			|			|| this.getWorld().projectileOverlapsWorm(this))
 	 * 			|				hasLanded = true
-	 * 			|		else if (! this.getWorld().isInWorld(x, y, this.getRadius()))
-	 * 			|				x = x - this.getRadius()
-	 * 			|				y = y - this.getRadius()
-	 * 			|				hasLanded = true
 	 * @effect	If a worm is hit, it will lose the amount of hit points specific to this projectile.
 	 * 			| if (this.getWorld().projectileOverlapsWorm(this))
 	 * 			|		target = this.getWormThatOverlaps(this)
@@ -447,11 +443,6 @@ public abstract class Projectile extends MovableObject {
 			this.setCoordinates(x, y);
 			if ((! this.getWorld().isPassableArea(x, y, radiusProjectile)) || 
 					this.getWorld().projectileOverlapsWorm(this)) {
-				hasLanded = true;
-			}
-			else if (! this.getWorld().isInWorld(x, y, this.getRadius())) {
-				x = x - this.getRadius();
-				y = y - this.getRadius();
 				hasLanded = true;
 			}
 		}	
