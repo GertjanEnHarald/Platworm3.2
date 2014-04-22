@@ -9,6 +9,7 @@ import worms.model.ModelException;
 import worms.model.Projectile;
 import worms.model.Worm;
 
+
 public class Shoot extends Command {
 	private final Worm worm;
 	private boolean finished = false;
