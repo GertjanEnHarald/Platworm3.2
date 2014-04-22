@@ -987,7 +987,7 @@ public class World implements Cloneable {
 	 * 			The name of the team to be created
 	 * 
 	 * @post	The team with the given name has been created and added to this world.
-	 * 			|new.teams.get(new.teams.size-1).getName() == name
+	 * 			|new.getTeams().get(new.teams.size-1).getName() == name
 	 * 
 	 * @throws 	ModelException
 	 * 			The maximum number of teams has been reached.
