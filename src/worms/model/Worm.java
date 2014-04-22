@@ -945,36 +945,23 @@ public class Worm extends MovableObject{
 	 * 
 	 * @effect	The projectile's position has been updated.
 	 * 			|this.updateProjectile()
-	 * @effect	Executes the optimal move, as described above. If no possible move is found
-	 * 			nothing happens.
-	 * 			|double maxSuccesOfMoveValue = 0.0
-	 *			|double toBeExecutedDirection = getDirection()
-	 *			|double toBeExecutedSteps = 0.0
-	 *			|for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.0175){
-	 *			|	double possibleMaxSuccesOfMoveValue = Math.abs(getMaxCoverableDistanceAdjacent(direction)/(Math.abs(direction-getDirection())+0.5))
-	 *			|	if (maxSuccesOfMoveValue < possibleMaxSuccesOfMoveValue){
-	 *			|		maxSuccesOfMoveValue = possibleMaxSuccesOfMoveValue
-	 *			|		toBeExecutedSteps = getMaxCoverableDistanceAdjacent(direction)
-	 * 			|		toBeExecutedDirection = direction
+	 * @effect	Executes the optimal move, as described above. 
+	 * 			|if (Math.abs(getMaxCoverableDistanceAdjacent(direction)/(Math.abs(direction-getDirection())+0.5))) >= (Math.abs(getMaxCoverableDistanceAdjacent(direction2)/(Math.abs(direction2-getDirection())+0.5)))
+	 *			|   	for each direction,direction2 in {direction| direction in (getDirection()-0.7875)..(getDirection()+0.7875)  & direction= getDirection()-n*0.0175 (with n integer)}
+	 *			|			then
+	 *			|				toBeExecutedDirectionAdjacent = direction
+	 *			|				toBeExecutedStepsAdjacent = getMaxCoverableDistanceAdjacent(direction)
+	 *			|if (Math.abs(getMaxCoverableDistancePassable(direction)/(Math.abs(direction-getDirection())+0.5))) >= (Math.abs(getMaxCoverableDistancePassable(direction2)/(Math.abs(direction2-getDirection())+0.5)))
+	 *			|   	for each direction,direction2 in {direction| direction in (getDirection()-0.7875)..(getDirection()+0.7875)  & direction= getDirection()-n*0.0175 (with n integer)}
+	 *			|			then
+	 *			|				toBeExecutedDirectionPassable = direction
+	 *			|				toBeExecutedStepsPassable = getMaxCoverableDistancePassable(direction)
 	 *			|
-	 *			|	}
-	 *			|}
-	 *			|if (toBeExecutedSteps > 0.0){
-	 *			|	move(toBeExecutedSteps,toBeExecutedDirection)
-	 *			|		return
-	 *			|}
-	 *			|
-	 *			|for(double direction = getDirection()-0.7875;direction <= getDirection()+0.7875;direction = direction + 0.0175){
-	 *			|	double possibleMaxSuccesOfMoveValue = Math.abs(getMaxCoverableDistancePassable(direction)/(Math.abs(direction-getDirection())+0.5))
-	 *			|	if (maxSuccesOfMoveValue < possibleMaxSuccesOfMoveValue){
-	 *			|		maxSuccesOfMoveValue = possibleMaxSuccesOfMoveValue
-	 *			|	
-	 *			|	toBeExecutedSteps = getMaxCoverableDistancePassable(direction)
-	 *			|	toBeExecutedDirection = direction
-	 *			|	}
-	 *			|}
-	 *			|if (toBeExecutedSteps > 0.0)
-	 *			|	move(toBeExecutedSteps,toBeExecutedDirection)
+	 *			|if toBeExecutedStepsAdjacent > 0
+	 *			|	move(toBeExecutedStepsAdjacent,toBeExecutedDirectionAdjacent)
+	 *			|else
+	 *			|	move(toBeExecutedStepsPassable,toBeExecutedDirectionPassable)
+	 *			
 	 *
 	 * @throws	ModelException
 	 *			This worm cannot move.
@@ -1061,14 +1048,12 @@ public class Worm extends MovableObject{
 	 * @return	Returns true if the worm can move anywhere between 0.1m in any direction that 
 	 * 			lies within the boundaries, (this worms direction -0.7875) and (this worms 
 	 * 			direction +0.7875).
-	 * 			| for(double steps= 1.0; steps >= 0.1/(getRadius());steps = steps -0.1){
-	 * 			|		for(double direction = getDirection()-0.7875; direction <= getDirection()+0.7875;direction = direction + 0.0175){
-	 * 			|			if (canMove(steps,direction))
-	 * 			|				result == true
-	 * 			|		}
-	 * 			|	}
-	 * 			|else 
-	 * 			|	return false
+	 * 			| if (canMove(steps,direction))
+	 * 			|	for any steps {steps| steps in 0.1/(getRadius()..1.0  & y= 1-n*0.1 (with n integer) & canMoveAdjacent(steps,direction)}
+	 *			|   	for any direction in {direction| direction in (getDirection()-0.7875)..(getDirection()+0.7875)  & direction= getDirection()-n*0.0175 (with n integer)}
+	 *			|			then result == true
+	 *			|else
+	 *			| 	result == false
 	 */
 	protected boolean canMove(){
 		if (!getStatus())
@@ -1175,11 +1160,8 @@ public class Worm extends MovableObject{
 	 * 
 	 * @return	Returns a value between 0 and 1 that represents the fraction
 	 * 			of the radius that can be moved in the given direction.
-	 * 			| for(double steps= 1.0; steps >= 0.1/(getRadius());steps = steps -0.1){
-	 * 			|		if (canMovePassable(steps, direction))
-	 * 			|			result == steps
-	 * 			| else
-	 * 			|		result == 0.0
+	 * 			|result >= steps
+	 * 			|	for each steps in {steps| steps in 0.1/(getRadius()..1.0  & y= 1-n*0.1 (with n integer) & canMoveAdjacent(steps,direction)}
 	 */
 	protected double getMaxCoverableDistanceAdjacent(double direction){
 		for(double steps= 1.0; steps >= 0.1/(getRadius());steps = steps -0.1){
@@ -1200,11 +1182,8 @@ public class Worm extends MovableObject{
 	 * 
 	 * @return	Returns a value between 0 and 1 that represents the fraction
 	 * 			of the radius that can be moved in the given direction.
-	 * 			| for(double steps= 1.0; steps >= 0.1/(getRadius());steps = steps -0.1){
-	 * 			|		if (canMovePassable(steps, direction))
-	 * 			|			result == steps
-	 * 			| else
-	 * 			|		result == 0.0 
+	 * 			|result >= steps
+	 * 			|	for each steps in {steps| steps in 0.1/(getRadius()..1.0  & y= 1-n*0.1 (with n integer) & canMovePassable(steps,direction)}
 	 */
 	protected double getMaxCoverableDistancePassable(double direction){
 		for(double steps= 1.0; steps >= 0.1/(getRadius());steps = steps -0.1){
