@@ -604,41 +604,16 @@ public class Worm extends MovableObject{
 			this.setActionPoints(0);
 			throw new ModelException("Cannot jump!");
 		}
-		/*
-		double x = this.getCoordinateX();
-		double y = this.getCoordinateY();
-		timeStep = 10.0*timeStep;
-		boolean hasLanded = false;
 		
-		for (double time = 0; (! hasLanded); time = time + timeStep) {
-			double[] position = this.getJumpStep(time);
-			x = position[0];
-			y = position[1];
-			if (this.getWorld().isAdjacent(x, y, this.getRadius())) {
-				double[] position2 = this.getJumpStep(time + timeStep);
-				double x2 = position2[0];
-				double y2 = position2[1];
-				if (! this.getWorld().isPassableArea(x2, y2, this.getRadius())) {
-					hasLanded = true;
-				}
-			}
-			else if (! this.getWorld().isInWorld(x, y, this.getRadius())) {
-				x = x - this.getRadius();
-				y = y - this.getRadius();
-				hasLanded = true;
-			} 
-		}
-		*/
-		double[] position = this.getJumpStep(this.getJumpRealTimeInAir(Math.pow(10, -3)/50.0));
-		System.out.println("yo");
+		double[] position = this.getJumpStep(this.getJumpRealTimeInAir(Math.pow(10, -5)));
 		this.setCoordinates(position[0], position[1]);
-		//this.setCoordinates(x, y);
-		// If setCoordinates terminates this worm, these functions will throw a NullPointer.
+
+		//		If setCoordinates terminates this worm, these functions will throw a NullPointer.
 		try {
 			this.setActionPoints(0);
 			this.updateProjectile();
-		} catch (NullPointerException exc) {}
-		
+		} catch (NullPointerException exc) {
+		}
 	}
 
 	
@@ -701,9 +676,11 @@ public class Worm extends MovableObject{
 			time = t;
 			if (this.getWorld().isAdjacent(position[0], position[1], this.getRadius())
 					&& !this.getWorld().isPassableArea(nextPosition[0], nextPosition[1], this.getRadius())) {
-				if (! this.getWorld().isInWorld(position[0], position[1], this.getRadius()))
-					// Extra time provided to give the worm the chance to jump off the screen.
-					time = time + 0.15;
+//				if (! this.getWorld().isInWorld(position[0], position[1], this.getRadius())) {
+//					// Extra time provided to give the worm the chance to jump off the screen.
+//					time = time + 0.20;
+//					System.out.println("Extra time");
+//					}
 				hasLanded = true;
 			}
 		}

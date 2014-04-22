@@ -16,7 +16,6 @@ import worms.util.Util;
 
 public class Tests {
 	private static final double EPS = Util.DEFAULT_EPSILON;
-	private static final double accuracyMapDimensions = 20.0 / 100;
 	private Random random;
 	private World world;
 	private World world2;
@@ -1575,8 +1574,12 @@ public class Tests {
 				testWorm.getCoordinateX(),
 				12.0 + (Math.pow(
 						(0.5 * (5 * testWorm.getMaximumActionPoints() + testWorm.getMass() * 9.80665)) / testWorm.getMass(), 2)
-						* Math.sin(2 * testWorm.getDirection()) / 9.80665),accuracyMapDimensions);
+						* Math.sin(2 * testWorm.getDirection()) / 9.80665),testWorm.getRadius()*0.1);
 		assertEquals(testWorm.getActionPoints(), 0);
+		assertEquals(testWorm.getProjectile().getCoordinateX(),
+				testWorm.getCoordinateX() + testWorm.getRadius()*Math.cos(testWorm.getDirection()),testWorm.getRadius()*0.1);
+		assertEquals(testWorm.getProjectile().getCoordinateY(),
+				testWorm.getCoordinateY() + testWorm.getRadius()*Math.sin(testWorm.getDirection()),testWorm.getRadius()*0.1);
 	}
 	
 	@Test
@@ -1602,8 +1605,8 @@ public class Tests {
 		 * So: a*x² + b*x + c - 3.0 = 0.0 if x = 18.04111175
 		 */
 		
-		assertEquals(testWorm.getCoordinateX(),18.04111175,accuracyMapDimensions);
-		assertEquals(testWorm.getCoordinateY(),3.0,accuracyMapDimensions);
+		assertEquals(testWorm.getCoordinateX(),18.04111175,testWorm.getRadius()*0.1);
+		assertEquals(testWorm.getCoordinateY(),3.0,testWorm.getRadius()*0.1);
 	}
 	
 	@Test
@@ -1614,8 +1617,8 @@ public class Tests {
 		 * The worm jumps 2.397141238784068 high, until it hits the wall (derived from previous test).
 		 * The worm will have an y coordinate equal to 10.0 + 1.0 = 11.0 (distance of wall + radius).
 		 */
-		assertEquals(testWorm.getCoordinateX(),11.0,accuracyMapDimensions);
-		assertEquals(testWorm.getCoordinateY(),2.397141238784068+2.0,accuracyMapDimensions);
+		assertEquals(testWorm.getCoordinateX(),11.0,testWorm.getRadius()*0.2);
+		assertEquals(testWorm.getCoordinateY(),2.397141238784068+2.0,testWorm.getRadius()*0.2);
 	}
 
 	@Test(expected = ModelException.class)
