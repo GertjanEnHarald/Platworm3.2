@@ -603,7 +603,7 @@ public class Worm extends MovableObject{
 			this.setActionPoints(0);
 			throw new ModelException("Cannot jump!");
 		}
-		
+		/*
 		double x = this.getCoordinateX();
 		double y = this.getCoordinateY();
 		timeStep = 10.0*timeStep;
@@ -627,10 +627,11 @@ public class Worm extends MovableObject{
 				hasLanded = true;
 			} 
 		}
-
-		//double[] position = this.getJumpStep(this.getJumpRealTimeInAir(Math.pow(10, -3)/50.0));	
-		//this.setCoordinates(position[0], position[1]);
-		this.setCoordinates(x, y);
+		*/
+		double[] position = this.getJumpStep(this.getJumpRealTimeInAir(Math.pow(10, -3)/50.0));
+		System.out.println("yo");
+		this.setCoordinates(position[0], position[1]);
+		//this.setCoordinates(x, y);
 		// If setCoordinates terminates this worm, these functions will throw a NullPointer.
 		try {
 			this.setActionPoints(0);
@@ -690,12 +691,14 @@ public class Worm extends MovableObject{
 	protected double getJumpRealTimeInAir(double step) {
 		double time = 0.0;
 		boolean hasLanded = false;
-		step = 50.0*step;
+		step = 100.0*step;
 
 		for (double t = step; (! hasLanded) ; t = t + step) {
 			double[] position = this.getJumpStep(time);
+			double[] nextPosition = this.getJumpStep(time+step);
 			time = t;
-			if (! this.getWorld().isPassableArea(position[0], position[1], this.getRadius())) {
+			if (this.getWorld().isAdjacent(position[0], position[1], this.getRadius())
+					&& !this.getWorld().isPassableArea(nextPosition[0], nextPosition[1], this.getRadius())) {
 				if (! this.getWorld().isInWorld(position[0], position[1], this.getRadius()))
 					// Extra time provided to give the worm the chance to jump off the screen.
 					time = time + 0.15;
