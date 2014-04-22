@@ -151,7 +151,7 @@ public class Worm extends MovableObject{
 	 * 			|		then this.eat()
 	 */
 	@Override
-	protected void setCoordinates(double x, double y) {
+	protected void setCoordinates(double x, double y) throws ModelException  {
 		this.hasJustEaten = false;
 		super.setCoordinates(x, y);
 		// If setCoordinates terminates this worm, this function will throw a NullPointer.
@@ -813,7 +813,7 @@ public class Worm extends MovableObject{
 	 * @post	Subtract the action points that it requires to shoot this weapon.
 	 * 			| new.getActionPoints() == this.getActionPoints() - this.getProjectile().getCostActionPoints() 
 	 */
-	public void shoot(int yield) {
+	public void shoot(int yield) throws ModelException {
 		this.projectile.setYield(yield);
 		this.setActionPoints(this.getActionPoints()-this.projectile.getCostActionPoints());
 	}
@@ -858,7 +858,7 @@ public class Worm extends MovableObject{
 	 * @effect	Update the location of this worm's projectile.
 	 * 			| this.updateProjectile()
 	 */
-	public void fall() {
+	public void fall() throws ModelException {
 		if (this.canFall()) {
 			double startY = this.getCoordinateY();
 			double finalY = startY;
@@ -906,9 +906,6 @@ public class Worm extends MovableObject{
 	
 	
 	
-	/**
-	 * Nieuwe moves voor deel 2.
-	 */
 	
 	/**
 	 * Calculates the amount of action points needed to move the given number of steps.
@@ -973,12 +970,12 @@ public class Worm extends MovableObject{
 	 *			|if (toBeExecutedSteps > 0.0)
 	 *			|	move(toBeExecutedSteps,toBeExecutedDirection)
 	 *
-	 *@throws	ModelException
+	 * @throws	ModelException
 	 *			This worm cannot move.
 	 *			| !this.canMove()	
 	 *
 	 */
-	public void move(){
+	public void move() throws ModelException {
 		if (!canMove())
 			throw new ModelException("This worm cannot move!");
 		double maxSuccesOfMoveValue = 0.0;
@@ -1107,6 +1104,7 @@ public class Worm extends MovableObject{
 	 * 			The steps to be checked.
 	 * @param 	direction
 	 * 			The direction to be checked.
+	 * 
 	 * @return	Returns true if the resulting position is passable and if the worm has enough action points to execute the move.
 	 * 			result == (getWorld().isPassable(getCoordinateX()+Math.cos(direction)*steps*getRadius(), getCoordinateY()+Math.sin(direction)*steps*getRadius(), getRadius()))
 	 * 						&&
@@ -1128,6 +1126,7 @@ public class Worm extends MovableObject{
 	 * 			The steps to be checked.
 	 * @param 	direction
 	 * 			The direction to be checked.
+	 * 
 	 * @return	Returns true if the resulting position is adjacent and if the worm has enough action points to execute the move.
 	 * 			result == (getWorld().isAdjacent(getCoordinateX()+Math.cos(direction)*steps*getRadius(), getCoordinateY()+Math.sin(direction)*steps*getRadius(), getRadius()))
 	 * 						&&
@@ -1149,6 +1148,7 @@ public class Worm extends MovableObject{
 	 *			The amount of steps to be checked. 
 	 * @param 	direction
 	 * 			The direction to be checked.
+	 * 
 	 * @return	Returns true if the move is possible. This means if this worm has more action points than would be needed to execute this move.
 	 * 			|result == ((this.getActionPoints() >= usedActionPointsMove(steps, direction)) && (steps >0) && (usedActionPointsMove(steps, direction); <= Integer.MAX_VALUE))
 	 */
@@ -1164,7 +1164,6 @@ public class Worm extends MovableObject{
 	 * if this worm were to move one step and the resulting position would
 	 * have to be adjacent.
 	 * 
-	 * 
 	 * @param 	direction
 	 * 			The given direction.
 	 * 
@@ -1175,8 +1174,6 @@ public class Worm extends MovableObject{
 	 * 			|			result == steps
 	 * 			| else
 	 * 			|		result == 0.0
-	 * 
-	 * 
 	 */
 	public double getMaxCoverableDistanceAdjacent(double direction){
 		for(double steps= 1.0; steps >= 0.1/(getRadius());steps = steps -0.1){
@@ -1192,7 +1189,6 @@ public class Worm extends MovableObject{
 	 * If this worm were to move one step and the resulting position would
 	 * have to be passable.
 	 * 
-	 * 
 	 * @param 	direction
 	 * 			The given direction.
 	 * 
@@ -1202,9 +1198,7 @@ public class Worm extends MovableObject{
 	 * 			|		if (canMovePassable(steps, direction))
 	 * 			|			result == steps
 	 * 			| else
-	 * 			|		result == 0.0
-	 * 
-	 * 
+	 * 			|		result == 0.0 
 	 */
 	public double getMaxCoverableDistancePassable(double direction){
 		for(double steps= 1.0; steps >= 0.1/(getRadius());steps = steps -0.1){

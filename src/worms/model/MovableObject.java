@@ -88,7 +88,6 @@ public abstract class MovableObject extends GameObject {
 	/**
 	 * Set the direction of this movable object to the given direction.
 	 * 
-	 * 
 	 * @param 	direction
 	 * 		  	The new direction of this movable object.
 	 * 

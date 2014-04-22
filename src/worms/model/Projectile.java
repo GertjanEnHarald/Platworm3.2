@@ -437,7 +437,7 @@ public abstract class Projectile extends MovableObject {
 	 * 			| ! this.canJump()
 	 */
 	@Override
-	public void jump(double timeStep) {
+	public void jump(double timeStep) throws ModelException {
 		if (! this.canJump()) 
 			throw new ModelException("Cannot jump!");
 		

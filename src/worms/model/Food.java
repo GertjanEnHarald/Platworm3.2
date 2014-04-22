@@ -48,7 +48,8 @@ public class Food extends GameObject {
 	 * 			| (! isValidCoordinate(coordinateX)) || (! isValidCoordinate(coordinateY))
 	 * 			|		|| (! isValidRadius(radius))
 	 */
-	public Food(double coordinateX, double coordinateY, boolean isActive, World world) {
+	public Food(double coordinateX, double coordinateY, boolean isActive, World world) 
+			throws ModelException {
 		super(coordinateX, coordinateY, isActive, 0.20,world);
 	}
 
