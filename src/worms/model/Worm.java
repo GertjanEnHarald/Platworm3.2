@@ -7,7 +7,7 @@ import be.kuleuven.cs.som.annotate.*;
 /**
  * A class describing the attributes and actions of worms.
  * 
- * @version 2.37
+ * @version 2.38
  * @author 	Gertjan Maenhout (2Bbi Computerwetenschappen - Elektrotechniek) & 
  * 			Harald Schafer (2Bbi Elektrotechniek - Computerwetenschappen)
  * 
