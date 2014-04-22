@@ -7,37 +7,65 @@ public class Facade implements IFacade {
 
 	@Override
 	public void addEmptyTeam(World world, String newName) {
-		world.addTeam(newName);
+		try {
+			world.addTeam(newName);
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public void addNewFood(World world) {
-		world.addFood();
+		try{
+			world.addFood();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public void addNewWorm(World world) {
-		world.addWorm();
+		try {
+			world.addWorm();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public boolean canFall(Worm worm) {
-		return worm.canFall();
+		try {
+			return worm.canFall();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public boolean canMove(Worm worm) {
-		return worm.canMove();
+		try {
+			return worm.canMove();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public boolean canTurn(Worm worm, double angle) {
-		return worm.canTurn(angle);
+		try {
+			return worm.canTurn(angle);
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public Food createFood(World world, double x, double y) {
-		return new Food(x,y,true,world);
+		try {
+			return new Food(x,y,true,world);
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
@@ -54,103 +82,182 @@ public class Facade implements IFacade {
 
 	@Override
 	public void fall(Worm worm) {
-		worm.fall();
-		
+		try {
+			worm.fall();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public int getActionPoints(Worm worm) {
-		return worm.getActionPoints();
+		try {
+			return worm.getActionPoints();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public Projectile getActiveProjectile(World world) {
-		return world.getActiveProjectile();
+		try {
+			return world.getActiveProjectile();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public Worm getCurrentWorm(World world) {
-		return world.getActiveWorm();
+		try {
+			return world.getActiveWorm();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public Collection<Food> getFood(World world) {
-		return world.getAllFood();
+		try {
+			return world.getAllFood();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public int getHitPoints(Worm worm) {
-		return worm.getHitPoints();
+		try {
+			return worm.getHitPoints();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public double[] getJumpStep(Projectile projectile, double t) {
-		return projectile.getJumpStep(t);
+		try {
+			return projectile.getJumpStep(t);
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public double[] getJumpStep(Worm worm, double t) {
-		return worm.getJumpStep(t);
+		try {
+			return worm.getJumpStep(t);
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public double getJumpTime(Projectile projectile, double timeStep) {
-		return projectile.getJumpRealTimeInAir(timeStep);
+		try {
+			return projectile.getJumpRealTimeInAir(timeStep);
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public double getJumpTime(Worm worm, double timeStep) {
-		return worm.getJumpRealTimeInAir(timeStep);
+		try {
+			return worm.getJumpRealTimeInAir(timeStep);
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public double getMass(Worm worm) {
-		return worm.getMass();
+		try {
+			return worm.getMass();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public int getMaxActionPoints(Worm worm) {
-		return worm.getMaximumActionPoints();
+		try {
+			return worm.getMaximumActionPoints();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public int getMaxHitPoints(Worm worm) {
-		return worm.getMaximumHitPoints();
+		try {
+			return worm.getMaximumHitPoints();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public double getMinimalRadius(Worm worm) {
-		return getMinimalRadius(worm);
+		try {
+			return getMinimalRadius(worm);
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public String getName(Worm worm) {
-		return worm.getName();
+		try {
+			return worm.getName();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public double getOrientation(Worm worm) {
-		return worm.getDirection();
+		try {
+			return worm.getDirection();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public double getRadius(Food food) {
-		return food.getRadius();
+		try {
+			return food.getRadius();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public double getRadius(Projectile projectile) {
-		return projectile.getRadius();
+		try {
+			return projectile.getRadius();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public double getRadius(Worm worm) {
-		return worm.getRadius();
+		try {
+			return worm.getRadius();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public String getSelectedWeapon(Worm worm) {
-		return worm.getProjectile().getName();
+		try {
+			return worm.getProjectile().getName();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
@@ -164,127 +271,220 @@ public class Facade implements IFacade {
 
 	@Override
 	public String getWinner(World world) {
-		return world.getWinner();
+		try {
+			return world.getWinner();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public Collection<Worm> getWorms(World world) {
-		return world.getAllWorms();
+		try {
+			return world.getAllWorms();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public double getX(Food food) {
-		return food.getCoordinateX();
+		try {
+			return food.getCoordinateX();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public double getX(Projectile projectile) {
-		return projectile.getCoordinateX();
+		try {
+			return projectile.getCoordinateX();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public double getX(Worm worm) {
-		return worm.getCoordinateX();
+		try {
+			return worm.getCoordinateX();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public double getY(Food food) {
-		return food.getCoordinateY();
+		try {
+			return food.getCoordinateY();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public double getY(Projectile projectile) {
-		return projectile.getCoordinateY();
+		try {
+			return projectile.getCoordinateY();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public double getY(Worm worm) {
-		return worm.getCoordinateY();
+		try {
+			return worm.getCoordinateY();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public boolean isActive(Food food) {
-		return food.getStatus();
+		try {
+			return food.getStatus();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public boolean isActive(Projectile projectile) {
-		return projectile.isTerminated();
+		try {
+			return projectile.isTerminated();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public boolean isAdjacent(World world, double x, double y, double radius){		
-		return world.isAdjacent(x, y, radius);
+		try {
+			return world.isAdjacent(x, y, radius);
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public boolean isAlive(Worm worm) {
-		return worm.getStatus();
+		try {
+			return worm.getStatus();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public boolean isGameFinished(World world) {
-		return world.isGameFinished();
+		try {
+			return world.isGameFinished();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public boolean isImpassable(World world, double x, double y, double radius) {
-		
-		return !world.isPassableArea(x, y, radius);
+		try {
+			return !world.isPassableArea(x, y, radius);
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public void jump(Projectile projectile, double timeStep) {
-		projectile.jump(timeStep);
-		
+		try {
+			projectile.jump(timeStep);
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public void jump(Worm worm, double timeStep) {
-		worm.jump(timeStep);
+		try {
+			worm.jump(timeStep);
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public void move(Worm worm) {
-		worm.move();
+		try {
+			worm.move();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public void rename(Worm worm, String newName) {
-		worm.setName(newName);
-		
+		try {
+			worm.setName(newName);
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public void selectNextWeapon(Worm worm) {
-		worm.selectWeapon();
+		try {
+			worm.selectWeapon();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 		
 	}
 
 	@Override
 	public void setRadius(Worm worm, double newRadius) {
-		worm.setRadius(newRadius);
+		try {
+			worm.setRadius(newRadius);
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public void shoot(Worm worm, int yield) {
-		worm.shoot(yield);
+		try {
+			worm.shoot(yield);
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 		
 	}
 
 	@Override
 	public void startGame(World world) {
-		world.startGame();
+		try {
+			world.startGame();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public void startNextTurn(World world) {
-		world.nextTurn();
+		try {
+			world.nextTurn();
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 
 	@Override
 	public void turn(Worm worm, double angle) {
-		worm.turn(angle);
+		try {
+			worm.turn(angle);
+		} catch (NullPointerException exc) {
+			throw new ModelException("Null is invalid object!");
+		}
 	}
 	
 
