@@ -15,7 +15,9 @@ import worms.util.Util;
  * @invar	This world has valid dimensions.	
  *			|isValidDimension(this.getWidth()) && isValidDimension(this.getHeight())
  * @invar	Each game object appears only once in this world.
- *			| ! this.getGameObjects().hasDuplicate()
+ * 			| for each object1 in this.getGameObjects()
+ * 			|	for each object2 in this.getGameObjects()
+ * 			|		object1 != object2 || this.getGameObjects().getIndex(object1) == this.getGameObjects().getIndex(object2)
  * @invar	The position of all objects must be within the bounds of the world.
  *			| for each object in this.getGameObjects()
  *			|	this.isInWorld(object.getCoordinateX(),object.getCoordinateY(),object.getRadius())
@@ -33,12 +35,12 @@ public class World implements Cloneable {
 	 //
 	
 	private final double g=9.80665;
-	private static double maxDimension=Double.MAX_VALUE;
+	private final static double maxDimension=Double.MAX_VALUE;
 	private double height;
 	private double width;
 	private final boolean[][] passableMap;
 	private boolean status;
-	private Random random;
+	private final Random random;
 	private final List<GameObject> gameObjects = new ArrayList<GameObject>();
 	private int indexOfActiveWorm=0;
 	private final List<Team> teams = new ArrayList<Team>();
@@ -104,7 +106,7 @@ public class World implements Cloneable {
 	@Basic
 	@Immutable
 	@Raw
-	public final double getGravity(){
+	protected final double getGravity(){
 		return g;
 	}
 	
@@ -114,18 +116,31 @@ public class World implements Cloneable {
 	 */
 	@Basic
 	@Raw
-	private Random getRandom(){
+	@Immutable
+	private final Random getRandom(){
 		return this.random;
 	}
 	
+	/**
+	 * Returns the list of possible random names for worms.
+	 */
+	@Raw
+	@Basic
+	@Immutable
+	private final List<String> getRandomNames(){
+		return this.randomNames;
+	}
 	
 	/**
 	 * Returns a random name for a worm.
+	 * 
+	 * @return	The result is in the list of random names.
+	 * 			|this.getRandomNames().contains(result)
 	 */
 	@Raw
 	private String getRandomName() {
 		int random = this.getRandom().nextInt(this.randomNames.size());
-		return randomNames.get(random);
+		return getRandomNames().get(random);
 	}
 	
 	
@@ -199,7 +214,8 @@ public class World implements Cloneable {
 	 */
 	@Basic
 	@Raw
-	protected boolean[][] getPassableMap() {
+	@Immutable
+	protected final boolean[][] getPassableMap() {
 		return this.passableMap;
 	}
 	
@@ -248,7 +264,8 @@ public class World implements Cloneable {
 	 */
 	@Basic
 	@Raw
-	protected int getHeightInPixels(){
+	@Immutable
+	protected final int getHeightInPixels(){
 		return this.passableMap.length;
 	}
 
@@ -262,7 +279,8 @@ public class World implements Cloneable {
 	 */
 	@Basic
 	@Raw
-	protected int getWidthInPixels(){
+	@Immutable
+	protected final int getWidthInPixels(){
 		return this.passableMap[0].length;
 	}
 	
@@ -325,24 +343,22 @@ public class World implements Cloneable {
 	 * 
 	 * @return	Whether all the pixels within the circle are passable pixels.
 	 *			|step = 0.5*Math.min(getHeight()/(1.0*getHeightInPixels()), getWidth()/(1.0*getWidthInPixels()))
-	 *			|
 	 *			|if (! isInWorld(x, y, radius))
 	 *			| 	result == false
 	 *			|
-	 *			|for(double distance=radius; distance>0;distance = distance -step){
-	 *			|	for(double angle=0; angle<=2*Math.PI; angle= angle + step/distance){
-	 *			|		if (!(isPassableLocation(x+Math.sin(angle)*distance,y+Math.cos(angle)*distance))){
-	 *			|			result == false
-	 *			|		}
-	 *			| 	}
-	 *			|}
-	 *			|result == true;
+	 *			|else if (!(isPassableLocation(x+Math.sin(angle)*distance,y+Math.cos(angle)*distance)))
+	 *			|	for any distance in {x| x in 0..radius & x = radius - n*step (with n integer)}
+	 *			|		for any angle in {x| x in 0..Pi*2 & x = n*step/distance (with n integer)}
+	 *			|			then result == false
+	 *			| 	
+	 *			|else
+	 *			|	result == true
 	 */
 	protected boolean isPassableArea(double x, double y, double radius){
 		double step = 0.5*Math.min(getHeight()/(1.0*getHeightInPixels()), getWidth()/(1.0*getWidthInPixels()));
 		if (! isInWorld(x, y, radius))
 			return false;
-		for(double distance=radius; distance>0;distance = distance -step){
+		for(double distance=0.999*radius; distance>0;distance = distance -step){
 			for(double angle=0; angle<=2*Math.PI; angle= angle + step/distance){
 				if (!(isPassableLocation(x+Math.sin(angle)*distance,y+Math.cos(angle)*distance))){
 					return false;
@@ -356,6 +372,9 @@ public class World implements Cloneable {
 	/**
 	 * Checks if a circular area with a given radius with the center
 	 * on the given locations x and y is located within the bounds of this world.
+	 * If any of the inputs are double.NaN, this function will return false, this 
+	 * is desirable as this logically means that the circular area is not really in
+	 * the world.
 	 * 
 	 * @param  	x 
 	 * 			The x coordinate of the center of the circle to be checked. 
@@ -408,14 +427,8 @@ public class World implements Cloneable {
 	 * 			|if (!(isInWorld(x, y, radius*1.1)))
 	 *			|	result == false
 	 * 			|result  == (! isPassableArea(x,y,1.1*radius)) && isPassableArea(x, y, radius)
-	 * 
-	 * @throws	ModelException
-	 * 			One of the inputs is not a number.
-	 * 			| (Double.isNaN(radius) || Double.isNaN(y) || Double.isNaN(x))
 	 */
-	protected boolean isAdjacent(double x, double y,double radius) throws ModelException {
-		if (Double.isNaN(radius) || Double.isNaN(y) || Double.isNaN(x))
-			throw new ModelException("Doubles must be real numbers as input of isAdjacent!");
+	protected boolean isAdjacent(double x, double y,double radius){
 		if (!(isInWorld(x, y, radius*1.1)))
 			return false;
 		return !isPassableArea(x,y,1.1*radius) && isPassableArea(x,y,radius);
@@ -430,38 +443,38 @@ public class World implements Cloneable {
 	 * 			The radius of the entity for which to find a random location.
 	 * 
 	 * @return 	The x and y position of the random location that was found as a list.
-	 * 			|X = (getRandom().nextDouble())*(getWidth()-radius*2.0)+radius
-	 *			|Y = 0
-	 *			|angle = Math.tan(getHeight()*0.5/(getWidth()*0.5-X))
-	 * 			|if (Double.isNaN(angle))
+	 * 			|x = (getRandom().nextDouble())*(getWidth()-radius*2.0)+radius
+	 *			|y = 0
+	 *			|if (x == getWidth()/2.0)
 	 *			|	angle = Math.PI/2.0
+	 *			|else
+	 *			|	angle = Math.atan(getHeight()*0.5/Math.abs(getWidth()*0.5-x))
 	 *			|step = getStep(radius)
-	 *			|stepX = Math.cos(angle)*step
 	 *			|stepY = Math.sin(angle)*step
-	 *			|while (!(Util.fuzzyEquals(Y, getHeight()/2.0,step*2.0))){
-	 *			|	X = X + stepX
-	 *			|	Y = Y + stepY
-	 *			|	if (isAdjacent(X, Y, radius))
-	 *			|		result == new double[] {X,Y}
-	 *			|}
+	 *			|
+	 *			|if (!isAdjacent(y/tan(angle), y, radius))
+	 *			|	for each y in {y| y in 0..(result[1]-stepY)  & y= n*stepY (with n integer)}
+	 *			|result[0] == result[1]/tan(angle)
 	 *
 	 *@throws	No location was found.
 	 *			| If the nothing is returned during the while loop.
 	 */		
 	private double[] getRandomAdjacentLocation(double radius){
-		double X = (getRandom().nextDouble())*(getWidth()-radius*2.0)+radius;
-		double Y = 0;
-		double angle = Math.tan(getHeight()*0.5/(getWidth()*0.5-X));
-		if (Double.isNaN(angle));
+		double x = (getRandom().nextDouble())*(getWidth()-radius*2.0)+radius;
+		double y = 0;
+		double angle;
+		if (x == getWidth()/2.0)
 			angle = Math.PI/2.0;
+		else
+			angle = Math.atan(getHeight()*0.5/Math.abs(getWidth()*0.5-x));
 		double step = getStep(radius);
 		double stepX = Math.cos(angle)*step;
 		double stepY = Math.sin(angle)*step;
-		while (!(Util.fuzzyEquals(Y, getHeight()/2.0,step*2.0))){
-			X = X + stepX;
-			Y = Y + stepY;
-			if (isAdjacent(X, Y, radius))
-				return new double[] {X,Y};
+		while (!(Util.fuzzyEquals(y, getHeight()/2.0,step*2.0))){
+			x = x + stepX;
+			y = y + stepY;
+			if (isAdjacent(x, y, radius))
+				return new double[] {x,y};
 				
 		}
 		throw new ModelException("Did not find location");
@@ -692,8 +705,8 @@ public class World implements Cloneable {
 	 * 			cases the game is over.
 	 * 			|Set<Team> set = new HashSet<Team>();
 	 * 			|
-	 * 			|for(counter=0; counter<getAllWorms().size(); counter++){
-	 *			|	set.add(getAllWorms().get(counter).getTeam()) }
+	 * 			|for each worm in getAllWorms()
+	 * 			| 	set.add(worm.getTeam())
 	 *			|
 	 *			|if (set.size() > 1)
 	 * 			|	result == false

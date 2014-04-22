@@ -365,20 +365,14 @@ public abstract class Projectile extends MovableObject {
 	/**
 	 * Calculates the time that this worm will be in the air.
 	 * 
-	 * @param	timeStep
+	 * @param	step
 	 * 			A time interval during which the worm will not move completely trough impassable terrain.
 	 * 
 	 * @return	Returns the time that this projectile is in the air until it hits impassable terrain
 	 * 			or it hits another worm.
-	 * 			| time = 0
-	 * 			| hasLanded = false
-	 * 			| for (t=0; (! hasLanded); t = t +step)
-	 * 			|		time = t
-	 * 			|		position = this.getJumpStep(t)
-	 * 			|		if (! this.getWorld().isPassableArea(position[0], position[1], this.getRadius())
-	 * 			|			|| this.getWorld().projectileOverlapsWorm(this))
-	 * 			|				hasLanded = true
-	 * 			| result == time
+	 * 			|if !(! this.getWorld().isPassableArea(position[0], position[1], this.getRadius())
+	 * 			|	|| this.getWorld().projectileOverlapsWorm(this))
+	 * 			|	for each t in {t| t in 0..(result-step) & t = n*step (with n an integer)}
 	 */
 	@Override
 	protected double getJumpRealTimeInAir(double step) {
