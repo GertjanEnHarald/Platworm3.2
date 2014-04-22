@@ -597,6 +597,7 @@ public class Worm extends MovableObject{
 	 * 			The exception is thrown if this worm cannot jump in its current situation.
 	 * 			| ! this.canJump()
 	 */
+	//TODO: Als deze methode af is moet ik nog de commentaar schrijven.
 	@Override
 	protected void jump(double timeStep) throws ModelException {
 		if (! this.canJump()) {
@@ -687,6 +688,7 @@ public class Worm extends MovableObject{
 	 * 			|						time = time + 0.15
 	 * 			| result == time
 	 */
+	//TODO: Als deze methode af is moet ik nog de commentaar schrijven.
 	@Override
 	protected double getJumpRealTimeInAir(double step) {
 		double time = 0.0;
@@ -856,8 +858,8 @@ public class Worm extends MovableObject{
 	 * @effect	Set the y coordinate to the first coordinate underneath
 	 * 			from where this worm cannot fall any further.
 	 * 			| Y = this.getCoordinateY()
-	 * 			| while(this.canFall(this.getCoordinateX(), Y)
-	 * 			|		then Y = Y - 0.1*this.getRadius()
+	 * 			| while this.canFall() && Y > 0.1*this.getRadius()
+	 * 			|	do: Y = Y - (this.getWorld().getStep(this.getRadius())))
 	 * 			| this.setY(Y)
 	 * @effect	Update the location of this worm's projectile.
 	 * 			| this.updateProjectile()

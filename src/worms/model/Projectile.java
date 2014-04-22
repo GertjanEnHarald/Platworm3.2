@@ -375,6 +375,7 @@ public abstract class Projectile extends MovableObject {
 	 * 			|	for each t in {t| t in 0..(result-step) & t = n*step (with n an integer)}
 	 */
 	@Override
+	//TODO: Als deze methode af is moet ik nog de commentaar schrijven.
 	protected double getJumpRealTimeInAir(double step) {
 		double time = 0.0;
 		double radius = this.getRadius();
@@ -426,6 +427,7 @@ public abstract class Projectile extends MovableObject {
 	 * 			The exception is thrown if this worm cannot jump in its current situation.
 	 * 			| ! this.canJump()
 	 */
+	//TODO: Als deze methode af is moet ik nog de commentaar schrijven.
 	@Override
 	protected void jump(double timeStep) throws ModelException {
 		if (! this.canJump()) 

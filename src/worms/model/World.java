@@ -454,6 +454,7 @@ public class World implements Cloneable {
 	 *			|
 	 *			|if (!isAdjacent(y/tan(angle), y, radius))
 	 *			|	for each y in {y| y in 0..(result[1]-stepY)  & y= n*stepY (with n integer)}
+	 *			|		then result == result
 	 *			|result[0] == result[1]/tan(angle)
 	 *
 	 *@throws	No location was found.
