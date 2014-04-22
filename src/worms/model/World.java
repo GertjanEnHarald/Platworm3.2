@@ -8,22 +8,25 @@ import worms.util.Util;
 /**
  * A class describing the world in which the game worms takes place.
  * 
- * @author The Originator
+ * @version 2.18
+ * @author 	Gertjan Maenhout (2Bbi Computerwetenschappen - Elektrotechniek) & 
+ * 			Harald Schafer (2Bbi Elektrotechniek - Computerwetenschappen)
  *
- *
- *@invar	Checks if width of world is valid.	
+ * @invar	Checks if width of world is valid.	
  *			|isValidDimension(this.getWidth())
- *@invar	Checks if height of world is valid.	
+ * @invar	Checks if height of world is valid.	
  *			|isValidDimension(this.getHeight())
- *@invar	World contains at most one live projectile.
+ * @invar	World contains at most one live projectile.
  *			| ...
- *@invar	Each object appears only once in this world.
- *			| ...
- *@invar	The position of all objects must be within the bounds of the world.
- *			| ...
- *
- *
- *
+ * @invar	Each object appears only once in this world.
+ *			| ! this.getGameObjects().hasDuplicate()
+ * @invar	The position of all objects must be within the bounds of the world.
+ *			| for each object in this.getGameObjects()
+ *			|	this.isInWorld(object.getCoordinateX(),object.getCoordinateY(),object.getRadius())
+ * @invar	The world has proper game objects.
+ *			| this.hasProperGameObjects()
+ * @invar	The world has proper teams.
+ *			| this.hasProperTeams()
  */
 public class World implements Cloneable {
 	
@@ -62,12 +65,27 @@ public class World implements Cloneable {
 	/**
 	 * Constructor of the world.
 	 * 
+	 * @param 	width
+	 * 			The width for this new world.
+	 * @param 	height
+	 * 			The height for this new world.
+	 * @param 	passableMap
+	 * 			The passable map for this new world.
+	 * @param 	random
+	 * 			The random for this new world.
 	 * 
-	 * @param width
-	 * @param height
-	 * @param passableMap
-	 * @param random
-	 * @throws ModelException
+	 * @post	The new width of this world is equal to the given width.
+	 * 			| new.getWidth() == width
+	 * @post	The new height of this world is equal to the given height.
+	 * 			| new.getHeight() == height
+	 * @post	The new passable map of this world is equal to the given map.
+	 * 			| new.getPassableMap() == passableMap
+	 * @post	The new random of this world is equal to the given random.
+	 * 			| new.getRandom() == random
+	 * 
+	 * @throws 	ModelException
+	 * 			The exception is thrown if height or width aren't valid dimension.
+	 * 			| isValidDimension(width) || isValidDimension(height)
 	 */
 	protected World(double width, double height,boolean[][] passableMap, Random random) 
 			throws ModelException {
@@ -94,18 +112,21 @@ public class World implements Cloneable {
 		return g;
 	}
 	
+	
 	/**
 	 * Returns the random seed of this world.
 	 */
+	@Basic
+	@Raw
 	private Random getRandom(){
 		return this.random;
 	}
 	
+	
 	/**
 	 * Returns a random name for a worm.
-	 * 
-	 * @return
 	 */
+	@Raw
 	private String getRandomName() {
 		int random = this.getRandom().nextInt(this.randomNames.size());
 		return randomNames.get(random);
@@ -115,6 +136,8 @@ public class World implements Cloneable {
 	/**
 	 * Returns all the teams in this world.
 	 */
+	@Basic
+	@Raw
 	private List<Team> getTeams() {
 		return this.teams;
 	}
@@ -126,6 +149,8 @@ public class World implements Cloneable {
 	 * @return 	The size of the list of teams.
 	 * 			| result == this.getTeams().size()
 	 */
+	@Basic
+	@Raw
 	private int getNumberOfTeams() {
 		return this.getTeams().size();
 	}
@@ -133,7 +158,6 @@ public class World implements Cloneable {
 	
 	/**
 	 * Returns the team at a given index in the list of teams this world has.
-	 * 
 	 * 
 	 * @param 	index
 	 * 			The given index.
@@ -145,6 +169,8 @@ public class World implements Cloneable {
 	 * 			The given index does not exist.
 	 * 			| index >= this.getNumberOfTeams()
 	 */
+	@Basic
+	@Raw
 	private Team getTeamAt(int index) throws ModelException {
 		if (index >= this.getNumberOfTeams() || index < 0)
 			throw new ModelException("Not possible to select that team!");
@@ -155,6 +181,8 @@ public class World implements Cloneable {
 	/**
 	 * Returns the width of this world.
 	 */
+	@Basic
+	@Raw
 	protected double getWidth(){
 		return this.width;
 	}
@@ -163,15 +191,30 @@ public class World implements Cloneable {
 	/**
 	 * Returns the height of this world.
 	 */
+	@Basic
+	@Raw
 	protected double getHeight(){
 		return this.height;
 	}
 	
 	
 	/**
+	 * Returns the passable map of this world.
+	 */
+	@Basic
+	@Raw
+	protected boolean[][] getPassableMap() {
+		return this.passableMap;
+	}
+	
+	
+	/**
 	 * Returns the upper bound for the dimensions of a world.
 	 */
-	private static double getMaxDimension(){
+	@Basic
+	@Raw
+	@Immutable
+	private static final double getMaxDimension(){
 		return maxDimension;
 	}
 	
@@ -179,13 +222,13 @@ public class World implements Cloneable {
 	/**
 	 * Checks if given dimension is valid.
 	 * 
-	 * 
 	 * @param 	dimension
 	 * 			dimension to be checked
 	 * 
 	 * @return	Returns whether the dimension is positive and below the upper bound.
-	 * 			| result == 0 <= dimension && dimension <= getMaxDimension()
+	 * 			| result == ((0 <= dimension) && (dimension <= getMaxDimension())
 	 */	
+	@Raw
 	private static boolean isValidDimension(double dimension){
 		return 0 <= dimension && dimension <= getMaxDimension();
 	}
@@ -194,6 +237,8 @@ public class World implements Cloneable {
 	/**
 	 * Returns whether the game has started.
 	 */
+	@Basic
+	@Raw
 	protected boolean getStatus(){
 		return this.status;
 	}
@@ -203,8 +248,10 @@ public class World implements Cloneable {
 	 * Returns the vertical dimension of this world in a number of pixels.
 	 * 
 	 * @return	Returns the height in pixels of this world.
-	 * 			|	result == this.passableMap.length
+	 * 			|	result == this.getPassableMap().length
 	 */
+	@Basic
+	@Raw
 	protected int getHeightInPixels(){
 		return this.passableMap.length;
 	}
@@ -215,8 +262,10 @@ public class World implements Cloneable {
 	 * Returns the horizontal dimension of this world in a number of pixels.
 	 * 
 	 * @return	Returns the width in pixels of this world.
-	 * 			|	result == this.passableMap[0].length
+	 * 			|	result == this.getPassableMap()[0].length
 	 */
+	@Basic
+	@Raw
 	protected int getWidthInPixels(){
 		return this.passableMap[0].length;
 	}
@@ -225,18 +274,20 @@ public class World implements Cloneable {
 	/**
 	 * Checks if a given pixel of this world is passable .
 	 * 
-	 * 
 	 * @param 	row
 	 * 			The row in which the pixel is.
 	 * @param	column
 	 * 			The column in which the pixel is.
 	 * 
 	 * @return 	The boolean value at the given indices in the boolean map.
-	 * 			|result == this.passableMap[row][column]
+	 * 			|result == this.getPassableMap[row][column]
+	 * 
 	 * @throws 	ModelException 
 	 * 			The given indices are invalid for the boolean map of this world.
 	 * 			| !(row < this.getHeightInPixels() && row >= 0 && column < this.getWidthInPixels() && column >= 0) 
 	 */
+	@Basic
+	@Raw
 	protected boolean isPassablePixel(int row, int column) throws ModelException{
 		if (row < this.getHeightInPixels() && row >= 0 && column < this.getWidthInPixels() && column >= 0) 
 			return this.passableMap[row][column];
@@ -246,7 +297,6 @@ public class World implements Cloneable {
 	
 	/**
 	 * Checks if a given location is passable.
-	 * 
 	 * 
 	 * @param 	x
 	 * 			The x coordinate of the location to check.
@@ -258,6 +308,7 @@ public class World implements Cloneable {
 	 * 			|pixelWidth = (getWidth()/getDimensionInPixels(true))
 	 *			| result == isPassablePixel((int)(y/pixelHeight),(int)(x/pixelWidth))
 	 */
+	@Raw
 	private boolean isPassableLocation(double x, double y){
 		double pixelHeight = (getHeight()/getHeightInPixels());
 		double pixelWidth = (getWidth()/getWidthInPixels());
@@ -268,7 +319,6 @@ public class World implements Cloneable {
 	/**
 	 * Checks if a circular area with a given radius with the center
 	 * on the given locations x and y is passable.
-	 *  
 	 * 
 	 * @param  	x
 	 * 			The x coordinate of the center of the circle to be checked.
@@ -278,7 +328,7 @@ public class World implements Cloneable {
 	 * 			The radius of the circle to be checked.
 	 * 
 	 * @return	Whether all the pixels within the circle are passable pixels.
-	 *			|double step = 0.5*Math.min(getHeight()/(1.0*getHeightInPixels()), getWidth()/(1.0*getWidthInPixels()))
+	 *			|step = 0.5*Math.min(getHeight()/(1.0*getHeightInPixels()), getWidth()/(1.0*getWidthInPixels()))
 	 *			|
 	 *			|if (! isInWorld(x, y, radius))
 	 *			| 	result == false
@@ -311,16 +361,19 @@ public class World implements Cloneable {
 	 * Checks if a circular area with a given radius with the center
 	 * on the given locations x and y is located within the bounds of this world.
 	 * 
-	 * 
-	 *@param  	x 
-	 * 			The x coordinate of the center of the circle to be checked. If this is not a number, the result will be false which is what is desired.
+	 * @param  	x 
+	 * 			The x coordinate of the center of the circle to be checked. 
+	 * 			If this is not a number, the result will be false which is what is desired.
 	 * @param 	y
-	 * 			The x coordinate of the center of the circle to be checked. If this is not a number, the result will be false which is what is desired.
+	 * 			The x coordinate of the center of the circle to be checked. 
+	 * 			If this is not a number, the result will be false which is what is desired.
 	 * @param 	radius
-	 * 			The radius of the circle to be checked. If this is not a number, the result will be false which is what is desired.
+	 * 			The radius of the circle to be checked. 
+	 * 			If this is not a number, the result will be false which is what is desired.
 	 * 
 	 * @return	Whether the circle is within the bounds of the map.
-	 * 			|result == !((x-radius) < 0 || (x+radius) > getWidth() || (y-radius) < 0 || (y + radius) > getHeight())
+	 * 			|result == !((x-radius) < 0 || (x+radius) > this.getWidth() 
+	 * 			|		|| (y-radius) < 0 || (y + radius) > this.getHeight())
 	 */
 	protected boolean isInWorld(double x, double y, double radius) {
 		return !((x-radius) < 0 || (x+radius) > getWidth() || (y-radius) < 0 || (y + radius) > getHeight());
@@ -347,7 +400,6 @@ public class World implements Cloneable {
 	/**
 	 * Checks if a circular area with a given radius with the center
 	 * on the given locations x and y is adjacent to impassable terrain..
-	 * 
 	 * 
 	 * @param  	x
 	 * 			The x coordinate of the center of the circle to be checked.
@@ -382,19 +434,20 @@ public class World implements Cloneable {
 	 * 			The radius of the entity for which to find a random location.
 	 * 
 	 * @return 	The x and y position of the random location that was found as a list.
-	 * 			|double X = (getRandom().nextDouble())*(getWidth()-radius*2.0)+radius
-	 *			|double Y = 0
-	 *			|double angle = Math.tan(getHeight()*0.5/(getWidth()*0.5-X))
+	 * 			|X = (getRandom().nextDouble())*(getWidth()-radius*2.0)+radius
+	 *			|Y = 0
+	 *			|angle = Math.tan(getHeight()*0.5/(getWidth()*0.5-X))
 	 * 			|if (Double.isNaN(angle))
 	 *			|	angle = Math.PI/2.0
-	 *			|double step = getStep(radius);
-	 *			|double stepX = Math.cos(angle)*step
-	 *			|double stepY = Math.sin(angle)*step
+	 *			|step = getStep(radius)
+	 *			|stepX = Math.cos(angle)*step
+	 *			|stepY = Math.sin(angle)*step
 	 *			|while (!(Util.fuzzyEquals(Y, getHeight()/2.0,step*2.0))){
 	 *			|	X = X + stepX
 	 *			|	Y = Y + stepY
 	 *			|	if (isAdjacent(X, Y, radius))
 	 *			|		result == new double[] {X,Y}
+	 *			|}
 	 *
 	 *@throws	No location was found.
 	 *			| If the nothing is returned during the while loop.
@@ -422,6 +475,8 @@ public class World implements Cloneable {
 	/**
 	 * Returns all the game objects (that means:food, worms, weapons ...) in this world.
 	 */
+	@Basic
+	@Raw
 	protected List<GameObject> getGameObjects(){
 		return this.gameObjects;
 	}
@@ -433,6 +488,8 @@ public class World implements Cloneable {
 	 * @return	The size of the list of game objects this world has.
 	 * 			|result == this.getGameObjects().size()
 	 */
+	@Basic
+	@Raw
 	private int getNbOfGameObjects() {
 		return this.getGameObjects().size();
 	}
@@ -440,10 +497,11 @@ public class World implements Cloneable {
 	
 	/**
 	 * Returns all the worms in this world.
-	 * 
+	 * TODO eerder post dan return, maar return is kopie van code
 	 * @return	Returns all the worms that are currently in this world as a list.
 	 * 			|for each gameObject in this.getGameObjects
-	 * 			| result.contains(gameObject) if gameObject instanceof Worm
+	 * 			| 	if gameObject instanceof Worm
+	 * 			|		result.contains(gameObject) 
 	 */
 	protected List<Worm> getAllWorms(){
 		List<Worm> worms = new ArrayList<Worm>();
@@ -458,8 +516,8 @@ public class World implements Cloneable {
 	
 	/**
 	 * Returns all the food in this world.
-	 * 
-	 *  @return	Returns all the food that are currently in this world as a list.
+	 * TODO zie vorige
+	 * @return	Returns all the food that are currently in this world as a list.
 	 * 			|for each gameObject in this.getGameObjects
 	 * 			| result.contains(gameObject) if gameObject instanceof Food.
 	 * 
@@ -479,9 +537,9 @@ public class World implements Cloneable {
 	/**
 	 * Returns the food that overlaps with a given worm if there is a food that overlaps.
 	 * 
-	 * 
 	 * @param	worm
 	 * 			The worm to check.
+	 * 
 	 * @return	Returns the requested food or null if no food is found that overlaps.
 	 * 			| for any food in this.getAllFood()
 	 * 			| if worm.Overlaps(food)
@@ -496,13 +554,14 @@ public class World implements Cloneable {
 		}
 		return null;
 	}
+
 	
 	/**
 	 * Returns the worm that overlaps with a given projectile if there is a worm that overlaps.
 	 * 
-	 * 
 	 * @param	projectile
 	 * 			The projectile to check.
+	 *
 	 * @return	Returns the requested worm or null if no worm is found that overlaps.
 	 * 			| for any worm in this.getAllWorms()
 	 * 			| if projectile.Overlaps(worm)
@@ -523,13 +582,13 @@ public class World implements Cloneable {
 	/**
 	 * Returns whether a given projectile overlaps with a worm.
 	 * 
-	 * 
 	 * @param	projectile
 	 * 			The projectile to check.
+	 *
 	 * @return	Returns true if the given projectile overlaps with a worm that is not the active worm
 	 * 			(the worm that fired the projectile).
-	 * 			| Worm worm = this.getWormThatOverlaps(projectile)
-	 *			| result == (worm != null) && (worm != this.getActiveWorm())
+	 *			| result == (this.getWormThatOverlapsProjectile(projectile) != null) 
+	 *			|			&& (this.getWormThatOverlapsProjectile(projectile) != this.getActiveWorm())
 	 */
 	protected boolean projectileOverlapsWorm(Projectile projectile) {
 		Worm worm = this.getWormThatOverlaps(projectile);
@@ -540,6 +599,8 @@ public class World implements Cloneable {
 	/**
 	 * Returns the index of the active worm in the list of all the worms in this world.
 	 */
+	@Basic
+	@Raw
 	private int getIndexOfActiveWorm() {
 		return this.indexOfActiveWorm;
 	}
@@ -570,6 +631,9 @@ public class World implements Cloneable {
 	/**
 	 * Returns a game object at a certain position in the list of game objects.
 	 * 
+	 * @param	i
+	 * 			The position of the wanted game object.
+	 * 
 	 * @return	The game object at the given index in the list of game objects.
 	 * 			| result == this.getGameObjects().get(i)
 	 * 
@@ -588,7 +652,6 @@ public class World implements Cloneable {
 	/**
 	 * Checks if this world can have the given game object. 
 	 * 
-	 * 
 	 * @param 	gameObject
 	 * 			The game object to be checked.
 	 * 
@@ -597,6 +660,8 @@ public class World implements Cloneable {
 	 * 			as it's world.
 	 * 			| result == (gameObject.getWorld() == this)
 	 */
+	@Basic
+	@Raw
 	private boolean canHaveAsGameObject(GameObject gameObject) {
 		return (gameObject.getWorld() == this);
 	}
@@ -604,6 +669,12 @@ public class World implements Cloneable {
 	
 	/**
 	 * Checks if all the game objects this world has are legal objects for this world to have.
+	 * 
+	 * @return	If each game object in this world, has this world as world.
+	 * 			| for each object in this.getGameObjects()
+	 * 			|		if ! this.canHaveAsGameObject(object)
+	 * 			|				result == false
+	 * 			| result == true
 	 */
 	@SuppressWarnings("unused")
 	private boolean hasProperGameObjects() {
@@ -626,8 +697,8 @@ public class World implements Cloneable {
 	 * 			cases the game is over.
 	 * 			|Set<Team> set = new HashSet<Team>();
 	 * 			|
-	 * 			|for(int counter=0;counter<getAllWorms().size();counter++){
-	 *			|set.add(getAllWorms().get(counter).getTeam())}
+	 * 			|for(counter=0; counter<getAllWorms().size(); counter++){
+	 *			|	set.add(getAllWorms().get(counter).getTeam()) }
 	 *			|
 	 *			|if (set.size() > 1)
 	 * 			|	result == false
@@ -660,7 +731,7 @@ public class World implements Cloneable {
 	 * 			|if (getAllWorms().size() ==0)
 	 *			|	result == "Nobody"
 	 *			|else if (getAllWorms().get(0).getTeam() == null)
-	 *			|	result ==getAllWorms().get(0).getName()
+	 *			|	result == getAllWorms().get(0).getName()
 	 *			|else
 	 *			|	result == getAllWorms().get(0).getTeam().getName()
 	 */
@@ -728,16 +799,17 @@ public class World implements Cloneable {
 	/**
 	 * Set the height of this world.
 	 * 
-	 * 
 	 * @param 	height
 	 * 			Height to be assigned to world
 	 * 
 	 * @post	The height has been set.
 	 * 			| new.getHeight() == height
-	 * @throws	 ModelException
+	 * 
+	 * @throws	ModelException
 	 * 			The dimension is invalid
 	 * 			|!isValidDimension(height)
 	 */
+	@Raw
 	private void setHeight(double height) throws ModelException{
 		if (!isValidDimension(height))
 			throw new ModelException("Invalid height for world!");
@@ -748,16 +820,17 @@ public class World implements Cloneable {
 	/**
 	 * Set the width of this world.
 	 * 
-	 * 
 	 * @param 	width
 	 * 			Width to be assigned to world
 	 * 
 	 * @post	The width has been set.
 	 * 			| new.getWidth() == width
+	 * 
 	 * @throws	 ModelException
 	 * 			The dimension is invalid
 	 * 			|!isValidDimension(width)
 	 */
+	@Raw
 	private void setWidth(double width){
 		if (!isValidDimension(width))
 			throw new ModelException("Invalid width for world!");
@@ -769,7 +842,7 @@ public class World implements Cloneable {
 	 * Starts the game.
 	 * 
 	 * @post 	The game has started
-	 * 			|new.getStatus == true
+	 * 			|new.getStatus() == true
 	 */
 	protected void startGame(){
 		this.status = true;
@@ -778,7 +851,6 @@ public class World implements Cloneable {
 	
 	/**
 	 * Adds given game object to the world.
-	 * 
 	 * 
 	 * @param 	gameObject
 	 * 			Game object to be added.
@@ -789,9 +861,8 @@ public class World implements Cloneable {
 	 * @throws 	ModelException
 	 * 			The world cannot have this object as a game object.
 	 * 			|(! this.canHaveAsGameObject(gameObject))
-	 * 
-	 */			
-	protected void addAsGameObject(GameObject gameObject) throws ModelException {
+	 */
+	protected void addAsGameObject(@Raw GameObject gameObject) throws ModelException {
 		if (! this.canHaveAsGameObject(gameObject))
 			throw new ModelException("Cannot assign this game object to this world!");
 		this.gameObjects.add(gameObject);
@@ -799,29 +870,28 @@ public class World implements Cloneable {
 	
 	
 	/**
-	 * Removes given gameobject from the world.
-	 * 
+	 * Removes given game object from the world.
 	 * 
 	 * @param 	gameObject
 	 * 			Game object to be removed.
+	 * 
 	 * @post	The object has been removed from the world.
-	 * 			If the object that has been removed is a worm,
+	 * 			|! this.gameObjects.contains(gameObject)
+	 * @post	If the object that has been removed is a worm,
 	 * 			and this worm's index in the list of worms is
 	 * 			smaller than the index of the active worm.
 	 * 			The index of the active worm is adjusted.
-	 * 			| !this.gameObjects.contains(gameObject)
 	 * 			|if (gameObject instanceof Worm){
 	 *			|	if (index < getIndexOfActiveWorm())
 	 *			|		new.getIndexOfActiveWorm == getIndexOfActiveWorm-1
-	 *@effect	If the object that is removed is the active worm,
+	 * 
+	 * @effect	If the object that is removed is the active worm,
 	 * 			The next worm's turn is started.
 	 * 			|if (gameObject instanceof Worm){
 	 * 			|	if (index == getIndexOfActiveWorm())
 	 *			|		this.nextTurn()
-	 *
-	 *
 	 */
-	protected void removeAsGameObject(GameObject gameObject) throws ModelException{
+	protected void removeAsGameObject(@Raw GameObject gameObject) throws ModelException {
 		int index = getAllWorms().indexOf(gameObject);
 		this.gameObjects.remove(gameObject);
 		if (gameObject instanceof Worm){
@@ -831,26 +901,26 @@ public class World implements Cloneable {
 			if (index < getIndexOfActiveWorm()){
 				setIndexOfActiveWorm(getIndexOfActiveWorm()-1);
 			}
-	}
+		}
 	}
 	
 	
 	/**
 	 * Adds a new worm to the world at a random adjacent location.
 	 * 
-	 *@post		The new Worm has been added at a random adjacent location on the map.
+	 * @post	The new Worm has been added at a random adjacent location on the map.
 	 *			Or no worm has been added. The radius of this worm is 0.3. This worm
 	 *			will receive a random name and may or may not be in a team.
 	 *			| new.getAllWorms() == this.getAllWorms()+1 || new.getAllWorms() == this.getAllWorms()
 	 *			| if (new.getAllWorms() == this.getAllWorms()+1)
-	 *			|	radius = new.getAllWorms().get(new.getAllWorms().size-1).getRadius()
+	 *			|	radius = new.getAllWorms().get(new.getAllWorms().size-1).getRadius()		TODO denk dat dit niete helemaal klopt
 	 *			|	x = new.getAllWorms().get(new.getAllWorms().size-1).getCoordinateX
 	 *			|	y = new.getAllWorms().get(new.getAllWorms().size-1).getCoordinateY
 	 * 			|	isAdjacent(x,y,radius)
-	 * @throws	ModelException
+	 * 
+	 * @throws	ModelException TODO wordt toch geen exceptions gegooid
 	 * 			The game has already started.
 	 * 			| getStatus()
-	 * 			
 	 */
 	protected void addWorm(){
 		if (getStatus())
@@ -874,17 +944,17 @@ public class World implements Cloneable {
 	/**
 	 * Adds a new food to the world at a random adjacent location.
 	 * 
-	 *@post		The new food has been added at a random adjacent location on the map.
+	 * @post	The new food has been added at a random adjacent location on the map.
 	 *			Or no food has been added.
 	 *			| new.getAllFood() == this.getAllFood()+1 || new.getAllFood() == this.getAllFood()
-	 *			| if (new.getAllWorms() == this.getAllWorms()+1)
+	 *			| if (new.getAllWorms() == this.getAllWorms()+1)		TODO zelfde als vorige
 	 *			|	x = new.getAllFood().get(new.getAllFood().size-1).getCoordinateX
 	 *			|	y = new.getAllFood().get(new.getAllFood().size-1).getCoordinateY
 	 * 			|	isAdjacent(x,y,0.2)
+	 * 
 	 * @throws	ModelException
 	 * 			The game has already started.
 	 * 			| getStatus()
-	 * 			
 	 */
 	protected void addFood(){
 		if (getStatus())
@@ -904,8 +974,9 @@ public class World implements Cloneable {
 	 * 
 	 * @param 	team
 	 * 			The team to be added.
+	 * 
 	 * @post	The team has been added.
-	 * 			|new.teams.contains(team)
+	 * 			|new.getTeams().contains(team)
 	 */
 	private void addAsTeam(Team team) {
 		this.teams.add(team);
@@ -914,11 +985,12 @@ public class World implements Cloneable {
 	/**
 	 * Creates a team with the given name and adds it to this world.
 	 * 
-	 * 
 	 * @param 	name
 	 * 			The name of the team to be created
+	 * 
 	 * @post	The team with the given name has been created and added to this world.
 	 * 			|new.teams.get(new.teams.size-1).getName() == name
+	 * 
 	 * @throws 	ModelException
 	 * 			The maximum number of teams has been reached.
 	 * 			| (this.getNumberOfTeams() > 10)
@@ -934,6 +1006,49 @@ public class World implements Cloneable {
 		Team team = new Team(name);
 		this.addAsTeam(team);
 	}
+	
+	
+	/**
+	 * Checks whether all the teams in this world are proper teams.
+	 * 
+	 * @return	Returns if each team in this world is a proper team.
+	 * 			| for each team in this.getTeams()
+	 * 			|	if (! this.isProperTeam(team))
+	 * 			|		result == false
+	 * 			| result == true
+	 */
+	protected boolean hasProperTeams() {
+		for(Team team: this.getTeams()) {
+			if (! this.isProperTeam(team))
+				return false;
+		}
+		return true;
+	}
+	
+	
+	/**
+	 * Checks if the given team is a proper team.
+	 * 
+	 * @param 	team
+	 * 			The team that needs to be checked.
+	 * 
+	 * @return	Returns if the team has proper worms and if all the worms are in this world.
+	 * 			| if (! team.hasProperWorms())
+	 * 			|	result == false
+	 * 			| for each worm in team.getLivingWorms()
+	 * 			|	if (! (worm.getWorld() == this))
+	 * 			|		result == false
+	 * 			| result == true
+	 */
+	protected boolean isProperTeam(Team team) {
+		if (! team.hasProperWorms())
+			return false;
+		for(Worm worm: team.getLivingWorms()) {
+			if (! (worm.getWorld() == this))
+				return false;
+		}
+		return true;
+	}
 
 	
 	/**
@@ -941,23 +1056,19 @@ public class World implements Cloneable {
 	 * If all worms in the world have had their turn, all action points are set to the max, the hit
 	 * points are increased by 10 and the it is the first worm's turn again.
 	 * 
-	 * 
 	 * @post	The index of the active worm is now the index of the next worm 
 	 * 			or the first worm if all worms have had their turn this round.
-	 * 			|if (this.getIndexOfActiveWorm()+1 >= this.getAllWorms().size()){
+	 * 			|if (this.getIndexOfActiveWorm()+1 >= this.getAllWorms().size())
 	 *			|	new.getIndexOfActiveWorm() == 0
 	 *			|else 
 	 *			|	new.getIndexOfActiveWorm() == this.getIndexOfActiveWorm()+1
-	 * 			
 	 * 
 	 * @effect	If the next round is started the hit points of all worms are increased
 	 * 			by 10 and their action points set to max.
 	 * 			|if (this.getIndexOfActiveWorm()+1 >= this.getAllWorms().size())
 	 * 			|	this.setActionPointsToMaxAndAdd10HitPoints()
-	 * 
 	 */
 	protected void nextTurn() {
-		
 		if (getIndexOfActiveWorm()+1 >= getAllWorms().size()){
 			setActionPointsToMaxAndAdd10HitPoints();
 			setIndexOfActiveWorm(0);
@@ -971,12 +1082,13 @@ public class World implements Cloneable {
 	/**
 	 * Sets the index of the active worm in the list of all the worms in this world.
 	 * 
-	 * 
 	 * @param 	indexToBeSet
 	 * 			The index to be set.
+	 * 
 	 * @post 	The index has been set.
 	 * 			new.getIndexOfActiveWorm() == indexToBeSet
 	 */
+	@Raw
 	private void setIndexOfActiveWorm(int indexToBeSet) {
 		this.indexOfActiveWorm = indexToBeSet;
 		
@@ -992,8 +1104,7 @@ public class World implements Cloneable {
 	 * 			been increased by 10.
 	 * 			| for each oldWorm in this.getAllWorms() and each newWorm in new.getAllWorms()
 	 * 			|	newWorm.getActionPoints() == newWorm.getMaximumActionPoints() &&
-	 * 			|	newWorm.getHitPoints() == oldWorm.getHitpoints() +10
-	 * 
+	 * 			|		newWorm.getHitPoints() == oldWorm.getHitpoints() +10
 	 */
 	private void setActionPointsToMaxAndAdd10HitPoints(){
 		for(int counter  = 0;counter < getAllWorms().size(); counter = counter+1){
@@ -1008,16 +1119,7 @@ public class World implements Cloneable {
 	protected World clone() throws CloneNotSupportedException {
 		return (World) super.clone();
 	}
-	
-	
-	
-	
-	
 
-	
-	
-	
-	
 }
 
 
