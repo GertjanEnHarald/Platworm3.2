@@ -14,8 +14,6 @@ import worms.util.Util;
  *
  * @invar	This world has valid dimensions.	
  *			|isValidDimension(this.getWidth()) && isValidDimension(this.getHeight())
- * @invar	World contains at most one live projectile.
- *			| ...
  * @invar	Each game object appears only once in this world.
  *			| ! this.getGameObjects().hasDuplicate()
  * @invar	The position of all objects must be within the bounds of the world.
