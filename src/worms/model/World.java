@@ -12,13 +12,11 @@ import worms.util.Util;
  * @author 	Gertjan Maenhout (2Bbi Computerwetenschappen - Elektrotechniek) & 
  * 			Harald Schafer (2Bbi Elektrotechniek - Computerwetenschappen)
  *
- * @invar	Checks if width of world is valid.	
- *			|isValidDimension(this.getWidth())
- * @invar	Checks if height of world is valid.	
- *			|isValidDimension(this.getHeight())
+ * @invar	This world has valid dimensions.	
+ *			|isValidDimension(this.getWidth()) && isValidDimension(this.getHeight())
  * @invar	World contains at most one live projectile.
  *			| ...
- * @invar	Each object appears only once in this world.
+ * @invar	Each game object appears only once in this world.
  *			| ! this.getGameObjects().hasDuplicate()
  * @invar	The position of all objects must be within the bounds of the world.
  *			| for each object in this.getGameObjects()
