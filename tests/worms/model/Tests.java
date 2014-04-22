@@ -1462,6 +1462,7 @@ public class Tests {
 		world.addAsGameObject(testWorm);
 		Team winners = new Team("Winners");
 		testWorm.joinTeam(winners);
+		winners.addWorm(testWorm);
 		testWorm.terminate();
 		assertFalse(testWorm.getStatus());
 		assertFalse(world.getAllWorms().contains(testWorm));
