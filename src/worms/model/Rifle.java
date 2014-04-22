@@ -35,7 +35,7 @@ public class Rifle extends Projectile {
 	 * @post	The name of this weapon will be set.
 	 * 			| new.getName() == 'Rifle'
 	 */
-	public Rifle(double coordinateX, double coordinateY, boolean isActive,
+	protected Rifle(double coordinateX, double coordinateY, boolean isActive,
 			World world, double direction) throws ModelException {
 		super(coordinateX, coordinateY, isActive, world, direction,
 				0.010,	20, 10);
@@ -51,7 +51,7 @@ public class Rifle extends Projectile {
 	@Basic
 	@Raw
 	@Immutable
-	public final double getForce() {
+	protected final double getForce() {
 		return 1.5;
 	}
 

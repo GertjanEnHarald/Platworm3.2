@@ -65,7 +65,7 @@ public abstract class MovableObject extends GameObject {
 	 * 			| (! isValidCoordinate(coordinateX)) || (! isValidCoordinate(coordinateY))
 	 * 			|		|| (! isValidRadius(radius)) 
 	 */
-	public MovableObject(double coordinateX, double coordinateY, boolean isActive, 
+	protected MovableObject(double coordinateX, double coordinateY, boolean isActive, 
 			double radius, World world, double direction) throws ModelException {
 		super(coordinateX, coordinateY, isActive, radius,world);
 		if (this.getStatus())
@@ -80,7 +80,7 @@ public abstract class MovableObject extends GameObject {
 	 */
 	@Basic
 	@Raw
-	public double getDirection() {
+	protected double getDirection() {
 		return this.direction;
 	}
 	
@@ -117,7 +117,7 @@ public abstract class MovableObject extends GameObject {
 	 * 			| result == angle
 	 */
 	@Raw
-	public static double changeAngleModulo2PI(double angle) {
+	protected static double changeAngleModulo2PI(double angle) {
 		angle = angle % (2*Math.PI);
 		if (angle < 0)
 			angle = angle + 2*Math.PI;
@@ -136,7 +136,7 @@ public abstract class MovableObject extends GameObject {
 	 *			| result == !(Double.isNaN(direction) || Double.isInfinite(Direction))
 	 */
 	@Raw
-	public static boolean isValidDirection(double direction) {
+	protected static boolean isValidDirection(double direction) {
 		return ! (Double.isNaN(direction) || Double.isInfinite(direction));
 	}
 
@@ -146,7 +146,7 @@ public abstract class MovableObject extends GameObject {
 	/**
 	 * Returns the mass of this movable object.
 	 */
-	public abstract double getMass();
+	protected abstract double getMass();
 	
 	
 	
@@ -158,7 +158,7 @@ public abstract class MovableObject extends GameObject {
 	 * 			A time interval in which the movable object will not
 	 * 			completely move through impassable terrain.
 	 */
-	public abstract void jump(double timeStep);
+	protected abstract void jump(double timeStep);
 	
 
 	/**
@@ -174,7 +174,7 @@ public abstract class MovableObject extends GameObject {
 	 * 			|	then result == this.getJumpDistance()/(this.getJumpVelocity()*Math.cos(Math.PI/2+2^(-1047)))
 	 * 			| result == this.getJumpDistance()/(this.getJumpVelocity()*Math.cos(this.getDirection()))
 	 */
-	public double getJumpTime(){
+	protected double getJumpTime(){
 		if (this.getDirection() == Math.PI/2)
 			return this.getJumpDistance()/(this.getJumpVelocity()*Math.cos(Math.PI/2+Double.MIN_VALUE));
 		return this.getJumpDistance()/(this.getJumpVelocity()*Math.cos(this.getDirection()));
@@ -184,7 +184,7 @@ public abstract class MovableObject extends GameObject {
 	/**
 	 * Returns the initial velocity of a movable object at the moment that it jumps from the ground.
 	 */
-	public abstract double getJumpVelocity();
+	protected abstract double getJumpVelocity();
 	
 	
 	/**
@@ -194,7 +194,7 @@ public abstract class MovableObject extends GameObject {
 	 * 			| result == Math.pow(this.getJumpVelocity(), 2)*
 	 * 			|				Math.sin(2*this.getDirection())/this.getWorld().getGravity()
 	 */
-	public double getJumpDistance(){
+	protected double getJumpDistance(){
 		return Math.pow(this.getJumpVelocity(), 2)*Math.sin(2*this.getDirection())/this.getWorld().getGravity();
 	}
 	
@@ -215,7 +215,7 @@ public abstract class MovableObject extends GameObject {
 	 * 			This worm cannot jump.
 	 * 			| (!canJump())
 	 */
-	public double[] getJumpStep(double time) throws ModelException {
+	protected double[] getJumpStep(double time) throws ModelException {
 		if (! this.canJump())
 			throw new ModelException("Cannot jump!");
 		double initialJumpVelocityX = this.getJumpVelocity()*Math.cos(this.getDirection());
@@ -235,14 +235,14 @@ public abstract class MovableObject extends GameObject {
 	 * 			A time interval in which the movable object will not
 	 * 			completely move through impassable terrain.
 	 */
-	public abstract double getJumpRealTimeInAir(double step);
+	protected abstract double getJumpRealTimeInAir(double step);
 	
 	
 	/**
 	 * Returns whether or not this movable object is in such a condition, 
 	 * that it could jump.
 	 */
-	public abstract boolean canJump();
+	protected abstract boolean canJump();
 	
 	
 	

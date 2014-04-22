@@ -110,7 +110,7 @@ public class Worm extends MovableObject{
 	 * 
 	 */
 	@Raw
-	public Worm(double coordinateX, double coordinateY, double direction, double radius, 
+	protected Worm(double coordinateX, double coordinateY, double direction, double radius, 
 			String name, boolean isActive, World world) 
 			throws ModelException {
 		super(coordinateX, coordinateY, isActive, radius, world, direction);
@@ -131,7 +131,7 @@ public class Worm extends MovableObject{
 	@Basic
 	@Immutable
 	@Raw
-	public final double getDensity(){
+	protected final double getDensity(){
 		return this.density;
 	}
 
@@ -172,7 +172,7 @@ public class Worm extends MovableObject{
 	@Basic
 	@Raw
 	@Immutable
-	public static double getMinimumRadius() {
+	protected static double getMinimumRadius() {
 		return minimumRadius;
 	}
 	
@@ -190,7 +190,7 @@ public class Worm extends MovableObject{
 	 * 			| && getMass(radius) <= Integer.MAX_VALUE
 	 */
 	@Override
-	public boolean isValidRadius(double radius) {
+	protected boolean isValidRadius(double radius) {
 		return (radius >= getMinimumRadius()) && (! Double.isNaN(radius)) && (this.getMass(radius) <= Integer.MAX_VALUE);
 	}
 
@@ -210,7 +210,7 @@ public class Worm extends MovableObject{
 	 */
 	@Basic
 	@Override
-	public double getMass(){
+	protected double getMass(){
 		double mass = this.getMass(this.getRadius());
 		if (mass > Integer.MAX_VALUE)
 			mass = Integer.MAX_VALUE;
@@ -228,7 +228,7 @@ public class Worm extends MovableObject{
 	 * 			| result == (this.getDensity()*4/3*Math.PI*Math.pow(radius, 3))
 	 */
 	@Raw
-	public double getMass(double radius){
+	protected double getMass(double radius){
 		return (this.getDensity()*(4.0/3.0)*Math.PI*Math.pow(radius, 3));
 	}
 	
@@ -240,7 +240,7 @@ public class Worm extends MovableObject{
 	 */
 	@Basic
 	@Raw
-	public int getActionPoints(){
+	protected int getActionPoints(){
 		return this.actionPoints;
 	}
 	
@@ -249,7 +249,7 @@ public class Worm extends MovableObject{
 	 * Returns the maximum number of action points that this
 	 * worm can have.
 	 */
-	public int getMaximumActionPoints(){
+	protected int getMaximumActionPoints(){
 		return (int) (Math.round(this.getMass()));
 	}
 	
@@ -296,7 +296,7 @@ public class Worm extends MovableObject{
 	 */
 	@Basic
 	@Raw
-	public int getHitPoints() {
+	protected int getHitPoints() {
 		return this.hitPoints;
 	}
 	
@@ -335,7 +335,7 @@ public class Worm extends MovableObject{
 	/**
 	 * Returns the maximum number of hit points this worm can have.
 	 */
-	public int getMaximumHitPoints() {
+	protected int getMaximumHitPoints() {
 		return (int) Math.round(this.getMass());
 	}
 	
@@ -347,7 +347,7 @@ public class Worm extends MovableObject{
 	 * 			larger than 0.
 	 * 			| result == (this.getHitPoints() > 0)
 	 */
-	public boolean isAlive() {
+	protected boolean isAlive() {
 		return (this.getHitPoints() > 0);
 	}
 	
@@ -359,7 +359,7 @@ public class Worm extends MovableObject{
 	 */
 	@Basic
 	@Raw
-	public String getName(){
+	protected String getName(){
 		return this.name;
 	}
 	
@@ -378,7 +378,7 @@ public class Worm extends MovableObject{
 	 * 			| ! isValidName(assignedName)
 	 */
 	@Raw
-	public void setName(String assignedName) throws ModelException {
+	protected void setName(String assignedName) throws ModelException {
 		if (! isValidName(assignedName))
 			throw new ModelException("Illegal assigned name!");
 		this.name = assignedName;
@@ -402,7 +402,7 @@ public class Worm extends MovableObject{
 	 * 			|				(isLetter(character) || character in {" ", "'", """}))
 	 */
 	@Raw
-	public static boolean isValidName(String name){
+	protected static boolean isValidName(String name){
 		List<String> validCharacters = Arrays.asList(" ", "\'", "\"");
 		if (name.length() < 2)
 			return false;
@@ -422,7 +422,7 @@ public class Worm extends MovableObject{
 	 * Returns the team of this worm.
 	 * If the worm has not joined a team, null is returned.
 	 */
-	public Team getTeam() {
+	protected Team getTeam() {
 		return this.team;
 	}
 	
@@ -441,7 +441,7 @@ public class Worm extends MovableObject{
 	 * 			after the game has already started.
 	 * 			| this.getWorld().getStatus()
 	 */
-	public void joinTeam(Team team) throws ModelException {
+	protected void joinTeam(Team team) throws ModelException {
 		if (this.getWorld().getStatus())
 			throw new ModelException("Game has already started, cannot assign to team!");
 		this.setTeam(team);
@@ -474,7 +474,7 @@ public class Worm extends MovableObject{
 	 * @return	Returns if the given team isn't null.
 	 * 			| result == (team != null)
 	 */
-	public static boolean isValidTeam(Team team) {
+	protected static boolean isValidTeam(Team team) {
 		return (team != null);
 	}
 	
@@ -487,7 +487,7 @@ public class Worm extends MovableObject{
 	 * 			| result == (this.getTeam() == null)
 	 * 			|				|| (this.getTeam().getWorms.contains(this))
 	 */
-	public boolean hasProperTeam() {
+	protected boolean hasProperTeam() {
 		return (this.getTeam() == null) || (this.team.getWorms().contains(this));
 	}
 
@@ -512,7 +512,7 @@ public class Worm extends MovableObject{
 	 * @post	The direction of the worm's projectile is also updated.
 	 * 			| new.getProjectile().getDirection() == new.getDirection()
 	 */
-	public void turn(double angle){
+	protected void turn(double angle){
 		assert this.canTurn(angle);
 		this.setDirection(this.getDirection()+angle);
 		int usedActionPoints = (int) (usedActionPointsTurn(angle)) + 1;
@@ -534,7 +534,7 @@ public class Worm extends MovableObject{
 	 * 			| 			(isValidDirection(this.getDirection()+angle)) && 
 	 * 			|			(usedActionPointsTurn(angle) < Integer.MAX_VALUE)
 	 */
-	public boolean canTurn(double angle){
+	protected boolean canTurn(double angle){
 		double usedActionPoints = usedActionPointsTurn(angle);
 		return (usedActionPoints <= this.getActionPoints()) 
 				&& (isValidDirection(this.getDirection()+angle)) && (usedActionPoints <= Integer.MAX_VALUE);
@@ -553,7 +553,7 @@ public class Worm extends MovableObject{
 	 * 			|					((60*Math.abs(changeAngleModulo2PI(angle)-2*Math.PI)/(2*Math.PI))))
 	 */
 	@Raw
-	public static double usedActionPointsTurn(double angle) {
+	protected static double usedActionPointsTurn(double angle) {
 		return Math.min((60*Math.abs(changeAngleModulo2PI(angle))/(2*Math.PI)), (60*Math.abs(changeAngleModulo2PI(angle)-2*Math.PI)/(2*Math.PI)));
 	}
 	
@@ -598,7 +598,7 @@ public class Worm extends MovableObject{
 	 * 			| ! this.canJump()
 	 */
 	@Override
-	public void jump(double timeStep) throws ModelException {
+	protected void jump(double timeStep) throws ModelException {
 		if (! this.canJump()) {
 			this.setActionPoints(0);
 			throw new ModelException("Cannot jump!");
@@ -647,7 +647,7 @@ public class Worm extends MovableObject{
 	 *			| result == F*0.5/this.getMass()
 	 */
 	@Override
-	public double getJumpVelocity(){
+	protected double getJumpVelocity(){
 		double F = 5*this.getActionPoints()+this.getMass()*this.getWorld().getGravity();
 		return F*0.5/this.getMass();
 	}
@@ -660,7 +660,7 @@ public class Worm extends MovableObject{
 	 * 			| result == (this.isAlive()) && ((this.getActionPoints() > 0)
 	 */
 	@Override
-	public boolean canJump() {
+	protected boolean canJump() {
 		return (this.isAlive()) && (this.getActionPoints() > 0);
 	}
 	
@@ -686,7 +686,7 @@ public class Worm extends MovableObject{
 	 * 			| result == time
 	 */
 	@Override
-	public double getJumpRealTimeInAir(double step) {
+	protected double getJumpRealTimeInAir(double step) {
 		double time = 0.0;
 		boolean hasLanded = false;
 		step = 50.0*step;
@@ -710,7 +710,7 @@ public class Worm extends MovableObject{
 	/**
 	 * Returns the number of the current weapon.
 	 */
-	public int getCurrentWeaponNumber() {
+	protected int getCurrentWeaponNumber() {
 		return this.currentWeaponNumber;
 	}
 	
@@ -738,7 +738,7 @@ public class Worm extends MovableObject{
 	/**
 	 * Returns the number of possible weapons to propel projectiles.
 	 */
-	public static int getNumberOfProjectiles() {
+	protected static int getNumberOfProjectiles() {
 		return 2;
 	}
 	
@@ -746,7 +746,7 @@ public class Worm extends MovableObject{
 	/**
 	 * Returns the current projectile of this worm.
 	 */
-	public Projectile getProjectile(){
+	protected Projectile getProjectile(){
 		return this.projectile;
 	}
 	
@@ -795,7 +795,7 @@ public class Worm extends MovableObject{
 	 * 			and becomes 0 if it equals getNumberOfProjectiles()
 	 * 			| new.getCurrentWeaponNumber() == (this.getCurrentWeaponNumber() + 1) % getNumberOfProjectiles()
 	 */
-	public void selectWeapon() {
+	protected void selectWeapon() {
 		this.projectile.terminate();
 		this.setCurrentWeaponNumber((this.getCurrentWeaponNumber()+1) % getNumberOfProjectiles());
 		this.setProjectile();
@@ -813,7 +813,7 @@ public class Worm extends MovableObject{
 	 * @post	Subtract the action points that it requires to shoot this weapon.
 	 * 			| new.getActionPoints() == this.getActionPoints() - this.getProjectile().getCostActionPoints() 
 	 */
-	public void shoot(int yield) throws ModelException {
+	protected void shoot(int yield) throws ModelException {
 		this.projectile.setYield(yield);
 		this.setActionPoints(this.getActionPoints()-this.projectile.getCostActionPoints());
 	}
@@ -858,7 +858,7 @@ public class Worm extends MovableObject{
 	 * @effect	Update the location of this worm's projectile.
 	 * 			| this.updateProjectile()
 	 */
-	public void fall() throws ModelException {
+	protected void fall() throws ModelException {
 		if (this.canFall()) {
 			double startY = this.getCoordinateY();
 			double finalY = startY;
@@ -882,7 +882,7 @@ public class Worm extends MovableObject{
 	 * 			| result == this.canFall(this.getCoordinateX(), this.getCoordinateY())
 	 * 			|				&& (! this.hasJustEaten())
 	 */
-	public boolean canFall() {
+	protected boolean canFall() {
 		return this.canFall(this.getCoordinateX(), this.getCoordinateY()) && !this.hasJustEaten();
 	}
 	
@@ -893,7 +893,7 @@ public class Worm extends MovableObject{
 	 * @return	This worm can fall if it is not located at an adjacent location inn its world.
 	 * 			| result == (! this.getWorld().isAdjacent(x, y, this.getRadius()))
 	 */
-	public boolean canFall(double x, double y) {
+	protected boolean canFall(double x, double y) {
 		return (! this.getWorld().isAdjacent(x, y, this.getRadius()));
 	}
 	
@@ -920,7 +920,7 @@ public class Worm extends MovableObject{
 	 * 			| result == NbSteps*((Math.abs(Math.cos(theta)) + 4*Math.abs(Math.sin(theta))))
 	 */
 	@Raw
-	public static double usedActionPointsMove(int NbSteps, double theta) {
+	protected static double usedActionPointsMove(int NbSteps, double theta) {
 		double usedActionPoints = NbSteps*( (Math.abs(Math.cos(theta)) + 4*Math.abs(Math.sin(theta))));
 		return usedActionPoints;
 	}
@@ -975,7 +975,7 @@ public class Worm extends MovableObject{
 	 *			| !this.canMove()	
 	 *
 	 */
-	public void move() throws ModelException {
+	protected void move() throws ModelException {
 		if (!canMove())
 			throw new ModelException("This worm cannot move!");
 		double maxSuccesOfMoveValue = 0.0;
@@ -1032,7 +1032,7 @@ public class Worm extends MovableObject{
 	 * 			The requested move is not possible
 	 * 			|(! this.canMove(steps,direction))
 	 */
-	public void move(double steps,double direction) throws ModelException {
+	protected void move(double steps,double direction) throws ModelException {
 		if(! this.canMove(steps,direction))
 			throw new ModelException("Illegal number of steps!");
 		
@@ -1064,7 +1064,7 @@ public class Worm extends MovableObject{
 	 * 			|else 
 	 * 			|	return false
 	 */
-	public boolean canMove(){
+	protected boolean canMove(){
 		if (!getStatus())
 			return false;
 		for(double steps= 1.0; steps >= 0.1/(getRadius());steps = steps -0.1){
@@ -1090,7 +1090,7 @@ public class Worm extends MovableObject{
 	 * 			and end up in an adjacent or a passable position.
 	 * 			| result == canMoveAdjacent(steps,direction) || canMovePassable(steps,direction)
 	 */
-	public boolean canMove(double steps, double direction){
+	protected boolean canMove(double steps, double direction){
 		return canMoveAdjacent(steps,direction) || canMovePassable(steps,direction);
 	}
 	
@@ -1110,7 +1110,7 @@ public class Worm extends MovableObject{
 	 * 						&&
 	 * 						isPossibleMoveWithCurrentActionPoints((int)steps +1, direction)
 	 */						
-	public boolean canMovePassable(double steps, double direction) {
+	protected boolean canMovePassable(double steps, double direction) {
 			if (!getWorld().isPassableArea(getCoordinateX()+Math.cos(direction)*steps*getRadius(), getCoordinateY()+Math.sin(direction)*steps*getRadius(), getRadius()))
 				return false;
 			return isPossibleMoveWithCurrentActionPoints((int)steps +1, direction);
@@ -1132,7 +1132,7 @@ public class Worm extends MovableObject{
 	 * 						&&
 	 * 						isPossibleMoveWithCurrentActionPoints((int)steps +1, direction)
 	 */						
-	public boolean canMoveAdjacent(double steps,double direction){
+	protected boolean canMoveAdjacent(double steps,double direction){
 		if (!getWorld().isAdjacent(getCoordinateX()+Math.cos(direction)*steps*getRadius(), getCoordinateY()+Math.sin(direction)*steps*getRadius(), getRadius()))
 			return false;
 		return isPossibleMoveWithCurrentActionPoints((int)steps +1, direction);
@@ -1152,7 +1152,7 @@ public class Worm extends MovableObject{
 	 * @return	Returns true if the move is possible. This means if this worm has more action points than would be needed to execute this move.
 	 * 			|result == ((this.getActionPoints() >= usedActionPointsMove(steps, direction)) && (steps >0) && (usedActionPointsMove(steps, direction); <= Integer.MAX_VALUE))
 	 */
-	public boolean isPossibleMoveWithCurrentActionPoints(int steps,double direction){
+	protected boolean isPossibleMoveWithCurrentActionPoints(int steps,double direction){
 		int currentActionPoints = this.getActionPoints();
 		double usedActionPoints = usedActionPointsMove(steps, direction);
 		return ((currentActionPoints >= usedActionPoints) && (steps >0) && (usedActionPoints <= Integer.MAX_VALUE));
@@ -1175,7 +1175,7 @@ public class Worm extends MovableObject{
 	 * 			| else
 	 * 			|		result == 0.0
 	 */
-	public double getMaxCoverableDistanceAdjacent(double direction){
+	protected double getMaxCoverableDistanceAdjacent(double direction){
 		for(double steps= 1.0; steps >= 0.1/(getRadius());steps = steps -0.1){
 			if (canMoveAdjacent(steps, direction))
 				return steps;
@@ -1200,7 +1200,7 @@ public class Worm extends MovableObject{
 	 * 			| else
 	 * 			|		result == 0.0 
 	 */
-	public double getMaxCoverableDistancePassable(double direction){
+	protected double getMaxCoverableDistancePassable(double direction){
 		for(double steps= 1.0; steps >= 0.1/(getRadius());steps = steps -0.1){
 			if (canMovePassable(steps, direction))
 				return steps;
@@ -1224,7 +1224,7 @@ public class Worm extends MovableObject{
 	 * 			| this.getProjectile().terminate()
 	 */
 	@Override
-	public void terminate(){
+	protected void terminate(){
 		super.terminate();
 		if (this.getProjectile() != null)
 			this.projectile.terminate();
@@ -1276,7 +1276,7 @@ public class Worm extends MovableObject{
 	/**
 	 * Returns if this worm has just eaten.
 	 */
-	public boolean hasJustEaten() {
+	protected boolean hasJustEaten() {
 		return this.hasJustEaten;
 	}
 	

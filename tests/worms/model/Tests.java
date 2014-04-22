@@ -1513,7 +1513,7 @@ public class Tests {
 		int hitPoints = testWorm.getHitPoints();
 		testWorm.fall();
 		assertEquals(testWorm.getCoordinateX(),12.0,EPS);
-		assertEquals(testWorm.getCoordinateY(), 2.0+testWorm.getRadius(), EPS);
+		assertEquals(testWorm.getCoordinateY(), 2.0+testWorm.getRadius(),testWorm.getRadius()*0.1);
 		assertTrue(world.isAdjacent(testWorm.getCoordinateX(), testWorm.getCoordinateY(), testWorm.getRadius()));
 		assertEquals(testWorm.getHitPoints(),hitPoints - 3*((int) Math.round((10.0-testWorm.getCoordinateY()))));
 	}
@@ -1523,10 +1523,10 @@ public class Tests {
 	public void testMoveVertical(){
 		Worm testWorm = new Worm(12.0, 3.05, Math.PI/2.0, 1, "Bob", true, world);
 		testWorm.move();
-		assertEquals(testWorm.getCoordinateY(), 4.05,EPS);
+		assertEquals(testWorm.getCoordinateY(), 4.05,testWorm.getRadius()*0.05);
 		assertEquals(testWorm.getCoordinateX(), 12.0,EPS);
 		testWorm.fall();
-		assertEquals(testWorm.getCoordinateY(), 3.05,EPS);
+		assertEquals(testWorm.getCoordinateY(), 3.05,testWorm.getRadius()*0.05);
 		assertEquals(testWorm.getCoordinateX(), 12.0,EPS);
 	}
 	
@@ -1552,7 +1552,6 @@ public class Tests {
 	 public void testMoveIllegalCaseCannotMoveInsufficientActionPoints() throws ModelException {
 		 Worm testWorm = new Worm(12.0, 3.05, Math.PI/2.0+Math.PI/8.0, 1, "Bob", true, world);
 		 testWorm.setActionPoints(0);
-		 System.out.println(testWorm.canMove());
 		 testWorm.move();
 	 }
 	

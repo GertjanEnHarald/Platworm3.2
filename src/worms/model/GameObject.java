@@ -64,7 +64,7 @@ public abstract class GameObject implements Cloneable {
 	 * 			| (! isValidCoordinate(coordinateX)) || (! isValidCoordinate(coordinateY))
 	 * 			|		|| (! isValidRadius(radius))
 	 */
-	public GameObject(double coordinateX, double  coordinateY, boolean isActive, double radius, World world) 
+	protected GameObject(double coordinateX, double  coordinateY, boolean isActive, double radius, World world) 
 			throws ModelException {
 		this.setStatus(isActive);
 		this.setWorld(world);
@@ -80,7 +80,7 @@ public abstract class GameObject implements Cloneable {
 	 */
 	@Basic
 	@Raw
-	public World getWorld(){
+	protected World getWorld(){
 		return this.world;
 	}
 	
@@ -108,7 +108,7 @@ public abstract class GameObject implements Cloneable {
 	 * 			| result == (this.getWorld() == null) || 
 	 * 			|	(this.getWorld().getGameObjects().contains(this))
 	 */
-	public boolean hasProperWorld() {
+	protected boolean hasProperWorld() {
 		return (this.getWorld() == null) || (this.getWorld().getGameObjects().contains(this));
 	}
 	
@@ -125,7 +125,7 @@ public abstract class GameObject implements Cloneable {
 	 * @post	This game object doesn't have a world anymore.
 	 * 			| new.getWorld() == null
 	 */
-	public void terminate() {
+	protected void terminate() {
 		this.setStatus(false);
 		this.getWorld().removeAsGameObject(this);
 		this.setWorld(null);
@@ -139,7 +139,7 @@ public abstract class GameObject implements Cloneable {
 	 */
 	@Basic
 	@Raw
-	public double getCoordinateX(){
+	protected double getCoordinateX(){
 		return this.coordinateX;
 	}
 	
@@ -149,7 +149,7 @@ public abstract class GameObject implements Cloneable {
 	 */
 	@Basic
 	@Raw
-	public double getCoordinateY(){
+	protected double getCoordinateY(){
 		return this.coordinateY;
 	}
 	
@@ -256,7 +256,7 @@ public abstract class GameObject implements Cloneable {
 	 *       	| result == (! Double.isNaN(coordinate))
 	 */
 	@Raw
-	public static boolean isValidCoordinate(double coordinate) {
+	protected static boolean isValidCoordinate(double coordinate) {
 		return ! Double.isNaN(coordinate);
 	}
 	
@@ -289,7 +289,7 @@ public abstract class GameObject implements Cloneable {
 	 */
 	@Basic
 	@Raw
-	public double getRadius(){
+	protected double getRadius(){
 		return this.radius;
 	}
 
@@ -308,7 +308,7 @@ public abstract class GameObject implements Cloneable {
 	 * 			| ! isValidRadius(radius)
 	 */
 	@Raw
-	public void setRadius(double radius) throws ModelException {
+	protected void setRadius(double radius) throws ModelException {
 		if (! isValidRadius(radius))
 			throw new ModelException("Illegal radius!");
 		this.radius = radius;
@@ -322,7 +322,7 @@ public abstract class GameObject implements Cloneable {
 	 * 			The radius that needs to be checked.
 	 */
 	@Raw
-	public abstract boolean isValidRadius(double radius);
+	protected abstract boolean isValidRadius(double radius);
 	
 	
 	
@@ -332,7 +332,7 @@ public abstract class GameObject implements Cloneable {
 	 */
 	@Basic
 	@Raw
-	public boolean getStatus() {
+	protected boolean getStatus() {
 		return this.isActive;
 	}
 	

@@ -33,7 +33,7 @@ public class Team implements Cloneable {
 	 * 			The exception is thrown if the given name is invalid.
 	 * 			| ! isValidName(name)
 	 */
-	public Team(String name) throws ModelException {
+	protected Team(String name) throws ModelException {
 		if (! isValidName(name))
 			throw new ModelException("Illegal name assignment!");
 		this.name = name;
@@ -58,7 +58,7 @@ public class Team implements Cloneable {
 	 * 			|			(for each char in name:
 	 * 							Character.isLetter(char))
 	 */
-	public static boolean isValidName(String name) {
+	protected static boolean isValidName(String name) {
 		if (name.length() < 2)
 			return false;
 		if (! Character.isUpperCase(name.charAt(0)))
@@ -77,7 +77,7 @@ public class Team implements Cloneable {
 	@Basic
 	@Immutable
 	@Raw
-	public String getName() {
+	protected String getName() {
 		return this.name;
 	}
 	
@@ -87,7 +87,7 @@ public class Team implements Cloneable {
 	/**
 	 * Returns all the worms that are in this team.
 	 */
-	public List<Worm> getWorms() {
+	protected List<Worm> getWorms() {
 		return this.worms;
 	}
 	
@@ -102,7 +102,7 @@ public class Team implements Cloneable {
 	 * 			|			then livingWorms.add(worm)
 	 * 			| result == livingWorms
 	 */
-	public List<Worm> getLivingWorms() {
+	protected List<Worm> getLivingWorms() {
 		List<Worm> wormsAlive = new ArrayList<Worm>();
 		for(Worm worm: this.getWorms()){
 			if (worm.isAlive())
@@ -125,7 +125,7 @@ public class Team implements Cloneable {
 	 *			This exception is thrown if this team cannot add the given worm. 
 	 *			| ! canHaveAsWorm(worm)
 	 */
-	public void addWorm(@Raw Worm worm) throws ModelException {
+	protected void addWorm(@Raw Worm worm) throws ModelException {
 		if (! canHaveAsWorm(worm))
 			throw new ModelException("Cannot have this worm in the team!");
 		this.worms.add(worm);
@@ -141,7 +141,7 @@ public class Team implements Cloneable {
 	 * @return	Returns if the worm has a reference to this team.
 	 * 			| result == (worm.getTeam() == this)
 	 */
-	public boolean canHaveAsWorm(@Raw Worm worm) {
+	protected boolean canHaveAsWorm(@Raw Worm worm) {
 		return (worm.getTeam() == this);
 	}
 	
@@ -155,7 +155,7 @@ public class Team implements Cloneable {
 	 * 			| then result == true
 	 * 			| else result == false
 	 */
-	public boolean hasProperWorms() {
+	protected boolean hasProperWorms() {
 		for(Worm worm: this.getWorms()) {
 			if (! (worm.getTeam() == this))
 				return false;
@@ -177,7 +177,7 @@ public class Team implements Cloneable {
 	 * 			The exception is thrown if this team cannot remove the given worm.
 	 * 			| ! this.canRemoveWorm(worm)
 	 */
-	public void removeFromTeam(Worm worm) throws ModelException {
+	protected void removeFromTeam(Worm worm) throws ModelException {
 		if (! this.canRemoveWorm(worm))
 			throw new ModelException("Cannot remove this worm from team!");
 		this.worms.remove(worm);
@@ -193,7 +193,7 @@ public class Team implements Cloneable {
 	 * @return	Returns if the given worm is in this team and if the given worm's team is this team.
 	 * 			| result == this.getWorms().contains(worm) && (worm.getTeam() == this)
 	 */
-	public boolean canRemoveWorm(Worm worm) {
+	protected boolean canRemoveWorm(Worm worm) {
 		return this.getWorms().contains(worm) && (worm.getTeam() == this);
 	}
 	

@@ -96,7 +96,7 @@ public abstract class Projectile extends MovableObject {
 	 * 			| 		|| (! isValidLostHitPoints(lostHitPoints)) 
 	 * 			|		||  (! isValidCostActionPoints(costActionPoints))
 	 */
-	public Projectile(double coordinateX, double coordinateY, boolean isActive,	World world,
+	protected Projectile(double coordinateX, double coordinateY, boolean isActive,	World world,
 			double direction, double massOfProjectile, int lostHitPoints, int costActionPoints) 
 			throws ModelException {
 		super(coordinateX, coordinateY, isActive, getRadius(massOfProjectile), world, direction);
@@ -123,7 +123,7 @@ public abstract class Projectile extends MovableObject {
 	@Basic
 	@Raw
 	@Immutable
-	public static final double getDensity() {
+	protected static final double getDensity() {
 		return density;
 	}
 	
@@ -135,7 +135,7 @@ public abstract class Projectile extends MovableObject {
 	 */
 	@Basic
 	@Raw
-	public boolean isTerminated() {
+	protected boolean isTerminated() {
 		return this.isTerminated;
 	}
 	
@@ -148,7 +148,7 @@ public abstract class Projectile extends MovableObject {
 	 */
 	@Raw
 	@Override
-	public void terminate() {
+	protected void terminate() {
 		super.terminate();
 		this.isTerminated = true;
 	}
@@ -161,7 +161,7 @@ public abstract class Projectile extends MovableObject {
 	 */
 	@Basic
 	@Raw
-	public String getName() {
+	protected String getName() {
 		return this.name;
 	}
 	
@@ -193,7 +193,7 @@ public abstract class Projectile extends MovableObject {
 	 * 			The mass should be a positive number.
 	 * 			| result == (mass != Double.NaN) && (mass > 0)
 	 */
-	public static boolean isValidMass(double mass) {
+	protected static boolean isValidMass(double mass) {
 		return (mass != Double.NaN) && (mass > 0);
 	}
 	
@@ -210,7 +210,7 @@ public abstract class Projectile extends MovableObject {
 	 * 			| result == (mass*(3/4)*(1/getDensity())
 	 *			|			*(1/Math.PI))^(1/3)
 	 */
-	public static double getRadius(double mass) {
+	protected static double getRadius(double mass) {
 		return Math.pow((3*mass)/(getDensity()*4*Math.PI), 1.0/3);
 	}
 	
@@ -223,7 +223,7 @@ public abstract class Projectile extends MovableObject {
 	 */
 	@Raw
 	@Override
-	public double getRadius() {
+	protected double getRadius() {
 		return getRadius(this.getMass());
 	}
 	
@@ -238,7 +238,7 @@ public abstract class Projectile extends MovableObject {
 	 * 			| result == (radius > 0)
 	 */
 	@Override
-	public boolean isValidRadius(double radius) {
+	protected boolean isValidRadius(double radius) {
 		return (radius > 0);
 	}
 	
@@ -251,7 +251,7 @@ public abstract class Projectile extends MovableObject {
 	@Basic
 	@Raw
 	@Override
-	public double getMass() {
+	protected double getMass() {
 		return this.massOfProjectile;
 	}
 
@@ -268,7 +268,7 @@ public abstract class Projectile extends MovableObject {
 	 * 			| result == (points > 0)
 	 */
 	@Raw
-	public static boolean isValidLostHitPoints(int points) {
+	protected static boolean isValidLostHitPoints(int points) {
 		return (points > 0);
 	}
 	
@@ -279,7 +279,7 @@ public abstract class Projectile extends MovableObject {
 	 */
 	@Basic
 	@Raw
-	public int getLostHitPoints() {
+	protected int getLostHitPoints() {
 		return this.lostHitPoints;
 	}
 	
@@ -296,7 +296,7 @@ public abstract class Projectile extends MovableObject {
 	 * 			| result == (points > 0)
 	 */
 	@Raw
-	public static boolean isValidCostActionPoints(int points) {
+	protected static boolean isValidCostActionPoints(int points) {
 		return (points > 0);
 	}
 	
@@ -307,7 +307,7 @@ public abstract class Projectile extends MovableObject {
 	 */
 	@Basic
 	@Raw
-	public int getCostActionPoints() {
+	protected int getCostActionPoints() {
 		return this.costActionPoints;
 	}
 
@@ -319,7 +319,7 @@ public abstract class Projectile extends MovableObject {
 	 */
 	@Basic
 	@Raw
-	public int getYield() {
+	protected int getYield() {
 		return this.yield;
 	}
 	
@@ -355,7 +355,7 @@ public abstract class Projectile extends MovableObject {
 	 * 			| result == ((0 <= yield) && (yield <= 100))
 	 */
 	@Raw
-	public static boolean isValidYield(int yield) {
+	protected static boolean isValidYield(int yield) {
 		return (yield >= 0) && (yield <= 100);
 	}
 	
@@ -381,7 +381,7 @@ public abstract class Projectile extends MovableObject {
 	 * 			| result == time
 	 */
 	@Override
-	public double getJumpRealTimeInAir(double step) {
+	protected double getJumpRealTimeInAir(double step) {
 		double time = 0.0;
 		double radius = this.getRadius();
 		step = 150.0*step;
@@ -437,7 +437,7 @@ public abstract class Projectile extends MovableObject {
 	 * 			| ! this.canJump()
 	 */
 	@Override
-	public void jump(double timeStep) throws ModelException {
+	protected void jump(double timeStep) throws ModelException {
 		if (! this.canJump()) 
 			throw new ModelException("Cannot jump!");
 		
@@ -474,7 +474,7 @@ public abstract class Projectile extends MovableObject {
 	/**
 	 * Returns the force that is used to propel a projectile.
 	 */
-	public abstract double getForce();
+	protected abstract double getForce();
 	
 	
 	
@@ -486,7 +486,7 @@ public abstract class Projectile extends MovableObject {
 	 *			| result == this.getForce()*0.5/this.getMass()
 	 */
 	@Override
-	public double getJumpVelocity(){
+	protected double getJumpVelocity(){
 		return this.getForce()*0.5/this.getMass();
 	}
 	
@@ -498,7 +498,7 @@ public abstract class Projectile extends MovableObject {
 	 * 			| result == (! this.isTerminated())
 	 */
 	@Override
-	public boolean canJump() {
+	protected boolean canJump() {
 		return (! this.isTerminated());
 	}
 	

@@ -48,7 +48,7 @@ public class Food extends GameObject {
 	 * 			| (! isValidCoordinate(coordinateX)) || (! isValidCoordinate(coordinateY))
 	 * 			|		|| (! isValidRadius(radius))
 	 */
-	public Food(double coordinateX, double coordinateY, boolean isActive, World world) 
+	protected Food(double coordinateX, double coordinateY, boolean isActive, World world) 
 			throws ModelException {
 		super(coordinateX, coordinateY, isActive, 0.20,world);
 	}
@@ -66,7 +66,7 @@ public class Food extends GameObject {
 	 * 			| result == (radius > 0)
 	 */
 	@Override
-	public boolean isValidRadius(double radius) {
+	protected boolean isValidRadius(double radius) {
 		return (radius > 0);
 	}
 
