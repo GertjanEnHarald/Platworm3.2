@@ -391,13 +391,23 @@ public abstract class Projectile extends MovableObject {
 	 * 			A time interval during which the worm will not move completely trough impassable terrain.
 	 * 
 	 * @return	Returns the time that this projectile is in the air until it hits impassable terrain
-	 * 			or it hits another worm.
-	 * 			|if !(! this.getWorld().isPassableArea(position[0], position[1], this.getRadius())
-	 * 			|	|| this.getWorld().projectileOverlapsWorm(this))
-	 * 			|	for each t in {t| t in 0..(result-step) & t = n*step (with n an integer)}
+	 * 			or it hits another worm. If the worm leaves the world, extra time is provided to make 
+	 * 			the worm visually disappear.
+	 * 			| for each time in {t | t in 0..result & t = n*step (with n integer)}
+	 * 			|	position = this.getJumpStep(t)
+	 * 			|	(this.getWorld().isPassableArea(position[0],position[1], this.getRadius())
+	 * 			|		&& ! this.getWorld().coordinatesOverlapsWorm(position[0]-0.5*this.getRadius(),
+	 * 			|					position[1]-0.5*this.getRadius(),this.getRadius()) ) == true
+	 * 			| 
+	 * 			| nextPosition = this.getJumpStep(result+step)
+	 * 			| (! this.getWorld().isPassableArea(nextPosition[0], nextPosition[1], this.getRadius()) 
+	 * 			|		|| this.getWorld().coordinatesOverlapsWorm(nextPosition[0]-0.5*this.getRadius(),
+	 * 			|					nextPosition[1]-0.5*this.getRadius(),this.getRadius()) )  == true
+	 * 			|
+	 * 			| if(! this.getWorld().isInWorld(position[0], position[1], this.getRadius()))
+	 * 			|	then result = result + 0.20 
 	 */
 	@Override
-	//TODO: Als deze methode af is moet ik nog de commentaar schrijven.
 	protected double getJumpRealTimeInAir(double step) {
 		double time = 0.0;
 		double radius = this.getRadius();
@@ -430,22 +440,10 @@ public abstract class Projectile extends MovableObject {
 	 * @param	timeStep
 	 * 			A time interval during which this projectile will not move completely trough impassable terrain.
 	 * 
-	 * @effect	The new x and y coordinates are assigned to this projectile.
-	 * 			This projectile will perform a parabolic movement, until it reaches impassable area 
-	 * 			or leaves the world or hits a worm.
-	 * 			If this projectile leaves the world at the end of a jump, its radius will be subtracted from 
-	 * 			its coordinates to visually make the worm disappear from the world. 
-	 * 			| x = this.getCoordinateX()
-	 * 			| y = this.getCoordinateY()
-	 * 			| hasLanded = false
-	 * 			| for (time = 0; (! hasLanded); time = time + timeStep)
-	 * 			|		position = this.getJumpStep(time)
-	 * 			|		x = position[0]
-	 * 			|		y = position[1]
-	 * 			| 		this.setCoordinates(x, y)
-	 * 			|		if (! this.getWorldIsPassableArea(position2[0], position2[1], this.getRadius())
-	 * 			|			|| this.getWorld().projectileOverlapsWorm(this))
-	 * 			|				hasLanded = true
+	 * @effect	The new x and y coordinates are assigned to this projectile. The end position of the jump 
+	 * 			is calculated by getting the step at the last position of the jump.
+	 * 			| position = this.getJumpStep(this.getJumpRealTimeInAir(10^-5))
+	 * 			| this.setCoordinates(position[0], position[1])
 	 * @effect	If a worm is hit, it will lose the amount of hit points specific to this projectile.
 	 * 			| if (this.getWorld().projectileOverlapsWorm(this))
 	 * 			|		target = this.getWormThatOverlaps(this)
@@ -455,7 +453,6 @@ public abstract class Projectile extends MovableObject {
 	 * 			The exception is thrown if this worm cannot jump in its current situation.
 	 * 			| ! this.canJump()
 	 */
-	//TODO: Als deze methode af is moet ik nog de commentaar schrijven.
 	@Override
 	protected void jump(double timeStep) throws ModelException {
 		if (! this.canJump()) 
