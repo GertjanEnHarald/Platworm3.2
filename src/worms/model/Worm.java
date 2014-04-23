@@ -596,37 +596,21 @@ public class Worm extends MovableObject{
 	 * @param	timeStep
 	 * 			A time interval during which the worm will not move completely trough impassable terrain.
 	 * 
-	 * @effect	The new x and y coordinates are assigned to this worm.
-	 * 			This worm will perform a parabolic movement, until it reaches impassable area or leaves the world.
-	 * 			If this worm leaves the world at the end of a jump, its radius will be subtracted from 
-	 * 			its coordinates to visually make the worm disappear from the world. 
-	 * 			| x = this.getCoordinateX()
-	 * 			| y = this.getCoordinateY()
-	 * 			| hasLanded = false
-	 * 			| for (time = 0; (! hasLanded); time = time + timeStep)
-	 * 			|		position = this.getJumpStep(time)
-	 * 			|		x = position[0]
-	 * 			|		y = position[1]
-	 * 			|		if (this.getWorld().isAdjacent(x,y,this.getRadius()))
-	 * 			|				position2 = this.getJumpStep(time + timeStep)
-	 * 			|				if (! this.getWorldIsPassableArea(position2[0], position2[1], this.getRadius()))
-	 * 			|						hasLanded = true
-	 * 			|		else if (! this.getWorld().isInWorld(x, y, this.getRadius()))
-	 * 			|				x = x - this.getRadius()
-	 * 			|				y = y - this.getRadius()
-	 * 			|				hasLanded = true
-	 * 			| this.setCoordinates(x, y)
-	 * @effect	The coordinates of this worm's projectile are updated.
-	 * 			| this.updateProjectile()
+	 * @effect	The new x and y coordinates are assigned to this worm. The end position of the jump 
+	 * 			is calculated by getting the step at the last position of the jump.
+	 * 			| position = this.getJumpStep(this.getJumpRealTimeInAir(10^-5))
+	 * 			| this.setCoordinates(position[0], position[1])
 	 * 
-	 * @post	All action points are used, even if this worm couldn't jump in its current situation.
-	 * 			| new.getActionPoints() == 0
+	 * @post	If the worm is still active after the jump, 
+	 * 			then all action points are used, even if this worm couldn't jump in its current situation.
+	 * 			| if this.getStatus()
+	 * 			| 	then new.getActionPoints() == 0
 	 * 
 	 * @throws	ModelException
 	 * 			The exception is thrown if this worm cannot jump in its current situation.
 	 * 			| ! this.canJump()
 	 */
-	//TODO: Als deze methode af is moet ik nog de commentaar schrijven.
+	//TODO: Als deze methode af is moet ik nog de commentaar schrijven. -> ok?
 	@Override
 	protected void jump(double timeStep) throws ModelException {
 		if (! this.canJump()) {
@@ -680,16 +664,15 @@ public class Worm extends MovableObject{
 	 * @return	Returns the time that this worm is in the air until it reaches impassable terrain
 	 * 			or it leaves the world. If the worm leaves the world, extra time is provided to make 
 	 * 			the worm visually disappear.
-	 * 			| time = 0
-	 * 			| hasLanded = false
-	 * 			| for (t = step; (! hasLanded); t = t + step)
-	 * 			|		position = this.getJumpTime(t)
-	 * 			|		time = t
-	 * 			| 		if (! this.getWorld().isPassableArea(position[0], position[1], this.getRadius()))
-	 * 			|				hasLanded = true
-	 * 			|				if (! this.getWorld().isInWorld(position[0], position[1], this.getRadius()))
-	 * 			|						time = time + 0.15
-	 * 			| result == time
+	 * 			| for each time in {t | t in 0..result & t = n*step (with n integer)}
+	 * 			|	position = this.getJumpStep(t)
+	 * 			|	this.getWorld().isPassableArea(position[0],position[1], this.getRadius()) == true
+	 * 			| 
+	 * 			| nextPosition = this.getJumpStep(result+step)
+	 * 			| ! this.getWorld().isPassableArea(nextPosition[0], nextPosition[1], this.getRadius())  == true
+	 * 			|
+	 * 			| if(! this.getWorld().isInWorld(position[0], position[1], this.getRadius()))
+	 * 			|	then result = result + 0.20 
 	 */
 	//TODO: Als deze methode af is moet ik nog de commentaar schrijven.
 	@Override
@@ -955,10 +938,9 @@ public class Worm extends MovableObject{
 	 *			|				toBeExecutedStepsPassable = getMaxCoverableDistancePassable(direction)
 	 *			|
 	 *			|if toBeExecutedStepsAdjacent > 0
-	 *			|	move(toBeExecutedStepsAdjacent,toBeExecutedDirectionAdjacent)
+	 *			|	then this.move(toBeExecutedStepsAdjacent,toBeExecutedDirectionAdjacent)
 	 *			|else
-	 *			|	move(toBeExecutedStepsPassable,toBeExecutedDirectionPassable)
-	 *			
+	 *			|	then this.move(toBeExecutedStepsPassable,toBeExecutedDirectionPassable)
 	 *
 	 * @throws	ModelException
 	 *			This worm cannot move.
@@ -1004,11 +986,11 @@ public class Worm extends MovableObject{
 	 * move is possible(the end position should be valid and the worm should
 	 * have enough action points to execute the move).
 	 * 
-	 * 
 	 * @param 	steps
 	 * 			The steps to be moved
 	 * @param 	direction
 	 * 			The direction to be moved in.
+	 * 
 	 * @post 	The new position of the worm is the result of a move from the previous
 	 * 			position in the given direction a given amount of steps.
 	 * 			|new.getCoordinateX() == this.getCoordinateX()+this.getRadius()*steps*Math.cos(direction)
@@ -1016,6 +998,7 @@ public class Worm extends MovableObject{
 	 * @post 	The necessary amount of action points needed for this move have been deducted
 	 * 			from this worm's action points.
 	 * 			|new.getActionPoints() == this.getActionPoints() -((int) usedActionPointsMove((int)steps+1, theta) +1)
+	 * 
 	 * @throws 	ModelException
 	 * 			The requested move is not possible
 	 * 			|(! this.canMove(steps,direction))
@@ -1039,8 +1022,7 @@ public class Worm extends MovableObject{
 	 * Returns whether the worm can move. This means that it can move between 0.1m and the
 	 * worms radius. And it can do that in approximately it's current direction.
 	 * 
-	 * 
-	 * @return	Returns true if the worm can move anywhere between 0.1m in any direction that 
+	 * @return	Returns true if the worm can move anywhere between 0.1m and its radius in any direction that 
 	 * 			lies within the boundaries, (this worms direction -0.7875) and (this worms 
 	 * 			direction +0.7875).
 	 * 			| if (canMove(steps,direction))
@@ -1072,12 +1054,13 @@ public class Worm extends MovableObject{
 	 * 			The steps to be checked.
 	 * @param 	direction
 	 * 			The direction to be checked.
+	 * 
 	 * @return	Returns true if the worm can move in the given direction the given amount of steps
-	 * 			and end up in an adjacent or a passable position.
-	 * 			| result == canMoveAdjacent(steps,direction) || canMovePassable(steps,direction)
+	 * 			and end up in an adjacent or a passable position. Any adjacent location is also passable.
+	 * 			| result == canMovePassable(steps,direction)
 	 */
 	protected boolean canMove(double steps, double direction){
-		return canMoveAdjacent(steps,direction) || canMovePassable(steps,direction);
+		return canMovePassable(steps,direction);
 	}
 	
 	
@@ -1114,9 +1097,9 @@ public class Worm extends MovableObject{
 	 * 			The direction to be checked.
 	 * 
 	 * @return	Returns true if the resulting position is adjacent and if the worm has enough action points to execute the move.
-	 * 			result == (getWorld().isAdjacent(getCoordinateX()+Math.cos(direction)*steps*getRadius(), getCoordinateY()+Math.sin(direction)*steps*getRadius(), getRadius()))
-	 * 						&&
-	 * 						isPossibleMoveWithCurrentActionPoints((int)steps +1, direction)
+	 * 			| result == (getWorld().isAdjacent(getCoordinateX()+Math.cos(direction)*steps*getRadius(), getCoordinateY()+Math.sin(direction)*steps*getRadius(), getRadius()))
+	 * 			|			&&
+	 * 			|			isPossibleMoveWithCurrentActionPoints((int)steps +1, direction)
 	 */						
 	protected boolean canMoveAdjacent(double steps,double direction){
 		if (!getWorld().isAdjacent(getCoordinateX()+Math.cos(direction)*steps*getRadius(), getCoordinateY()+Math.sin(direction)*steps*getRadius(), getRadius()))
@@ -1136,7 +1119,7 @@ public class Worm extends MovableObject{
 	 * 			The direction to be checked.
 	 * 
 	 * @return	Returns true if the move is possible. This means if this worm has more action points than would be needed to execute this move.
-	 * 			|result == ((this.getActionPoints() >= usedActionPointsMove(steps, direction)) && (steps >0) && (usedActionPointsMove(steps, direction); <= Integer.MAX_VALUE))
+	 * 			|result == ((this.getActionPoints() >= usedActionPointsMove(steps, direction)) && (steps >0) && (usedActionPointsMove(steps, direction) <= Integer.MAX_VALUE))
 	 */
 	protected boolean isPossibleMoveWithCurrentActionPoints(int steps,double direction){
 		int currentActionPoints = this.getActionPoints();
