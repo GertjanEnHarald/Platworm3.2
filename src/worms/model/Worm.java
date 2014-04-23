@@ -637,7 +637,6 @@ public class Worm extends MovableObject{
 	 * 			The exception is thrown if this worm cannot jump in its current situation.
 	 * 			| ! this.canJump()
 	 */
-	//TODO: Als deze methode af is moet ik nog de commentaar schrijven. -> ok?
 	@Override
 	protected void jump(double timeStep) throws ModelException {
 		if (! this.canJump()) {
@@ -701,7 +700,6 @@ public class Worm extends MovableObject{
 	 * 			| if(! this.getWorld().isInWorld(position[0], position[1], this.getRadius()))
 	 * 			|	then result = result + 0.20 
 	 */
-	//TODO: Als deze methode af is moet ik nog de commentaar schrijven.
 	@Override
 	protected double getJumpRealTimeInAir(double step) {
 		double time = 0.0;
