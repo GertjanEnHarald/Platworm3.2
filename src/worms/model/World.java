@@ -34,16 +34,50 @@ public class World implements Cloneable {
 	 // Variable initialization
 	 //
 	
+	/**
+	 *The gravity working in this world
+	 */
 	private final double g=9.80665;
+	/**
+	 * The maximum dimension(for width or height allowed in this world)
+	 */
 	private final static double maxDimension=Double.MAX_VALUE;
+	/**
+	 * The height of this world.
+	 */
 	private double height;
+	/**
+	 * The width of this world.
+	 */
 	private double width;
+	/**
+	 * The Boolean map respresnting whether the corresponding pixels of the
+	 * map are passable.
+	 */
 	private final boolean[][] passableMap;
+	/**
+	 * A boolean representing whether the game has started.
+	 */
 	private boolean status;
+	/**
+	 * The random seeded used to generate random numbers.
+	 */
 	private final Random random;
+	/**
+	 * The list containing all the game objects that are in this world.
+	 */
 	private final List<GameObject> gameObjects = new ArrayList<GameObject>();
+	/**
+	 * The index of the active worm in the list of all worms.
+	 */
 	private int indexOfActiveWorm=0;
+	/**
+	 * A list containing all the teams that are in this world.
+	 */
 	private final List<Team> teams = new ArrayList<Team>();
+	/**
+	 * A list of random names that are used for the worms created in this world.
+	 */
 	private final List<String> randomNames = Arrays.asList("Bob", "Emmitt","Parker", "Sergio", "Elias", "Clifton",
 		    "Gregg", "Derick", "Porter", "Archie", "Robbie", "Salvador", "Erich", "Wilfredo", "Casey",
 		    "Sung", "Christopher", "Jude", "Logan", "Roosevelt", "Rich");
@@ -454,8 +488,7 @@ public class World implements Cloneable {
 	 *			|
 	 *			|if (!isAdjacent(y/tan(angle), y, radius))
 	 *			|	for each y in {y| y in 0..(result[1]-stepY)  & y= n*stepY (with n integer)}
-	 *			|		then result == result
-	 *			|result[0] == result[1]/tan(angle)
+	 *			|		then result == [result[1]/tan(angle),result[1]]
 	 *
 	 *@throws	No location was found.
 	 *			| If the nothing is returned during the while loop.

@@ -33,12 +33,34 @@ public abstract class Projectile extends MovableObject {
 	/**
 	 * The initialisation of the variables.
 	 */
+	
+	/**
+	 * The density of the projectile.
+	 */
 	private static final double density = 7800;		// In kg/m³
+	/**
+	 * The mass of the projectile.
+	 */
 	private final double massOfProjectile;			// In kg
+	/**
+	 * The hit points a worm loses if hit by this projectile.
+	 */
 	private final int lostHitPoints;
+	/**
+	 * The action points it costs to fire this projectile.
+	 */
 	private final int costActionPoints;
+	/**
+	 * A boolean representing whether this projectile is "alive".
+	 */
 	private boolean isTerminated;
+	/**
+	 * The name of this projectile.
+	 */
 	private String name;
+	/**
+	 * The propulsion yield of this projectile.
+	 */
 	private int yield;
 	
 	

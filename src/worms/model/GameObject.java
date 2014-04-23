@@ -22,11 +22,25 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public abstract class GameObject implements Cloneable {
 	
-
+	/**
+	 * The x coordinate of the game object.
+	 */
 	private double coordinateX;
+	/**
+	 * The y coordinate of the game object.
+	 */
 	private double coordinateY;
+	/**
+	 * The radius of the game object.
+	 */
 	private double radius;
+	/**
+	 * Boolean representing whether the worm is alive.
+	 */
 	private boolean isActive;
+	/**
+	 * The world in which this game object is.
+	 */
 	private World world;
 	
 	

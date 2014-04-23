@@ -19,7 +19,13 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public class Team implements Cloneable {
 
+	/**
+	 * The name of this team.
+	 */
 	private final String name;
+	/**
+	 * The list of worms that are members of this team.
+	 */
 	private final List<Worm> worms = new ArrayList<Worm>();
 	
 	
