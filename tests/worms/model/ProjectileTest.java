@@ -1247,6 +1247,8 @@ public class ProjectileTest {
 	public void testShootingPorjectileHitsWorm() {
 		Worm target = new Worm(3,5,0,1,"Torro",true,world);
 		world.addAsGameObject(target);
+		Worm other = new Worm(3,5,0,1,"Torro",true,world);
+		world.addAsGameObject(other);
 		worm.shoot(50);
 		worm.getProjectile().jump(Math.pow(10, -4));
 		assertEquals(worm.getProjectile().getCoordinateX(), 3-Math.sqrt(2)/2,accuracyMapDimensions);

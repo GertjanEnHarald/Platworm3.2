@@ -589,7 +589,7 @@ public class World implements Cloneable {
 	}
 	
 	//TODO commentaar
-	protected boolean projectileOverlapsWorm(double x, double y, double radius) {
+	protected boolean coordinatesOverlapsWorm(double x, double y, double radius) {
 		for (Worm worm: this.getAllWorms()) {
 			if (worm != this.getActiveWorm())
 				if (GameObject.Overlaps(worm.getCoordinateX(),worm.getCoordinateY(),worm.getRadius(),
