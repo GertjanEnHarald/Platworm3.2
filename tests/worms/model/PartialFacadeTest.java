@@ -67,8 +67,8 @@ public class PartialFacadeTest {
 		Worm worm = facade.createWorm(world, 1.5, 0.5,
 				Math.PI / 2 - 10 * 0.0175, 0.5, "Test");
 		facade.move(worm);
-		assertEquals(1.5, facade.getX(worm), EPS);
-		assertEquals(1.0, facade.getY(worm), EPS);
+		assertEquals(1.5, facade.getX(worm), 0.1*worm.getRadius());
+		assertEquals(1.0, facade.getY(worm), 0.1*worm.getRadius());
 	}
 
 	@Test
