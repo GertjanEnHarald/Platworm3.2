@@ -299,7 +299,7 @@ public class Worm extends MovableObject{
 			this.actionPoints = actionPoints;
 		else if (actionPoints <= 0){
 			this.actionPoints = 0;
-			//this.getWorld().nextTurn(); TODO
+			this.getWorld().nextTurn(); 
 		}
 		else if (actionPoints > this.getMaximumActionPoints())
 			this.actionPoints = this.getMaximumActionPoints();
@@ -621,36 +621,15 @@ public class Worm extends MovableObject{
 			this.setActionPoints(0);
 			throw new ModelException("Cannot jump!");
 		}
-		double time = 0;
-		double x = this.getCoordinateX();
-		double y = this.getCoordinateY();
-		boolean hasLanded = false;
-		for (time = 0; (! hasLanded); time = time + timeStep) {
-			double[] position = this.getJumpStep(time);
-			x = position[0];
-			y = position[1];
-				if (this.getWorld().isAdjacent(x,y,this.getRadius())) {
-						double[] position2 = this.getJumpStep(time + timeStep);
-						if (! this.getWorld().isPassableArea(position2[0], position2[1], this.getRadius()))
-								hasLanded = true;
-				}
-				else if (! this.getWorld().isInWorld(x, y, this.getRadius())){
-						x = x - this.getRadius();
-						y = y - this.getRadius();
-						hasLanded = true;}
-		}
-		this.setCoordinates(x, y);
-		
-		
-//		double[] position = this.getJumpStep(this.getJumpRealTimeInAir(Math.pow(10, -5)));
-//		this.setCoordinates(position[0], position[1]);
+				
+		double[] position = this.getJumpStep(this.getJumpRealTimeInAir(Math.pow(10, -5)));
+		this.setCoordinates(position[0], position[1]);
 
 		//		If setCoordinates terminates this worm, these functions will throw a NullPointer.
 
 		if (this.getStatus())
 			this.setActionPoints(0);
 
-		//System.out.println("position is: ("+position[0]+", "+ position[1]+")");
 	}
 
 	
