@@ -559,7 +559,7 @@ public class World implements Cloneable {
 	 */
 	protected Food getFoodThatOverlaps(Worm worm) {
 		for(Food food: this.getAllFood()){
-			if (worm.Overlaps(food))
+			if (worm.overlapsGameObject(food))
 				return food;
 		}
 		return null;
@@ -581,18 +581,36 @@ public class World implements Cloneable {
 	 */
 	protected Worm getWormThatOverlaps(Projectile projectile) {
 		for (Worm worm: this.getAllWorms()) {
-			if (projectile.Overlaps(worm)) {
+			if (projectile.overlapsGameObject(worm)) {
 				return worm;
 			}
 		}
 		return null;
 	}
 	
-	//TODO commentaar
+	
+	
+	/**
+	 * Checks if a circle with given centre and radius overlaps 
+	 * with a worm.
+	 * 
+	 * @param 	x
+	 * 			The x coordinate of the centre.
+	 * @param 	y
+	 * 			The y coordinate of the centre.
+	 * @param 	radius
+	 * 			The radius of the circle.
+	 * 
+	 * @return	Returns if a worm overlaps with the given circle.
+	 * 			| for any worm in this.getAllWorms()
+	 * 			| 	if (GameObjects.overlaps(x,y,radius,worm.getCoordinateX(), worm.getCoordinateY, worm.getRadius()))
+	 * 			|		then result == true
+	 * 			| result == false
+	 */	
 	protected boolean coordinatesOverlapsWorm(double x, double y, double radius) {
 		for (Worm worm: this.getAllWorms()) {
 			if (worm != this.getActiveWorm())
-				if (GameObject.Overlaps(worm.getCoordinateX(),worm.getCoordinateY(),worm.getRadius(),
+				if (GameObject.overlaps(worm.getCoordinateX(),worm.getCoordinateY(),worm.getRadius(),
 									x,y,radius)) {
 					return true;
 			}

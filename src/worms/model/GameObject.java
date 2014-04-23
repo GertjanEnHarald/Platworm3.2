@@ -359,20 +359,37 @@ public abstract class GameObject implements Cloneable {
 	 * @param 	gameObject
 	 * 			The other game object.
 	 * 
-	 * @return	Returns if the distance between the center of those game objects
-	 * 			is smaller than the sum of their radiuses.
-	 * 			| result == (SquareRoot((gameObject.getCoordinateX() - this.getCoordinateX())²
-	 * 			|				 		+ (gameObject.getCoordinateY() - this.getCoordinateY())²)
-	 * 			|			< (this.getRadius() + gameObject.getRadius()))
+	 * @return	Returns if the two game objects overlap.
+	 * 			| result == overlaps(this.getCoordinateX(),this.getCoordinateY(), this.getRadius(),
+	 *			|			gameObject.getCoordinateX(),gameObject.getCoordinateY(),gameObject.getRadius())
 	 */
-	protected boolean Overlaps(GameObject gameObject) {
-		return Overlaps(this.getCoordinateX(),this.getCoordinateY(), this.getRadius(),
+	protected boolean overlapsGameObject(GameObject gameObject) {
+		return overlaps(this.getCoordinateX(),this.getCoordinateY(), this.getRadius(),
 						gameObject.getCoordinateX(),gameObject.getCoordinateY(),gameObject.getRadius());
 	}
 	
 	
-	//TODO commentaar
-	protected static boolean Overlaps(double x1, double y1, double radius1, double x2, double y2, double radius2) {
+	/**
+	 * Checks whether two given circles with given center and radius overlaps.
+	 * 
+	 * @param 	x1
+	 * 			The x coordinate of the centre of the first circle.
+	 * @param 	y1
+	 * 			The y coordinate of the centre of the first circle.
+	 * @param 	radius1
+	 * 			The radius of the first circle.
+	 * @param 	x2
+	 * 			The x coordinate of the centre of the second circle.
+	 * @param 	y2
+	 * 			The y coordinate of the centre of the second circle.
+	 * @param 	radius2
+	 * 			The radius of the second circle.
+	 * 
+	 * @return 	Returns if the the sum of the radiuses is larger than
+	 * 			distance between the two centres.
+	 * 			| result == ((radius1 + radius2) > SquareRoot((x2 - x1)² + (y2 - y1)²))
+	 */
+	protected static boolean overlaps(double x1, double y1, double radius1, double x2, double y2, double radius2) {
 		double distance = Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
 		return (distance < radius1 + radius2);
 	}

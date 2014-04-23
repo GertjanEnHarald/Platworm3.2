@@ -161,7 +161,13 @@ public class Worm extends MovableObject{
 	}
 	
 	
-	// TODO commentaar
+	/**
+	 * Set the x coordinate to the given coordinate.
+	 * 
+	 * @effect	If this worm is still active, then update projectile.
+	 * 			| if(this.getStatus())
+	 * 			|	then this.updateProjectile()
+	 */
 	@Override
 	protected void setX(double coordinateX) throws ModelException {
 		super.setX(coordinateX);
@@ -170,7 +176,13 @@ public class Worm extends MovableObject{
 	}
 	
 	
-	// TODO commentaar
+	/**
+	 * Set the y coordinate to the given coordinate.
+	 * 
+	 * @effect	If this worm is still active, then update projectile.
+	 * 			| if(this.getStatus())
+	 * 			|	then this.updateProjectile()
+	 */
 	@Override
 	protected void setY(double coordinateY) throws ModelException {
 		super.setY(coordinateY);
@@ -662,7 +674,7 @@ public class Worm extends MovableObject{
 	/**
 	 * Calculates the time that this worm will be in the air.
 	 * 
-	 * @param	timeStep
+	 * @param	step
 	 * 			A time interval during which the worm will not move completely trough impassable terrain.
 	 * 
 	 * @return	Returns the time that this worm is in the air until it reaches impassable terrain
