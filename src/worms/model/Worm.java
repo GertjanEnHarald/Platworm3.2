@@ -625,7 +625,7 @@ public class Worm extends MovableObject{
 		double[] position = this.getJumpStep(this.getJumpRealTimeInAir(Math.pow(10, -5)));
 		this.setCoordinates(position[0], position[1]);
 
-		//		If setCoordinates terminates this worm, these functions will throw a NullPointer.
+		//	If setCoordinates terminates this worm, these function shall only work if the status is active.
 
 		if (this.getStatus())
 			this.setActionPoints(0);
@@ -686,30 +686,18 @@ public class Worm extends MovableObject{
 		boolean hasLanded = false;
 		step = 100.0*step;
 
-		for (double t = step; (! hasLanded); t = t + step){
-				double[] position = this.getJumpStep(t);
-				time = t;
-		 		if (! this.getWorld().isPassableArea(position[0], position[1], this.getRadius()))
-						hasLanded = true;
-						if (! this.getWorld().isInWorld(position[0], position[1], this.getRadius()))
-								time = time + 0.15;
+		for (double t = step; (! hasLanded) ; t = t + step) {
+			double[] position = this.getJumpStep(t);
+			if (this.getWorld().isPassableArea(position[0], position[1], this.getRadius())) {
+				time = t;}
+			else if(! this.getWorld().isInWorld(position[0], position[1], this.getRadius())) {
+				time = time+0.20;
+				hasLanded = true;
+			}
+			else {
+				hasLanded = true;}
 		}
-		
-//		for (double t = step; (! hasLanded) ; t = t + step) {
-//			double[] position = this.getJumpStep(time);
-//			double[] nextPosition = this.getJumpStep(time+step);
-//			time = t;
-//			if (this.getWorld().isAdjacent(position[0], position[1], this.getRadius())
-//					&& !this.getWorld().isPassableArea(nextPosition[0], nextPosition[1], this.getRadius())) {
-//				if (! this.getWorld().isInWorld(position[0], position[1], this.getRadius())) {
-//					// Extra time provided to give the worm the chance to jump off the screen.
-//					time = time + 0.20;
-//					System.out.println("Extra time");
-//					}
-//				hasLanded = true;
-//			}
-//		}
-//		System.out.println("Time is: "+time);
+
 		return time;
 	}
 	
