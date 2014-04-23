@@ -42,14 +42,41 @@ public class Worm extends MovableObject{
 	/**
 	 * Variable initialization.
 	 */
+	/**
+	 * The action points of this worm.
+	 */
 	private int actionPoints;
+	/**
+	 * The hit points of this worm.
+	 */
 	private int hitPoints;
+	/**
+	 * The name of this worm.	
+	 */
 	private String name;
+	/**
+	 * The minimum radius of this worm.
+	 */
 	private static final double minimumRadius=0.25;
+	/**
+	 * The density of this worm.
+	 */
 	private final double density=1062;
+	/**
+	 * The projectile that this worm currently carries.
+	 */
 	private Projectile projectile;
+	/**
+	 * The team of this worm.
+	 */
 	private Team team;
+	/**
+	 * A boolean representing if this worm has just eaten worm food.
+	 */
 	private boolean hasJustEaten;
+	/**
+	 * The number of the current weapon of this worm.
+	 */
 	private int currentWeaponNumber = 0;
 	
 	
