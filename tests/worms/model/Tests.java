@@ -1409,6 +1409,7 @@ public class Tests {
 		assertEquals(5 * Math.PI / 4, testWorm.getDirection(), EPS);
 		int actionPoints = (int) (testWorm.getMaximumActionPoints() - (	(60 * Math.PI / 4) / (2 * Math.PI)));
 		assertEquals(actionPoints, testWorm.getActionPoints());
+		assertEquals(testWorm.getDirection(), testWorm.getProjectile().getDirection(),EPS);
 	}
 
 	@Test
@@ -1570,6 +1571,7 @@ public class Tests {
 		world.addAsGameObject(testWorm2);
 		testWorm.fall();
 		testWorm.jump(Math.pow(10, -4));
+
 		assertEquals(
 				testWorm.getCoordinateX(),
 				12.0 + (Math.pow(

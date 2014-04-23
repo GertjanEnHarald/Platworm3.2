@@ -161,6 +161,23 @@ public class Worm extends MovableObject{
 	}
 	
 	
+	// TODO commentaar
+	@Override
+	protected void setX(double coordinateX) throws ModelException {
+		super.setX(coordinateX);
+		if (this.getStatus())
+			this.updateProjectile();
+	}
+	
+	
+	// TODO commentaar
+	@Override
+	protected void setY(double coordinateY) throws ModelException {
+		super.setY(coordinateY);
+		if (this.getStatus())
+			this.updateProjectile();
+	}
+	
 	
 	
 	/**
@@ -282,7 +299,7 @@ public class Worm extends MovableObject{
 			this.actionPoints = actionPoints;
 		else if (actionPoints <= 0){
 			this.actionPoints = 0;
-			this.getWorld().nextTurn();
+			//this.getWorld().nextTurn(); TODO
 		}
 		else if (actionPoints > this.getMaximumActionPoints())
 			this.actionPoints = this.getMaximumActionPoints();
@@ -604,16 +621,36 @@ public class Worm extends MovableObject{
 			this.setActionPoints(0);
 			throw new ModelException("Cannot jump!");
 		}
+		double time = 0;
+		double x = this.getCoordinateX();
+		double y = this.getCoordinateY();
+		boolean hasLanded = false;
+		for (time = 0; (! hasLanded); time = time + timeStep) {
+			double[] position = this.getJumpStep(time);
+			x = position[0];
+			y = position[1];
+				if (this.getWorld().isAdjacent(x,y,this.getRadius())) {
+						double[] position2 = this.getJumpStep(time + timeStep);
+						if (! this.getWorld().isPassableArea(position2[0], position2[1], this.getRadius()))
+								hasLanded = true;
+				}
+				else if (! this.getWorld().isInWorld(x, y, this.getRadius())){
+						x = x - this.getRadius();
+						y = y - this.getRadius();
+						hasLanded = true;}
+		}
+		this.setCoordinates(x, y);
 		
-		double[] position = this.getJumpStep(this.getJumpRealTimeInAir(Math.pow(10, -5)));
-		this.setCoordinates(position[0], position[1]);
+		
+//		double[] position = this.getJumpStep(this.getJumpRealTimeInAir(Math.pow(10, -5)));
+//		this.setCoordinates(position[0], position[1]);
 
 		//		If setCoordinates terminates this worm, these functions will throw a NullPointer.
-		try {
+
+		if (this.getStatus())
 			this.setActionPoints(0);
-			this.updateProjectile();
-		} catch (NullPointerException exc) {
-		}
+
+		//System.out.println("position is: ("+position[0]+", "+ position[1]+")");
 	}
 
 	
@@ -670,20 +707,30 @@ public class Worm extends MovableObject{
 		boolean hasLanded = false;
 		step = 100.0*step;
 
-		for (double t = step; (! hasLanded) ; t = t + step) {
-			double[] position = this.getJumpStep(time);
-			double[] nextPosition = this.getJumpStep(time+step);
-			time = t;
-			if (this.getWorld().isAdjacent(position[0], position[1], this.getRadius())
-					&& !this.getWorld().isPassableArea(nextPosition[0], nextPosition[1], this.getRadius())) {
+		for (double t = step; (! hasLanded); t = t + step){
+				double[] position = this.getJumpStep(t);
+				time = t;
+		 		if (! this.getWorld().isPassableArea(position[0], position[1], this.getRadius()))
+						hasLanded = true;
+						if (! this.getWorld().isInWorld(position[0], position[1], this.getRadius()))
+								time = time + 0.15;
+		}
+		
+//		for (double t = step; (! hasLanded) ; t = t + step) {
+//			double[] position = this.getJumpStep(time);
+//			double[] nextPosition = this.getJumpStep(time+step);
+//			time = t;
+//			if (this.getWorld().isAdjacent(position[0], position[1], this.getRadius())
+//					&& !this.getWorld().isPassableArea(nextPosition[0], nextPosition[1], this.getRadius())) {
 //				if (! this.getWorld().isInWorld(position[0], position[1], this.getRadius())) {
 //					// Extra time provided to give the worm the chance to jump off the screen.
 //					time = time + 0.20;
 //					System.out.println("Extra time");
 //					}
-				hasLanded = true;
-			}
-		}
+//				hasLanded = true;
+//			}
+//		}
+//		System.out.println("Time is: "+time);
 		return time;
 	}
 	
@@ -838,8 +885,6 @@ public class Worm extends MovableObject{
 	 * 			| while this.canFall() && Y > 0.1*this.getRadius()
 	 * 			|	do: Y = Y - (this.getWorld().getStep(this.getRadius())))
 	 * 			| this.setY(Y)
-	 * @effect	Update the location of this worm's projectile.
-	 * 			| this.updateProjectile()
 	 */
 	protected void fall() throws ModelException {
 		if (this.canFall()) {
@@ -852,7 +897,6 @@ public class Worm extends MovableObject{
 			this.setY(finalY);
 			if (this.getStatus()) {
 				this.setHitPoints(this.getHitPoints() - (int) (Math.round((startY - finalY)*3.0)));
-				this.updateProjectile();
 			}
 		}
 	}
@@ -919,9 +963,6 @@ public class Worm extends MovableObject{
 	 *  the difference between the current direction of the worm and the direction in which the worm 
 	 *  would have to move to end up in the position in question.
 	 *  
-	 * 
-	 * @effect	The projectile's position has been updated.
-	 * 			|this.updateProjectile()
 	 * @effect	Executes the optimal move, as described above. 
 	 * 			|if (Math.abs(getMaxCoverableDistanceAdjacent(direction)/(Math.abs(direction-getDirection())+0.5))) >= (Math.abs(getMaxCoverableDistanceAdjacent(direction2)/(Math.abs(direction2-getDirection())+0.5)))
 	 *			|   	for each direction,direction2 in {direction| direction in (getDirection()-0.7875)..(getDirection()+0.7875)  & direction= getDirection()-n*0.0175 (with n integer)}
@@ -962,7 +1003,6 @@ public class Worm extends MovableObject{
 			}
 		if (toBeExecutedSteps > 0.0){
 			move(toBeExecutedSteps,toBeExecutedDirection);
-			this.updateProjectile();
 			return;
 		}
 			
@@ -977,7 +1017,6 @@ public class Worm extends MovableObject{
 		}
 		if (toBeExecutedSteps > 0.0)
 			move(toBeExecutedSteps,toBeExecutedDirection);
-		this.updateProjectile();
 	}
 	
 	
