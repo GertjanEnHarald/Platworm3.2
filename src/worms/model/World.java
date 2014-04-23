@@ -588,6 +588,18 @@ public class World implements Cloneable {
 		return null;
 	}
 	
+	//TODO commentaar
+	protected boolean projectileOverlapsWorm(double x, double y, double radius) {
+		for (Worm worm: this.getAllWorms()) {
+			if (worm != this.getActiveWorm())
+				if (GameObject.Overlaps(worm.getCoordinateX(),worm.getCoordinateY(),worm.getRadius(),
+									x,y,radius)) {
+					return true;
+			}
+		}
+		return false;
+	}
+	
 	
 	/**
 	 * Returns whether a given projectile overlaps with a worm.

@@ -366,13 +366,15 @@ public abstract class GameObject implements Cloneable {
 	 * 			|			< (this.getRadius() + gameObject.getRadius()))
 	 */
 	protected boolean Overlaps(GameObject gameObject) {
-		double x1 = this.getCoordinateX();
-		double y1 = this.getCoordinateY();
-		double x2 = gameObject.getCoordinateX();
-		double y2 = gameObject.getCoordinateY();
-		
+		return Overlaps(this.getCoordinateX(),this.getCoordinateY(), this.getRadius(),
+						gameObject.getCoordinateX(),gameObject.getCoordinateY(),gameObject.getRadius());
+	}
+	
+	
+	//TODO commentaar
+	protected static boolean Overlaps(double x1, double y1, double radius1, double x2, double y2, double radius2) {
 		double distance = Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
-		return distance < (this.getRadius() + gameObject.getRadius()); 
+		return (distance < radius1 + radius2);
 	}
 	
 	

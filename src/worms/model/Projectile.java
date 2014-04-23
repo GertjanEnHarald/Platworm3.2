@@ -382,14 +382,20 @@ public abstract class Projectile extends MovableObject {
 		step = 150.0*step;
 		boolean hasLanded = false;
 		
-		for (double t = 0; (! hasLanded); t = t + step) {
-			time = t;
+		for (double t = step; (! hasLanded) ; t = t + step) {
 			double[] position = this.getJumpStep(t);
-			if ( (! this.getWorld().isPassableArea(position[0], position[1], radius)) ||
-					this.getWorld().projectileOverlapsWorm(this)) {
+			if (this.getWorld().isPassableArea(position[0], position[1], radius)
+					|| ! this.getWorld().projectileOverlapsWorm(position[0],position[1],radius)) {
+				time = t;
+				}
+			else if(! this.getWorld().isInWorld(position[0], position[1], radius)) {
+				time = time+0.20;
 				hasLanded = true;
 			}
+			else {
+				hasLanded = true;}
 		}
+		
 		return time;
 	}
 	
@@ -432,22 +438,9 @@ public abstract class Projectile extends MovableObject {
 	protected void jump(double timeStep) throws ModelException {
 		if (! this.canJump()) 
 			throw new ModelException("Cannot jump!");
-		
-		double x = this.getCoordinateX();
-		double y = this.getCoordinateY();
-		double radiusProjectile = this.getRadius();
-		boolean hasLanded = false;
 
-		for (double time = timeStep; (! hasLanded); time = time + timeStep) {
-			double[] position = this.getJumpStep(time);
-			x = position[0];
-			y = position[1];
-			this.setCoordinates(x, y);
-			if ((! this.getWorld().isPassableArea(x, y, radiusProjectile)) || 
-					this.getWorld().projectileOverlapsWorm(this)) {
-				hasLanded = true;
-			}
-		}	
+		double[] position = this.getJumpStep(this.getJumpRealTimeInAir(Math.pow(10, -5)));
+		this.setCoordinates(position[0], position[1]);
 		
 		Worm target = this.getWorld().getWormThatOverlaps(this);
 		if (target != null) {
