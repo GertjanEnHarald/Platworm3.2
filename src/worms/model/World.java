@@ -521,7 +521,6 @@ public class World implements Cloneable {
 			x = x + stepX;
 			y = y + stepY;
 			if (isAdjacent(x, y, radius)) {
-				System.out.println("placed");
 				return new double[] {x,y};
 				}
 				
