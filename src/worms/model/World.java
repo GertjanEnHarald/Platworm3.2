@@ -493,27 +493,37 @@ public class World implements Cloneable {
 	 *@throws	No location was found.
 	 *			| If the nothing is returned during the while loop.
 	 */		
-	private double[] getRandomAdjacentLocation(double radius){
+	private double[] getRandomAdjacentLocation(double radius) throws ModelException {
 		double[][] possibles = {{(getRandom().nextDouble())*(getWidth()-radius*2.0)+radius,0},
-				{(getRandom().nextDouble())*(getWidth()-radius*2.0)+radius,getHeight()},
-				{0, (getRandom().nextDouble())*(getHeight()-radius*2.0)+radius},
-				{getWidth(), (getRandom().nextDouble())*(getHeight()-radius*2.0)+radius}};
+								{(getRandom().nextDouble())*(getWidth()-radius*2.0)+radius,getHeight()},
+								{0, (getRandom().nextDouble())*(getHeight()-radius*2.0)+radius},
+								{getWidth(), (getRandom().nextDouble())*(getHeight()-radius*2.0)+radius}};
 		double angle;
 		int randomInt = Math.abs(getRandom().nextInt())%4;
 		double x = possibles[randomInt][0];
 		double y = possibles[randomInt][1];
 		if (x == getWidth()/2.0)
 			angle = Math.PI/2.0;
+		else if (y == getHeight()/2.0)
+			angle = 0.0;
 		else
-			angle = Math.atan(getHeight()*0.5/Math.abs(getWidth()*0.5-x));
+			angle = Math.atan(Math.abs(getHeight()*0.5-y)/Math.abs(getWidth()*0.5-x));
 		double step = getStep(radius);
 		double stepX = Math.cos(angle)*step;
 		double stepY = Math.sin(angle)*step;
+		
+		if (x > getWidth()/2.0)
+			stepX = stepX*(-1);
+		if (y > getHeight()/2.0)
+			stepY = stepY*(-1);
+		
 		while (!(Util.fuzzyEquals(y, getHeight()/2.0,step*2.0))){
 			x = x + stepX;
 			y = y + stepY;
-			if (isAdjacent(x, y, radius))
+			if (isAdjacent(x, y, radius)) {
+				System.out.println("placed");
 				return new double[] {x,y};
+				}
 				
 		}
 		throw new ModelException("Did not find location");
