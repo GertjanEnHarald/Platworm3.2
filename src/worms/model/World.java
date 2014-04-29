@@ -494,9 +494,14 @@ public class World implements Cloneable {
 	 *			| If the nothing is returned during the while loop.
 	 */		
 	private double[] getRandomAdjacentLocation(double radius){
-		double x = (getRandom().nextDouble())*(getWidth()-radius*2.0)+radius;
-		double y = 0;
+		double[][] possibles = {{(getRandom().nextDouble())*(getWidth()-radius*2.0)+radius,0},
+				{(getRandom().nextDouble())*(getWidth()-radius*2.0)+radius,getHeight()},
+				{0, (getRandom().nextDouble())*(getHeight()-radius*2.0)+radius},
+				{getWidth(), (getRandom().nextDouble())*(getHeight()-radius*2.0)+radius}};
 		double angle;
+		int randomInt = Math.abs(getRandom().nextInt())%4;
+		double x = possibles[randomInt][0];
+		double y = possibles[randomInt][1];
 		if (x == getWidth()/2.0)
 			angle = Math.PI/2.0;
 		else
