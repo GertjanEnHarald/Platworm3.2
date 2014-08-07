@@ -11,12 +11,12 @@
 
 # Standard to msysgit
 *.doc	 diff=word
-*.DOC	 diff=astextplain
+*.DOC	 diff=word
 *.docx diff=astextplain
 *.DOCX diff=astextplain
 *.dot  diff=astextplain
 *.DOT  diff=astextplain
 *.pdf  diff=astextplain
 *.PDF	 diff=astextplain
-*.rtf	 diff=rtf
-*.RTF	 diff=astextplain
+*.rtf	 diff=rich
+*.RTF	 diff=rich
