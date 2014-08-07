@@ -493,6 +493,7 @@ public class World implements Cloneable {
 	 *@throws	No location was found.
 	 *			| If the nothing is returned during the while loop.
 	 */		
+	//TODO commentaar world
 	private double[] getRandomAdjacentLocation(double radius) throws ModelException {
 		double[][] possibles = {{(getRandom().nextDouble())*(getWidth()-radius*2.0)+radius,0},
 								{(getRandom().nextDouble())*(getWidth()-radius*2.0)+radius,getHeight()},
